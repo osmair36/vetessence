@@ -21,6 +21,13 @@
         .ts-dropdown .option { background: #fff !important; }
         .ts-dropdown .option.active { background: #e9ecef !important; }
         .ts-dropdown .option:hover { background: #dee2e6 !important; }
+        .main-sidebar .brand-link {
+            white-space: normal !important;
+            line-height: 1.25 !important;
+        }
+        .main-sidebar .brand-link .brand-text {
+            white-space: normal !important;
+        }
         .main-sidebar.sidebar-dark-primary {
             background: var(--sidebar-bg, #051c12) !important;
         }
@@ -116,21 +123,22 @@
         @php $sidebarBg = branding('sidebar_bg', '#051c12'); @endphp
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: {{ $sidebarBg }} !important;">
             @php
-                $logoUrl = branding_sidebar_logo_url();
-                $hasLogo = (bool) $logoUrl;
-                $showName = branding('show_clinic_name', '0') === '1';
-                $pos = branding('clinic_name_position', 'right');
-                $logoW = branding('sidebar_logo_width', 40);
+                $clinicName = branding('clinic_name', 'Amigo Bicho - Clínica Veterinária');
+                if (str_contains($clinicName, ' - ')) {
+                    $parts = explode(' - ', $clinicName, 2);
+                    $line1 = trim($parts[0]);
+                    $line2 = trim($parts[1]);
+                    if (str_contains($line2, ' e Pet Shop')) {
+                        $line2 = 'Clínica Veterinária';
+                    }
+                } else {
+                    $line1 = 'Amigo Bicho';
+                    $line2 = 'Clínica Veterinária';
+                }
             @endphp
-            <a href="{{ route('dashboard') }}" class="brand-link d-flex align-items-center justify-content-center" style="height: 56px;">
-                @if($hasLogo)
-                    <img src="{{ $logoUrl }}" alt="Logo" style="max-height: 38px; max-width: 100%; object-fit: contain;">
-                @else
-                    <i class="fas fa-paw brand-image"></i>
-                @endif
-                @if($showName)
-                    <span class="brand-text font-weight-light ml-2">{{ branding('clinic_name', 'VetEssence') }}</span>
-                @endif
+            <a href="{{ route('dashboard') }}" class="brand-link d-flex flex-column align-items-center justify-content-center text-center py-2" style="height: auto; min-height: 56px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 0.65rem 0.75rem !important;">
+                <span class="brand-text font-weight-bold text-white text-center w-100" style="font-size: 1.05rem; letter-spacing: 0.02em; display: block; line-height: 1.2;">{{ $line1 }}</span>
+                <span class="brand-text text-center w-100" style="font-size: 0.8rem; color: var(--brand-accent, #d6c38d); font-weight: 600; letter-spacing: 0.03em; margin-top: 3px; display: block; line-height: 1.2;">{{ $line2 }}</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
