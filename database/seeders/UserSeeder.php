@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     protected array $fallbackAccounts = [
         ['name' => 'Super Administrador', 'email' => 'super@vet.com', 'password' => 'super123', 'role' => 'super-admin'],
         ['name' => 'Administrador', 'email' => 'admin@vet.com', 'password' => 'admin123', 'role' => 'admin'],
-        ['name' => 'Dr. João Silva', 'email' => 'vet@vet.com', 'password' => 'vet123', 'role' => 'veterinario'],
+        ['name' => 'Dra. Joelma Scarabelli Neves', 'email' => 'vet@vet.com', 'password' => 'vet123', 'role' => 'veterinario'],
         ['name' => 'Dra. Ana Costa', 'email' => 'vet2@vet.com', 'password' => 'vet2123', 'role' => 'veterinario'],
         ['name' => 'Paula Recepcionista', 'email' => 'recep@vet.com', 'password' => 'recep123', 'role' => 'recepcionista'],
         ['name' => 'Carlos Recepcionista', 'email' => 'recep2@vet.com', 'password' => 'recep2123', 'role' => 'recepcionista'],
@@ -54,7 +54,10 @@ class UserSeeder extends Seeder
             $name = $account['name']
                 ?? ($namesByEmail[$email] ?? ucfirst(explode('@', $email)[0]));
 
-            $u = User::firstOrCreate(
+            $isVeterinarian = in_array($account['role'], ['veterinario', 'veterinarian']) || $account['role'] === 'super-admin';
+            $crmv = ($email === 'vet@vet.com') ? 'CRMV-PR 08147' : null;
+
+            $u = User::updateOrCreate(
                 ['email' => $email],
                 [
                     'name' => $name,
@@ -62,7 +65,8 @@ class UserSeeder extends Seeder
                     'role_id' => $role->id,
                     'branch_id' => $defaultBranchId,
                     'is_active' => true,
-                    'is_veterinarian' => $account['role'] === 'super-admin',
+                    'is_veterinarian' => $isVeterinarian,
+                    'crmv' => $crmv,
                 ]
             );
 

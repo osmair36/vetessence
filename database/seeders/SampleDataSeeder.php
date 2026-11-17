@@ -62,11 +62,11 @@ class SampleDataSeeder extends Seeder
             ['user_id' => $tutorUser->id],
             [
                 'cpf' => '123.456.789-00',
-                'phone' => '(11) 99999-8888',
+                'phone' => '(44) 99888-7777',
                 'email' => 'maria.tutor@email.com',
                 'address' => 'Rua das Flores, 123',
-                'city' => 'São Paulo',
-                'state' => 'SP',
+                'city' => 'Assis Chateaubriand',
+                'state' => 'PR',
             ]
         );
 

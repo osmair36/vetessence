@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ZoonosisSeeder::class,
             VaccineProtocolSeeder::class,
             GeoSeeder::class,
+            AmigoBichoSettingsSeeder::class,
         ]);
     }
 }

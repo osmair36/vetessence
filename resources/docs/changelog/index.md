@@ -1,6 +1,14 @@
 # Changelog
 
-## [Não versionado] — 2026-10-08
+## [v1.3.0] — 2026-11-17
+
+### Adicionado
+- **Projeto Amigo Bicho (Fase 2)**:
+  - Identidade visual da Clínica Veterinária e Pet Shop Amigo Bicho com logotipo oficial e paleta de cores institucional (verde esmeralda, verde escuro corporativo, laranja acolhedor).
+  - Parametrização cadastral da filial matriz com localização em Assis Chateaubriand - PR (Rua Rio de Janeiro, 178 - Jardim América, CEP 85935-000, telefones (44) 3528-2481 / (44) 99833-0660).
+  - Cadastro da Dra. Joelma Scarabelli Neves como Médica Veterinária e Responsável Técnica (CRMV-PR 08147).
+  - Seeder de configurações institucionais `AmigoBichoSettingsSeeder` integrado à execução do `DatabaseSeeder`.
+  - Testes de feature `AmigoBichoBrandingTest` para validação de branding, seeders e escopo geográfico.
 
 ## [v1.2.1] — 2026-10-08
 ## [v1.2.0] — 2026-10-08

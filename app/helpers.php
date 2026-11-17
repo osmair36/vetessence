@@ -46,10 +46,10 @@ if (!function_exists('branding_favicon_url')) {
 if (!function_exists('branding_css_vars')) {
     function branding_css_vars(): string
     {
-        $primary = branding('primary_color', '#455e36');
-        $sidebar = branding('sidebar_bg', '#051c12');
-        $secondary = branding('secondary_color', '#9aaa7e');
-        $accent = branding('accent_color', '#d6c38d');
+        $primary = branding('primary_color', '#1E7E34');
+        $sidebar = branding('sidebar_bg', '#132E27');
+        $secondary = branding('secondary_color', '#F4A261');
+        $accent = branding('accent_color', '#E76F51');
         return ":root { --brand-primary: {$primary}; --brand-primary-rgb: " . hex_to_rgb($primary) . "; --sidebar-bg: {$sidebar}; --brand-secondary: {$secondary}; --brand-accent: {$accent}; }";
     }
 }
@@ -71,7 +71,7 @@ if (!function_exists('hex_to_rgb')) {
 if (!function_exists('branding_clinic_name')) {
     function branding_clinic_name(): string
     {
-        return branding('clinic_name', config('app.name', 'VetEssence'));
+        return branding('clinic_name', config('app.name', 'Amigo Bicho - Clínica Veterinária e Pet Shop'));
     }
 }
 
