@@ -37,10 +37,13 @@ class CorporateDashboardController extends Controller
             $stats['total_pets'] = ($stats['total_pets'] ?? 0) + $petQuery->count();
             $stats['today_appointments'] = ($stats['today_appointments'] ?? 0) + $appQuery->whereDate('date', today())->count();
 
+            $isSqlite = DB::getDriverName() === 'sqlite';
+            $monthExpr = $isSqlite ? "CAST(strftime('%m', created_at) AS INTEGER)" : 'MONTH(created_at)';
+
             $monthly = $invQuery
-                ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(total) as total'))
+                ->select(DB::raw("$monthExpr as month"), DB::raw('SUM(total) as total'))
                 ->whereYear('created_at', now()->year)
-                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->groupBy(DB::raw($monthExpr))
                 ->pluck('total', 'month');
 
             $patients = $appQuery

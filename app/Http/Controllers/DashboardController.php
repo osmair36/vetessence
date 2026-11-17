@@ -63,15 +63,23 @@ class DashboardController extends Controller
             ->get();
 
         // Charts Data
-        // Revenue by month (last 6 months)
+        // Revenue by month (last 6 months) - SQLite/MySQL compatible
+        $isSqlite = DB::getDriverName() === 'sqlite';
+        $monthExpr = $isSqlite
+            ? "strftime('%Y-%m', paid_at) as month"
+            : "DATE_FORMAT(paid_at, '%Y-%m') as month";
+        $monthGroup = $isSqlite
+            ? "strftime('%Y-%m', paid_at)"
+            : "DATE_FORMAT(paid_at, '%Y-%m')";
+
         $revenueByMonth = Invoice::select(
-                DB::raw("DATE_FORMAT(paid_at, '%Y-%m') as month"),
+                DB::raw($monthExpr),
                 DB::raw('SUM(total) as total')
             )
             ->where('status', 'paid')
             ->where('paid_at', '>=', now()->subMonths(6))
-            ->groupByRaw("DATE_FORMAT(paid_at, '%Y-%m')")
-            ->orderByRaw("DATE_FORMAT(paid_at, '%Y-%m')")
+            ->groupByRaw($monthGroup)
+            ->orderByRaw($monthGroup)
             ->get();
 
         // Appointments by type (current month)

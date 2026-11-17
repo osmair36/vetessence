@@ -49,11 +49,16 @@ class ReportController extends Controller
             ->groupBy('payment_method')
             ->get();
 
+        $isSqlite = DB::getDriverName() === 'sqlite';
+        $monthExprReport = $isSqlite
+            ? "CAST(strftime('%m', paid_at) AS INTEGER)"
+            : 'MONTH(paid_at)';
+
         $monthlyRevenue = Invoice::where('status', 'paid')
             ->whereYear('paid_at', $startDate->year)
-            ->selectRaw('MONTH(paid_at) as month, SUM(total) as total')
-            ->groupByRaw('MONTH(paid_at)')
-            ->orderByRaw('MONTH(paid_at)')
+            ->selectRaw("$monthExprReport as month, SUM(total) as total")
+            ->groupByRaw($monthExprReport)
+            ->orderByRaw($monthExprReport)
             ->get()
             ->keyBy('month');
 
