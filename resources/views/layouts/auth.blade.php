@@ -260,7 +260,7 @@
 
                 <div class="auth-logo-box">
                     @if($hasLogo)
-                        <img src="{{ $logoUrl }}" class="auth-logo-img" alt="{{ $clinicName }}">
+                        <img src="{{ $logoUrl }}?v={{ file_exists(public_path('img/logo-amigobicho.png')) ? filemtime(public_path('img/logo-amigobicho.png')) : time() }}" class="auth-logo-img" alt="{{ $clinicName }}">
                     @else
                         <i class="fas fa-paw fa-3x" style="color: var(--brand-primary);"></i>
                     @endif
