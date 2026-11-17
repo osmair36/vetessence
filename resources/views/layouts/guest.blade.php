@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? branding('clinic_name', 'VetEssence') }} - {{ branding('clinic_name', 'VetEssence') }}</title>
+    <title>{{ $title ?? branding('clinic_name', 'Amigo Bicho') }} - {{ branding('clinic_name', 'Amigo Bicho') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ branding_favicon_url() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
@@ -32,7 +32,7 @@
                     <i class="fas fa-paw fa-2x"></i>
                 @endif
                 @if($showName)
-                    <b>{{ branding('clinic_name', 'VetEssence') }}</b>
+                    <b>{{ branding('clinic_name', 'Amigo Bicho') }}</b>
                 @endif
             </a>
         </div>

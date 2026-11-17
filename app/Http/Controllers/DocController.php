@@ -69,7 +69,7 @@ class DocController extends Controller
 
         $markdown = file_get_contents($path);
         $clinicName = $this->getClinicName();
-        $markdown = str_replace('VetEssence', $clinicName, $markdown);
+        $markdown = str_replace(['VetEssence', 'Amigo Bicho'], $clinicName, $markdown);
 
         $html = Str::markdown($markdown);
 
@@ -111,6 +111,6 @@ class DocController extends Controller
 
     private function getClinicName(): string
     {
-        return Setting::get('branding.clinic_name', 'VetEssence');
+        return Setting::get('branding.clinic_name', 'Amigo Bicho');
     }
 }

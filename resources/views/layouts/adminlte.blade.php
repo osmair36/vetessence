@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? branding('clinic_name', 'VetEssence') }} - {{ branding('clinic_name', 'VetEssence') }}</title>
+    <title>{{ $title ?? branding('clinic_name', 'Amigo Bicho') }} - {{ branding('clinic_name', 'Amigo Bicho') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ branding_favicon_url() }}">
     <style>{!! branding_css_vars() !!}</style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap">
@@ -873,9 +873,9 @@
         <!-- Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                <strong>VetEssence</strong> v{{ config('app.version') }}
+                <strong>Amigo Bicho</strong> v{{ config('app.version') }}
             </div>
-            <strong>&copy; {{ date('Y') }} {{ branding('clinic_name', config('app.name', 'VetEssence')) }}</strong>
+            <strong>&copy; {{ date('Y') }} {{ branding('clinic_name', config('app.name', 'Amigo Bicho')) }}</strong>
         </footer>
     </div>
     @stack('modals')

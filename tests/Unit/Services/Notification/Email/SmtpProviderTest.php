@@ -23,7 +23,7 @@ class SmtpProviderTest extends ModuleTestCase
             'username' => 'user',
             'password' => 'pass',
             'encryption' => 'tls',
-            'from_name' => 'VetEssence',
+            'from_name' => 'Amigo Bicho',
         ];
 
         $this->provider = new SmtpProvider($this->config);
@@ -46,7 +46,7 @@ class SmtpProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',
@@ -69,7 +69,7 @@ class SmtpProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Invoice',
             '<p>Invoice attached</p>',
@@ -91,7 +91,7 @@ class SmtpProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Report',
             '<p>Report attached</p>',
@@ -109,7 +109,7 @@ class SmtpProviderTest extends ModuleTestCase
             ->andThrow(new \Exception('SMTP connection refused'));
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',

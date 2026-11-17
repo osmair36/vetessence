@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'Portal do Tutor' }} - {{ branding('clinic_name', 'VetEssence') }}</title>
+    <title>{{ $title ?? 'Portal do Tutor' }} - {{ branding('clinic_name', 'Amigo Bicho') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ branding_favicon_url() }}">
     <style>{!! branding_css_vars() !!}</style>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,7 +29,7 @@
                         <i class="fas fa-paw" style="color: var(--brand-primary, #455e36); font-size: 1.75rem;"></i>
                     @endif
                     @if($showName)
-                        <span class="text-gray-800 hidden sm:inline">{{ branding('clinic_name', 'VetEssence') }}</span>
+                        <span class="text-gray-800 hidden sm:inline">{{ branding('clinic_name', 'Amigo Bicho') }}</span>
                     @endif
                 </a>
                 @auth('tutor')
@@ -86,7 +86,7 @@
                 <span class="text-gray-300">|</span>
                 <a href="{{ route('portal.dashboard') }}" class="hover:text-blue-600 transition">Portal</a>
             </div>
-            <p>&copy; {{ date('Y') }} {{ branding('clinic_name', 'VetEssence') }}. Todos os direitos reservados.</p>
+            <p>&copy; {{ date('Y') }} {{ branding('clinic_name', 'Amigo Bicho') }}. Todos os direitos reservados.</p>
         </div>
     </footer>
 

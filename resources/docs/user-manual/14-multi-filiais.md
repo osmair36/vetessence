@@ -1,7 +1,7 @@
 # Multi-Filiais
 
 ## Estrutura
-O VetEssence suporta múltiplas filiais (unidades) com:
+O Amigo Bicho suporta múltiplas filiais (unidades) com:
 - **Dados globais**: Tutores, pets, convênios, fornecedores, produtos
 - **Dados por filial**: Estoque, agendamentos, financeiro, usuários
 

@@ -1,6 +1,6 @@
 # Manual do Tutor
 
-Bem-vindo ao **Portal do Tutor** VetEssence! Este manual explica tudo que você pode fazer pelo portal.
+Bem-vindo ao **Portal do Tutor** Amigo Bicho! Este manual explica tudo que você pode fazer pelo portal.
 
 ## Acessar o Portal
 

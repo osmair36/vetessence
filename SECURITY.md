@@ -2,7 +2,7 @@
 
 ## Reportando uma Vulnerabilidade
 
-Levamos a segurança do VetEssence a sério. Se você encontrou uma vulnerabilidade de segurança, por favor, reporte-a através dos canais abaixo.
+Levamos a segurança do Amigo Bicho a sério. Se você encontrou uma vulnerabilidade de segurança, por favor, reporte-a através dos canais abaixo.
 
 **Por favor, NÃO abra uma issue pública para reportar vulnerabilidades de segurança.**
 

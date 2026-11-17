@@ -30,7 +30,7 @@
                 <i class="fas fa-paw text-2xl text-white"></i>
             @endif
             @if($showName)
-                <span class="text-xl font-bold text-white">{{ branding('clinic_name', 'VetEssence') }}</span>
+                <span class="text-xl font-bold text-white">{{ branding('clinic_name', 'Amigo Bicho') }}</span>
             @endif
         </div>
     </div>

@@ -16,7 +16,7 @@ class SendGridProviderTest extends ModuleTestCase
 
         $this->provider = new SendGridProvider([
             'api_key' => 'SG.test-key',
-            'from_name' => 'VetEssence',
+            'from_name' => 'Amigo Bicho',
         ]);
     }
 
@@ -32,7 +32,7 @@ class SendGridProviderTest extends ModuleTestCase
         ]);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',
@@ -49,7 +49,7 @@ class SendGridProviderTest extends ModuleTestCase
         ]);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',

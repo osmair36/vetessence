@@ -84,7 +84,7 @@
         </div>
 
         <div class="footer">
-            <p>Documento gerado eletronicamente em {{ now()->format('d/m/Y H:i:s') }} — {{ branding('clinic_name', config('app.name', 'VetEssence')) }}</p>
+            <p>Documento gerado eletronicamente em {{ now()->format('d/m/Y H:i:s') }} — {{ branding('clinic_name', config('app.name', 'Amigo Bicho')) }}</p>
         </div>
         <div class="disclaimer">
             <p>Este certificado é válido apenas com assinatura e carimbo do veterinário responsável, nos termos da Resolução CFMV nº 957/2006.</p>

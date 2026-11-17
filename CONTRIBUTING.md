@@ -1,6 +1,6 @@
-# Contribuindo com o VetEssence
+# Contribuindo com o Amigo Bicho
 
-Obrigado por considerar contribuir com o VetEssence! Este guia estabelece as diretrizes para contribuições.
+Obrigado por considerar contribuir com o Amigo Bicho! Este guia estabelece as diretrizes para contribuições.
 
 ## Como contribuir
 

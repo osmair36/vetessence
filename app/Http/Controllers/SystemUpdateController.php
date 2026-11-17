@@ -249,7 +249,7 @@ class SystemUpdateController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$token}",
-                'User-Agent: VetEssence',
+                'User-Agent: AmigoBicho',
                 'Accept: application/vnd.github+json',
             ],
             CURLOPT_TIMEOUT => 10,
@@ -288,7 +288,7 @@ class SystemUpdateController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$token}",
-                'User-Agent: VetEssence',
+                'User-Agent: AmigoBicho',
                 'Accept: application/vnd.github+json',
             ],
             CURLOPT_TIMEOUT => 10,

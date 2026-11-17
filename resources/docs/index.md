@@ -1,6 +1,6 @@
-# Documentação VetEssence
+# Documentação Amigo Bicho
 
-Bem-vindo à documentação completa do sistema de gestão veterinária **VetEssence**.
+Bem-vindo à documentação completa do sistema de gestão veterinária **Amigo Bicho**.
 
 ## Seções
 

@@ -175,7 +175,7 @@ O sistema possui **284 permissões** organizadas em **76 grupos** (ex.: Tutores,
 5. As permissões são sincronizadas com o Spatie Permission e ficam imediatamente ativas
 
 ### Sincronização entre Sistemas
-O VetEssence utiliza dois sistemas de permissão em paralelo:
+O Amigo Bicho utiliza dois sistemas de permissão em paralelo:
 - **Custom Role** (`App\Models\Role`) — usado pela diretiva `@role()` no sidebar
 - **Spatie Permission** — usado por `@can()`, `Gate::allows()` e middlewares
 

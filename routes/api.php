@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\ZoonoticDiseaseController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes - VetEssence Mobile App
+| API Routes - Amigo Bicho Mobile App
 |--------------------------------------------------------------------------
 */
 

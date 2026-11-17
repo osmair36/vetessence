@@ -21,7 +21,7 @@ class MailgunProviderTest extends ModuleTestCase
             'domain' => 'mg.example.com',
             'secret' => 'key-secret',
             'endpoint' => 'api.mailgun.net',
-            'from_name' => 'VetEssence',
+            'from_name' => 'Amigo Bicho',
         ];
 
         $this->provider = new MailgunProvider($this->config);
@@ -44,7 +44,7 @@ class MailgunProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',
@@ -67,7 +67,7 @@ class MailgunProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Invoice',
             '<p>Invoice attached</p>',
@@ -89,7 +89,7 @@ class MailgunProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Report',
             '<p>Report attached</p>',
@@ -107,7 +107,7 @@ class MailgunProviderTest extends ModuleTestCase
             ->andThrow(new \Exception('Mailgun API timeout'));
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',

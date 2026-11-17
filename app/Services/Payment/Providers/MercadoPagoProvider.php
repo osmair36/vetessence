@@ -442,7 +442,7 @@ class MercadoPagoProvider implements PaymentGatewayProvider
                 'items' => $items,
                 'external_reference' => (string) $invoice->id,
                 'notification_url' => $this->gateway->webhook_url,
-                'statement_descriptor' => 'VETESSENCE',
+                'statement_descriptor' => 'AMIGO BICHO',
                 'auto_return' => 'approved',
                 'back_urls' => [
                     'success' => route('portal.invoices.show', $invoice->id),

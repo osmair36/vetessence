@@ -21,7 +21,7 @@ class SesProviderTest extends ModuleTestCase
             'key' => 'AKIA-test',
             'secret' => 'test-secret',
             'region' => 'us-east-1',
-            'from_name' => 'VetEssence',
+            'from_name' => 'Amigo Bicho',
         ];
 
         $this->provider = new SesProvider($this->config);
@@ -44,7 +44,7 @@ class SesProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',
@@ -67,7 +67,7 @@ class SesProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Invoice',
             '<p>Invoice attached</p>',
@@ -89,7 +89,7 @@ class SesProviderTest extends ModuleTestCase
             ->andReturn($mailerMock);
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Report',
             '<p>Report attached</p>',
@@ -107,7 +107,7 @@ class SesProviderTest extends ModuleTestCase
             ->andThrow(new \Exception('SES credentials invalid'));
 
         $result = $this->provider->send(
-            'no-reply@vetessence.com',
+            'no-reply@amigobicho.com',
             'user@example.com',
             'Welcome',
             '<h1>Hello</h1>',

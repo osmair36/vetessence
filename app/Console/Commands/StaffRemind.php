@@ -38,7 +38,7 @@ class StaffRemind extends Command
             $message = "Olá {$schedule->user->name}!\n\n"
                 . "Você tem {$type} agendada para amanhã ({$schedule->work_date->format('d/m/Y')}).\n"
                 . "Horário: {$schedule->start_time} às {$schedule->end_time}\n\n"
-                . "Atenciosamente,\nEquipe VetEssence";
+                . "Atenciosamente,\nEquipe Amigo Bicho";
 
             $result = $notificationService->send(
                 NotificationChannel::Email,

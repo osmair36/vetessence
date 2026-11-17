@@ -33,7 +33,7 @@
 
                         <div class="form-group">
                             <label>Nome da Clínica</label>
-                            <input type="text" name="clinic_name" class="form-control" value="{{ branding('clinic_name', 'VetEssence') }}" placeholder="VetEssence">
+                            <input type="text" name="clinic_name" class="form-control" value="{{ branding('clinic_name', 'Amigo Bicho') }}" placeholder="Amigo Bicho">
                             <small class="text-muted">Exibido no título, sidebar, navbar e documentos.</small>
                         </div>
 
@@ -112,7 +112,7 @@
                             <small class="text-muted d-block mb-2">Pré-visualização (sidebar):</small>
                             <div class="d-inline-flex align-items-center p-2 rounded text-white font-weight-bold" style="background: {{ branding('primary_color', '#455e36') }};" id="previewBrand">
                                 <img src="{{ $logo && !str_contains($logo, 'logo-default.png') ? $logo : 'https://via.placeholder.com/40' }}" width="{{ branding('sidebar_logo_width', 40) }}" class="mr-2" id="previewLogo">
-                                <span id="previewNameText" style="{{ $showName !== '1' ? 'display:none' : '' }}">{{ branding('clinic_name', 'VetEssence') }}</span>
+                                <span id="previewNameText" style="{{ $showName !== '1' ? 'display:none' : '' }}">{{ branding('clinic_name', 'Amigo Bicho') }}</span>
                             </div>
                         </div>
 

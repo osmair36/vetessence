@@ -23,7 +23,7 @@ class AnonimizarDadosLGPD extends Command
             'name' => '[ANONYMIZED]',
             'cpf' => null,
             'rg' => null,
-            'email' => "anonimo{$tutor->id}@vetessence.anon",
+            'email' => "anonimo{$tutor->id}@amigobicho.anon",
             'phone' => null,
             'phone_secondary' => null,
             'zipcode' => null,

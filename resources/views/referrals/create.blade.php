@@ -40,7 +40,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="referring_clinic">Clínica de Origem</label>
-                        <input type="text" name="referring_clinic" id="referring_clinic" class="form-control" value="{{ old('referring_clinic', 'VetEssence') }}">
+                        <input type="text" name="referring_clinic" id="referring_clinic" class="form-control" value="{{ old('referring_clinic', 'Amigo Bicho') }}">
                     </div>
                 </div>
             </div>

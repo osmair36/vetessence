@@ -363,9 +363,9 @@ Configurado via painel admin em **Configurações > Notificações** (aba E-mail
 
 | Chave | Variável .env | Padrão | Descrição |
 |-------|---------------|--------|-----------|
-| `pix.pix_key` | `PIX_KEY` | `admin@vetessence.com` | Chave PIX (CPF, CNPJ, e-mail, telefone ou aleatória) — substituída pelo `public_key` do gateway quando configurado |
+| `pix.pix_key` | `PIX_KEY` | `admin@amigobicho.com` | Chave PIX (CPF, CNPJ, e-mail, telefone ou aleatória) — substituída pelo `public_key` do gateway quando configurado |
 | `pix.gi` | `PIX_GI` | `br.gov.bcb.pix` | GUI (identificador do arranjo de pagamentos) |
-| `pix.merchant_name` | `PIX_MERCHANT_NAME` | `VETESSENCE CLINICA VETERINARIA` | Nome do recebedor (até 25 caracteres) |
+| `pix.merchant_name` | `PIX_MERCHANT_NAME` | `AMIGO BICHO CLINICA VETERINARIA` | Nome do recebedor (até 25 caracteres) |
 | `pix.city` | `PIX_CITY` | `SAO PAULO` | Cidade do recebedor |
 | `pix.url` | `PIX_URL` | — | URL opcional para payload dinâmico |
 
@@ -595,7 +595,7 @@ ufw --force enable
 
 ## Instalação Automatizada (Script)
 
-O diretório `install/` contém o script `install.sh` que automatiza toda a instalação do VetEssence.
+O diretório `install/` contém o script `install.sh` que automatiza toda a instalação do Amigo Bicho.
 
 ```bash
 sudo bash install/install.sh

@@ -237,7 +237,7 @@ class VersionBump extends Command
 
         $body = $this->extractReleaseNotes($new);
         if ($body === '') {
-            $body = "Versão v{$new} do VetEssence.";
+            $body = "Versão v{$new} do Amigo Bicho.";
         }
 
         $payload = json_encode([
@@ -253,7 +253,7 @@ class VersionBump extends Command
             "https://api.github.com/repos/{$repo}/releases",
             '-H', 'Authorization: Bearer ' . $token,
             '-H', 'Accept: application/vnd.github+json',
-            '-H', 'User-Agent: VetEssence',
+            '-H', 'User-Agent: AmigoBicho',
             '-d', $payload,
         ]);
         $process->setTimeout(60);

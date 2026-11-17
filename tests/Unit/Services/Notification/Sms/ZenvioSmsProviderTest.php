@@ -31,7 +31,7 @@ class ZenvioSmsProviderTest extends ModuleTestCase
         ]);
 
         $result = $this->provider->send(
-            'VetEssence',
+            'Amigo Bicho',
             '+55 (11) 99999-9999',
             'Sua consulta foi confirmada',
         );
@@ -46,7 +46,7 @@ class ZenvioSmsProviderTest extends ModuleTestCase
             'https://api.zenvio.com.br/v1/sms/enviar' => Http::response([], 401),
         ]);
 
-        $result = $this->provider->send('VetEssence', '+5511999999999', 'Test');
+        $result = $this->provider->send('Amigo Bicho', '+5511999999999', 'Test');
 
         $this->assertFalse($result->success);
         $this->assertEquals('Zenvio SMS', $result->provider);
@@ -63,7 +63,7 @@ class ZenvioSmsProviderTest extends ModuleTestCase
             },
         ]);
 
-        $this->provider->send('VetEssence', '+55 (11) 99999-9999', 'Msg');
+        $this->provider->send('Amigo Bicho', '+55 (11) 99999-9999', 'Msg');
     }
 
     public function test_send_sets_correct_headers(): void
@@ -77,7 +77,7 @@ class ZenvioSmsProviderTest extends ModuleTestCase
             },
         ]);
 
-        $this->provider->send('VetEssence', '+5511999999999', 'Msg');
+        $this->provider->send('Amigo Bicho', '+5511999999999', 'Msg');
     }
 
     public function test_send_failure_throws_exception(): void
@@ -88,7 +88,7 @@ class ZenvioSmsProviderTest extends ModuleTestCase
             },
         ]);
 
-        $result = $this->provider->send('VetEssence', '+5511999999999', 'Test');
+        $result = $this->provider->send('Amigo Bicho', '+5511999999999', 'Test');
 
         $this->assertFalse($result->success);
         $this->assertStringContainsString('API timeout', $result->error ?? '');

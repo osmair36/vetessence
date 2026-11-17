@@ -147,7 +147,7 @@ class PayerProvider implements PaymentGatewayProvider
 
             $payload = [
                 'type' => 'INPUT',
-                'origin' => 'VETESSENCE',
+                'origin' => 'AMIGO BICHO',
                 'data' => [
                     'callbackUrl' => $callbackUrl,
                     'correlationId' => $correlationId,
@@ -264,7 +264,7 @@ class PayerProvider implements PaymentGatewayProvider
 
             $validatePayload = [
                 'type' => 'INPUT',
-                'origin' => 'VETESSENCE',
+                'origin' => 'AMIGO BICHO',
                 'data' => [
                     'callbackUrl' => route('api.payments.webhook', ['gateway' => $this->gateway->id]),
                     'correlationId' => (string) Str::uuid(),
@@ -304,7 +304,7 @@ class PayerProvider implements PaymentGatewayProvider
 
         return [
             'type' => 'INPUT',
-            'origin' => 'VETESSENCE',
+            'origin' => 'AMIGO BICHO',
             'data' => [
                 'callbackUrl' => '',
                 'correlationId' => $correlationId,

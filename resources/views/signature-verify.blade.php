@@ -37,7 +37,7 @@
             <p class="text-muted mb-0">
                 <small>
                     <i class="fas fa-shield-alt mr-1"></i>
-                    Verificação baseada em SHA-256 — {{ config('app.name', 'VetEssence') }}
+                    Verificação baseada em SHA-256 — {{ config('app.name', 'Amigo Bicho') }}
                 </small>
             </p>
         </div>

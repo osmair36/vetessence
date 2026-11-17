@@ -1,5 +1,17 @@
 # Changelog
 
+## [Não versionado] — 2026-11-17
+
+## [v1.4.11] — 2026-11-17
+
+### Alterado
+- **Identidade e Rebranding Completo para Amigo Bicho**:
+  - Atualização de todas as ocorrências, textos de exibição, rodapés, cabeçalhos e fallbacks de branding de `VetEssence` para `Amigo Bicho` em todas as views Blade (`adminlte`, `app`, `guest`, `mobile`, `sidebar`, `portal`, `branding`, `prescriptions`, `health-certificates`, `invoices`, `vaccinations`).
+  - Atualização dos modelos e comandos de e-mail, SMS, lembretes de vacina e rotinas de agendamento para assinar como `Amigo Bicho` e `Equipe Amigo Bicho`.
+  - Atualização dos descritores de fatura em gateways de pagamento (Mercado Pago e Payer) para `AMIGO BICHO`.
+  - Atualização das chaves e descrições PIX para `AMIGO BICHO CLINICA VETERINARIA` e `admin@amigobicho.com`.
+  - Atualização dos manuais de usuário, manuais técnicos, tutores e documentação oficial (`resources/docs`, `README.md`, `install.sh`).
+  - Limpeza total de referências obsoletas em testes unitários e de integração.
 ## [v1.3.0] — 2026-11-17
 
 ### Adicionado
@@ -33,7 +45,7 @@
 
 ### Alterado
 - **Provedores fiscais desativados**: FocusNFe e Spedy desativados na emissão de notas (NFS-e, NFC-e e NF-e). Deixaram de ser selecionáveis na Configuração NF — a validação aceita apenas Webmania® e NFE.io. As classes `FocusNfeProvider`/`SpedyProvider` e os mapeamentos de resolução foram mantidos no código (configs existentes continuam funcionando). Referências removidas da documentação (manuais usuário e técnico).
-- **Rodapé corrigido**: lado esquerdo passa a exibir o **nome da clínica** vindo do branding (`© 2026 {clínica}`) em vez do texto fixo "Clínica Veterinária"; lado direito exibe **VetEssence** com a versão atual (`config('app.version')`, arquivo `VERSION`) em vez do "v1.0" fixo e do nome de clínica do branding.
+- **Rodapé corrigido**: lado esquerdo passa a exibir o **nome da clínica** vindo do branding (`© 2026 {clínica}`) em vez do texto fixo "Clínica Veterinária"; lado direito exibe **Amigo Bicho** com a versão atual (`config('app.version')`, arquivo `VERSION`) em vez do "v1.0" fixo e do nome de clínica do branding.
 ## [Não versionado] — 2026-08-03
 
 ### Adicionado

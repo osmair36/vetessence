@@ -1,6 +1,6 @@
 # Manual do Usuário
 
-Guia prático para utilização do VetEssence no dia a dia da clínica.
+Guia prático para utilização do Amigo Bicho no dia a dia da clínica.
 
 ## Índice de Módulos
 

@@ -202,7 +202,7 @@
 </div>
 
 <div class="footer">
-    {{ config('app.name', 'VetEssence') }} — Documento verificado digitalmente
+    {{ config('app.name', 'Amigo Bicho') }} — Documento verificado digitalmente
 </div>
 
 <script>

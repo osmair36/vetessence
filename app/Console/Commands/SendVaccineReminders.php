@@ -43,7 +43,7 @@ class SendVaccineReminders extends Command
                     "Lembrando que a vacina {$vaccination->vaccine} do pet {$vaccination->pet->name} " .
                     "está agendada para o dia {$vaccination->next_date->format('d/m/Y')}.\n\n" .
                     "Por favor, entre em contato para confirmar o atendimento.\n\n" .
-                    "Att,\nVetEssence";
+                    "Att,\nAmigo Bicho";
 
                 CommunicationQueue::create([
                     'pet_id' => $vaccination->pet_id,

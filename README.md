@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐾 VetEssence
+# 🐾 Amigo Bicho
 
 ### Sistema completo de gestão para clínicas veterinárias
 
@@ -11,7 +11,7 @@
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
 [![GitHub stars](https://img.shields.io/github/stars/hlmitecnologia/vetessence?style=social)](https://github.com/hlmitecnologia/vetessence)
 [![GitHub issues](https://img.shields.io/github/issues/hlmitecnologia/vetessence)](https://github.com/hlmitecnologia/vetessence/issues)
-[![Versão](https://img.shields.io/badge/versão-v1.4.10-blue.svg)](https://github.com/hlmitecnologia/vetessence/releases)
+[![Versão](https://img.shields.io/badge/versão-v1.4.11-blue.svg)](https://github.com/hlmitecnologia/vetessence/releases)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Sobre
 
-O **VetEssence** é um sistema ERP completo para clínicas veterinárias, construído sobre **Laravel 13** com foco em **prontuário clínico**, **farmácia**, **financeiro**, **conformidade regulatória** (ANVISA, LGPD, CFMV) e **multi-filiais** — tudo em um único código aberto, gratuito e auto-hospedado.
+O **Amigo Bicho** é um sistema ERP completo para clínicas veterinárias, construído sobre **Laravel 13** com foco em **prontuário clínico**, **farmácia**, **financeiro**, **conformidade regulatória** (ANVISA, LGPD, CFMV) e **multi-filiais** — tudo em um único código aberto, gratuito e auto-hospedado.
 
 > ⚠️ **O software é gratuito.** Suporte, instalação, hospedagem e customizações são serviços pagos pela [HLMI Tecnologia](https://vetessence.com.br). Ao utilizar serviços pagos, você concorda com nossos [termos de serviço](https://vetessence.com.br/termos).
 
@@ -220,7 +220,7 @@ Para ambientes de produção, veja o **Guia de Performance** em [docs/performanc
 
 ## Suporte Profissional
 
-O VetEssence é **gratuito e open source**. Se você precisa de:
+O Amigo Bicho é **gratuito e open source**. Se você precisa de:
 
 - **Instalação e configuração** do servidor
 - **Hospedagem gerenciada** (nós cuidamos do servidor)
@@ -232,7 +232,7 @@ Entre em contato:
 
 - 🌐 [vetessence.com.br](https://vetessence.com.br)
 - 📱 [WhatsApp](https://wa.me/5511998464769)
-- 📧 [contato@vetessence.com.br](mailto:contato@vetessence.com.br)
+- 📧 [contato@amigobicho.com.br](mailto:contato@amigobicho.com.br)
 
 ---
 

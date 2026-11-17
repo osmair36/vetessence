@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>Fatura #{{ $invoice->id }} - {{ branding('clinic_name', config('app.name', 'VetEssence')) }}</title>
+    <title>Fatura #{{ $invoice->id }} - {{ branding('clinic_name', config('app.name', 'Amigo Bicho')) }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -197,7 +197,7 @@
     @endif
 
     <div class="footer">
-        <p>{{ branding('clinic_name', 'VetEssence') }} - Documento gerado em {{ now()->format('d/m/Y H:i:s') }}</p>
+        <p>{{ branding('clinic_name', 'Amigo Bicho') }} - Documento gerado em {{ now()->format('d/m/Y H:i:s') }}</p>
     </div>
 </body>
 </html>

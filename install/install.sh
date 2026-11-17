@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #==============================================================================
-# VetEssence - Script de Instalação Completa
+# Amigo Bicho - Script de Instalação Completa
 #==============================================================================
 # Uso: sudo bash install.sh
 #==============================================================================
@@ -141,7 +141,7 @@ echo -e "${BLUE}   CONFIGURAÇÃO DO SISTEMA               ${NC}"
 echo -e "${BLUE}══════════════════════════════════════════${NC}"
 
 APP_URL=$(prompt "APP_URL" "Domínio completo do sistema (ex: https://vetessence.com.br)" "http://localhost")
-APP_NAME=$(prompt "APP_NAME" "Nome do sistema" "VetEssence")
+APP_NAME=$(prompt "APP_NAME" "Nome do sistema" "Amigo Bicho")
 ADMIN_EMAIL=$(prompt "ADMIN_EMAIL" "E-mail do super-admin" "super@vet.com")
 ADMIN_PASS=$(prompt_secret "ADMIN_PASS" "Senha do super-admin")
 TIMEZONE=$(prompt "TIMEZONE" "Fuso horário (ex: America/Sao_Paulo)" "America/Sao_Paulo")
@@ -818,7 +818,7 @@ echo -e "${BLUE}═════════════════════�
 echo -e "${BLUE}   INSTALAÇÃO CONCLUÍDA!                 ${NC}"
 echo -e "${BLUE}══════════════════════════════════════════${NC}"
 echo ""
-echo -e "${GREEN}VetEssence foi instalado com sucesso!${NC}"
+echo -e "${GREEN}Amigo Bicho foi instalado com sucesso!${NC}"
 echo ""
 echo -e " ${CYAN}Site:${NC}              ${APP_URL}"
 echo -e " ${CYAN}Diretório:${NC}         ${APP_DIR}"

@@ -331,7 +331,7 @@ class DemoSeed extends Command
         $password = Hash::make('tutor123');
 
         foreach ($tutors as $i => $data) {
-            $email = 'demo.tutor' . ($i + 1) . '@vetessence.com.br';
+            $email = 'demo.tutor' . ($i + 1) . '@amigobicho.com.br';
             Tutor::updateOrCreate(
                 ['cpf' => $data['cpf']],
                 [

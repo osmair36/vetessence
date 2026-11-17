@@ -29,7 +29,7 @@
                 <i class="fas fa-paw text-5xl mb-4" style="color: {{ $primary }}"></i>
             @endif
             @if($showName)
-                <h1 class="text-3xl font-bold text-gray-800">{{ branding('clinic_name', 'VetEssence') }}</h1>
+                <h1 class="text-3xl font-bold text-gray-800">{{ branding('clinic_name', 'Amigo Bicho') }}</h1>
             @endif
             <p class="text-lg text-gray-500 mt-2">Portal do Tutor — Acesse sua conta</p>
         </div>

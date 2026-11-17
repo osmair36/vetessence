@@ -41,14 +41,14 @@ class SnsSmsProviderTest extends ModuleTestCase
             ->with(\Mockery::on(function ($args) {
                 $this->assertEquals('5511999999999', $args['PhoneNumber']);
                 $this->assertEquals('Your appointment is confirmed', $args['Message']);
-                $this->assertEquals('VetEssence', $args['MessageAttributes']['AWS.SNS.SMS.SenderID']['StringValue']);
+                $this->assertEquals('Amigo Bicho', $args['MessageAttributes']['AWS.SNS.SMS.SenderID']['StringValue']);
                 $this->assertEquals('Transactional', $args['MessageAttributes']['AWS.SNS.SMS.SMSType']['StringValue']);
 
                 return true;
             }))
             ->andReturn(new Result(['MessageId' => 'sns-msg-123']));
 
-        $result = $this->provider->send('VetEssence', '+55 (11) 99999-9999', 'Your appointment is confirmed');
+        $result = $this->provider->send('Amigo Bicho', '+55 (11) 99999-9999', 'Your appointment is confirmed');
 
         $this->assertTrue($result->success);
         $this->assertEquals('Amazon SNS', $result->provider);
@@ -75,7 +75,7 @@ class SnsSmsProviderTest extends ModuleTestCase
             ->once()
             ->andThrow(new \Exception('Invalid parameter'));
 
-        $result = $this->provider->send('VetEssence', '5511999999999', 'Test');
+        $result = $this->provider->send('Amigo Bicho', '5511999999999', 'Test');
 
         $this->assertFalse($result->success);
         $this->assertEquals('Amazon SNS', $result->provider);
@@ -88,7 +88,7 @@ class SnsSmsProviderTest extends ModuleTestCase
             ->once()
             ->andReturn(new Result([]));
 
-        $result = $this->provider->send('VetEssence', '5511999999999', 'Test');
+        $result = $this->provider->send('Amigo Bicho', '5511999999999', 'Test');
 
         $this->assertTrue($result->success);
         $this->assertNull($result->messageId);

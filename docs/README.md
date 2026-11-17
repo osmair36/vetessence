@@ -1,4 +1,4 @@
-# Documentação do VetEssence
+# Documentação do Amigo Bicho
 
 Os manuais do sistema estão versionados em [`resources/docs/`](../resources/docs/):
 

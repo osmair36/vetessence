@@ -137,7 +137,7 @@ class VaccinationReminderController extends Controller
             "Lembrando que a vacina {$vaccinationReminder->vaccination->vaccine} do pet {$vaccinationReminder->pet->name} " .
             "está agendada para o dia {$vaccinationReminder->scheduled_date->format('d/m/Y')}.\n\n" .
             "Por favor, entre em contato para confirmar o atendimento.\n\n" .
-            "Att,\nVetEssence";
+            "Att,\nAmigo Bicho";
 
         $service = app(NotificationService::class);
         $result = $service->send(
