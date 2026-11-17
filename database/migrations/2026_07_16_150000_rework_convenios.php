@@ -10,6 +10,9 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Criar convenio_subscriptions (plano contratado pelo tutor)
+        Schema::dropIfExists('convenio_coverage_rules');
+        Schema::dropIfExists('convenio_covered_pets');
+        Schema::dropIfExists('convenio_subscriptions');
         Schema::create('convenio_subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tutor_id')->constrained('tutors')->cascadeOnDelete();
@@ -88,19 +91,34 @@ return new class extends Migration
         }
 
         // 5. Adicionar subscription_id em convenio_claims (nullable)
-        Schema::table('convenio_claims', function (Blueprint $table) {
-            $table->foreignId('subscription_id')->nullable()->after('convenio_pet_id')
-                ->constrained('convenio_subscriptions')->cascadeOnDelete();
-        });
+        if (!Schema::hasColumn('convenio_claims', 'subscription_id')) {
+            Schema::table('convenio_claims', function (Blueprint $table) {
+                $table->foreignId('subscription_id')->nullable()->after('convenio_pet_id')
+                    ->constrained('convenio_subscriptions')->cascadeOnDelete();
+            });
+        }
 
         // 6. Preencher subscription_id em convenio_claims baseado no convenio_pet_id
-        DB::statement('
-            UPDATE convenio_claims cc
-            JOIN convenio_pet cp ON cc.convenio_pet_id = cp.id
-            JOIN convenio_covered_pets ccp ON ccp.pet_id = cp.pet_id
-            JOIN convenio_subscriptions cs ON cs.id = ccp.subscription_id AND cs.convenio_id = cp.convenio_id
-            SET cc.subscription_id = cs.id
-        ');
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement('
+                UPDATE convenio_claims SET subscription_id = (
+                    SELECT cs.id
+                    FROM convenio_pet cp
+                    JOIN convenio_covered_pets ccp ON ccp.pet_id = cp.pet_id
+                    JOIN convenio_subscriptions cs ON cs.id = ccp.subscription_id AND cs.convenio_id = cp.convenio_id
+                    WHERE cp.id = convenio_claims.convenio_pet_id
+                    LIMIT 1
+                ) WHERE convenio_pet_id IS NOT NULL
+            ');
+        } else {
+            DB::statement('
+                UPDATE convenio_claims cc
+                JOIN convenio_pet cp ON cc.convenio_pet_id = cp.id
+                JOIN convenio_covered_pets ccp ON ccp.pet_id = cp.pet_id
+                JOIN convenio_subscriptions cs ON cs.id = ccp.subscription_id AND cs.convenio_id = cp.convenio_id
+                SET cc.subscription_id = cs.id
+            ');
+        }
     }
 
     public function down(): void
