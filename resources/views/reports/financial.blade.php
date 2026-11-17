@@ -15,8 +15,16 @@
                 <label class="mx-2">Data Fim:</label>
                 <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="form-control">
             </div>
-            <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-filter"></i> Filtrar</button>
-        </form>
+                <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-filter"></i> Filtrar</button>
+                <button type="button" onclick="window.print()" class="btn btn-secondary mx-2"><i class="fas fa-print"></i> Imprimir</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card d-none d-print-block mb-3">
+    <div class="card-body p-2">
+        <x-report-header title="Relatório Financeiro e Gerencial" subtitle="Período: {{ $startDate->format('d/m/Y') }} a {{ $endDate->format('d/m/Y') }}" />
     </div>
 </div>
 

@@ -63,4 +63,17 @@ class AmigoBichoBrandingTest extends TestCase
         $this->assertEquals('CRMV-PR 08147', $vet->crmv);
         $this->assertTrue((bool)$vet->is_veterinarian);
     }
+
+    public function test_branding_header_helpers_and_component()
+    {
+        $headerUrl = branding_header_url();
+        $this->assertStringContainsString('cabecalho-amigobicho', $headerUrl);
+
+        $base64 = branding_header_base64();
+        $this->assertStringStartsWith('data:image/', $base64);
+
+        $view = $this->blade('<x-report-header title="Teste de Relatório" />');
+        $this->assertStringContainsString('Teste de Relatório', $view);
+        $this->assertStringContainsString('data:image/', $view);
+    }
 }

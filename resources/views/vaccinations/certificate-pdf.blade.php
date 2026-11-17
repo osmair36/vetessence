@@ -28,11 +28,11 @@
 <body>
     <div class="border-page">
         <div class="header">
-            <div class="crmv-seal">
-                CRMV<br>Conselho Regional<br>Medicina Veterinária
+            <div style="margin-bottom: 8px;">
+                <img src="{{ branding_header_base64() }}" alt="{{ branding_clinic_name() }}" style="max-width: 100%; height: auto; max-height: 85px; display: block; margin: 0 auto;">
             </div>
-            <h1>Certificado de Vacinação</h1>
-            <h2>{{ branding('clinic_name', config('app.name', 'Clínica Veterinária')) }} — {{ config('app.cnpj', '') }}</h2>
+            <h1 style="font-size: 16px; margin: 4px 0;">Certificado de Vacinação</h1>
+            <h2 style="font-size: 12px; margin: 0;">Resp. Técnica: Dra. Joelma Scarabelli Neves — CRMV-PR 08147</h2>
             <p style="font-size: 9px; margin-top: 4px;">Emissão: {{ now()->format('d/m/Y') }}</p>
         </div>
 

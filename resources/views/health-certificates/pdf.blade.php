@@ -21,10 +21,7 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>CERTIFICADO SANITÁRIO</h1>
-        <h2>Atestado de Saúde Animal</h2>
-    </div>
+    <x-report-header title="Certificado Sanitário" subtitle="Atestado de Saúde Animal — Resp. Técnica: Dra. Joelma Scarabelli Neves (CRMV-PR 08147)" />
 
     <div class="cert-number">
         Certificado nº {{ $healthCertificate->certificate_number }}

@@ -17,16 +17,13 @@
             </div>
             <div class="card-body">
                 <div class="referral-document p-4" style="border: 1px solid #dee2e6; border-radius: 4px;">
-                    <div class="text-center mb-4">
-                        <h4>ENCAMINHAMENTO VETERINÁRIO</h4>
-                        <p class="text-muted">Nº {{ $referral->referral_number }}</p>
-                    </div>
+                    <x-report-header title="Encaminhamento Veterinário" subtitle="Nº {{ $referral->referral_number }}" />
 
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="p-3 bg-light rounded">
                                 <h6 class="text-muted text-uppercase">Clínica de Origem</h6>
-                                <p class="mb-1"><strong>Clínica:</strong> {{ $referral->referring_clinic ?? 'VetEssence' }}</p>
+                                <p class="mb-1"><strong>Clínica:</strong> {{ $referral->referring_clinic ?? branding('clinic_name', 'Amigo Bicho') }}</p>
                                 <p class="mb-0"><strong>Veterinário:</strong> {{ $referral->referringVet->name ?? '-' }}</p>
                             </div>
                         </div>

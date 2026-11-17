@@ -114,11 +114,7 @@
         <button onclick="window.print()" style="padding: 0.5rem 1rem; cursor: pointer;">Imprimir</button>
     </div>
 
-    <div class="header">
-        <h1>{{ config('app.name', 'Clínica Veterinária') }}</h1>
-        <p>{{ config('app.address', 'Endereço da Clínica') }} | Tel: {{ config('app.phone', '(XX) XXXX-XXXX') }}</p>
-        <p>CNPJ: {{ config('app.cnpj', '00.000.000/0001-00') }}</p>
-    </div>
+    <x-report-header title="Receituário Veterinário" subtitle="Resp. Técnica: Dra. Joelma Scarabelli Neves — CRMV-PR 08147" />
 
     @if($prescription->is_controlled)
     <div class="controlled-watermark">SUBSTÂNCIA CONTROLADA</div>

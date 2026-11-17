@@ -32,6 +32,32 @@ if (!function_exists('branding_sidebar_logo_url')) {
     }
 }
 
+if (!function_exists('branding_header_url')) {
+    function branding_header_url(): string
+    {
+        $path = branding('header_path');
+        if ($path && file_exists(public_path($path))) {
+            return asset($path);
+        }
+        return asset('img/cabecalho-amigobicho.png');
+    }
+}
+
+if (!function_exists('branding_header_base64')) {
+    function branding_header_base64(): string
+    {
+        $path = branding('header_path', 'img/cabecalho-amigobicho.png');
+        $fullPath = public_path($path);
+        if (file_exists($fullPath)) {
+            $type = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+            $mime = ($type === 'jpg' || $type === 'jpeg') ? 'image/jpeg' : 'image/png';
+            $data = file_get_contents($fullPath);
+            return 'data:' . $mime . ';base64,' . base64_encode($data);
+        }
+        return '';
+    }
+}
+
 if (!function_exists('branding_favicon_url')) {
     function branding_favicon_url(): string
     {

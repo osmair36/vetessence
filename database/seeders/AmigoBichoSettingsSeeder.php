@@ -21,6 +21,7 @@ class AmigoBichoSettingsSeeder extends Seeder
             'branding.sidebar_logo_width'   => '140',
             'branding.logo_path'            => 'img/logo-amigobicho.png',
             'branding.sidebar_logo_path'    => 'img/logo-amigobicho.png',
+            'branding.header_path'          => 'img/cabecalho-amigobicho.png',
 
             'clinic.name'                   => 'Amigo Bicho - Clínica Veterinária e Pet Shop',
             'clinic.address'                => 'Rua Rio de Janeiro, 178 - Jardim América',

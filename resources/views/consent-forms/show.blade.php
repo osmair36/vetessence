@@ -17,10 +17,7 @@
             </div>
             <div class="card-body">
                 <div class="consent-document p-4" style="border: 1px solid #dee2e6; border-radius: 4px;">
-                    <div class="text-center mb-4">
-                        <h4>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</h4>
-                        <p class="text-muted">Nº {{ $consentForm->consent_number }}</p>
-                    </div>
+                    <x-report-header title="Termo de Consentimento Livre e Esclarecido" subtitle="Nº {{ $consentForm->consent_number }}" />
 
                     <div class="mb-4">
                         <p><strong>Paciente:</strong> {{ $consentForm->pet->name ?? '-' }}</p>

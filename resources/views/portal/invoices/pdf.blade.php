@@ -112,12 +112,7 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ branding('clinic_name', 'VetEssence') }}</h1>
-        <div class="clinic-info">
-            {{ config('app.address', '') }}{{ config('app.address') ? ' | ' : '' }}CNPJ: {{ config('app.cnpj', '') }}{{ config('app.cnpj') ? ' | ' : '' }}Tel: {{ config('app.phone', '') }}
-        </div>
-    </div>
+    <x-report-header title="Fatura de Serviços e Produtos" />
 
     <div class="invoice-title">Fatura #{{ $invoice->invoice_number ?? $invoice->id }}</div>
 
