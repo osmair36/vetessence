@@ -10,14 +10,17 @@ class MedicalRecordController extends Controller
 {
     public function index(Request $request)
     {
-        $pets = auth()->user()->pets()->with('medicalRecords.vet')->get();
+        $tutor = auth('tutor')->user() ?? auth()->user()?->tutor;
+        $pets = $tutor ? $tutor->pets()->with('medicalRecords.vet')->get() : collect();
         $records = $pets->flatMap->medicalRecords->sortByDesc('created_at');
         return view('portal.medical-records.index', compact('records'));
     }
 
     public function show($id)
     {
-        $pet = auth()->user()->pets()->with('medicalRecords.vet')->findOrFail($id);
+        $tutor = auth('tutor')->user() ?? auth()->user()?->tutor;
+        abort_unless($tutor, 403);
+        $pet = $tutor->pets()->with('medicalRecords.vet')->findOrFail($id);
         return view('portal.medical-records.show', compact('pet'));
     }
 }

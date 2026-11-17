@@ -50,7 +50,7 @@ class ExecutionMapIndex extends Component
             });
         }
 
-        return $query->orderByRaw("FIELD(status, 'discharged', 'transferred', 'active', 'admitted') DESC")
+        return $query->orderByRaw("CASE status WHEN 'admitted' THEN 4 WHEN 'active' THEN 3 WHEN 'transferred' THEN 2 WHEN 'discharged' THEN 1 ELSE 0 END DESC")
             ->orderBy('admission_date', 'desc')
             ->paginate(15);
     }

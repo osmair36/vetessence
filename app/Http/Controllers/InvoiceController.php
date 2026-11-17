@@ -46,7 +46,7 @@ class InvoiceController extends Controller
             $query->whereDate('due_date', '<=', $request->date_to);
         }
 
-        $invoices = $query->orderByRaw("FIELD(status, 'pending', 'overdue', 'cancelled', 'paid')")
+        $invoices = $query->orderByRaw("CASE status WHEN 'pending' THEN 1 WHEN 'overdue' THEN 2 WHEN 'cancelled' THEN 3 WHEN 'paid' THEN 4 ELSE 5 END")
             ->orderBy('invoice_number', 'desc')
             ->get();
 

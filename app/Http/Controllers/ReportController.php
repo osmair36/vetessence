@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\ZoonoticDisease;
 use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ReportController extends Controller

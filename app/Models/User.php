@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,9 +38,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function tutor(): BelongsTo
+    public function tutor(): HasOne
     {
-        return $this->belongsTo(Tutor::class);
+        return $this->hasOne(Tutor::class);
+    }
+
+    public function pets()
+    {
+        return $this->tutor ? $this->tutor->pets() : Pet::whereRaw('1=0');
     }
 
     public function department(): BelongsTo

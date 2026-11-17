@@ -9,7 +9,8 @@ class PrescriptionController extends Controller
 {
     public function index()
     {
-        $pets = auth()->user()->pets()->with('medicalRecords.prescriptions')->get();
+        $tutor = auth('tutor')->user() ?? auth()->user()?->tutor;
+        $pets = $tutor ? $tutor->pets()->with('medicalRecords.prescriptions')->get() : collect();
         $prescriptions = $pets->flatMap->medicalRecords->flatMap->prescriptions->sortByDesc('created_at');
         return view('portal.prescriptions.index', compact('prescriptions'));
     }

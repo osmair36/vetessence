@@ -13,6 +13,28 @@ class DatabaseBackup extends Command
 
     public function handle()
     {
+        $dir = storage_path('app/backups');
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $connection = config('database.default', 'sqlite');
+        if ($connection === 'sqlite' || config("database.connections.{$connection}.driver") === 'sqlite') {
+            $sqlitePath = config('database.connections.sqlite.database');
+            if (!file_exists($sqlitePath) && file_exists(database_path('database.sqlite'))) {
+                $sqlitePath = database_path('database.sqlite');
+            }
+            $filename = 'backup-' . now()->format('Y-m-d_H-i-s') . '.sqlite';
+            $destPath = "{$dir}/{$filename}";
+            if (file_exists($sqlitePath)) {
+                copy($sqlitePath, $destPath);
+                $this->info("Backup criado: {$filename}");
+                return 0;
+            }
+            $this->error("Arquivo SQLite não encontrado: {$sqlitePath}");
+            return 1;
+        }
+
         $filename = 'backup-' . now()->format('Y-m-d_H-i-s') . '.sql';
 
         $db = config('database.connections.mysql');

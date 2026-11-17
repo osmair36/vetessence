@@ -9,7 +9,8 @@ class ExamController extends Controller
 {
     public function index()
     {
-        $pets = auth()->user()->pets()->with('exams')->get();
+        $tutor = auth('tutor')->user() ?? auth()->user()?->tutor;
+        $pets = $tutor ? $tutor->pets()->with('exams')->get() : collect();
         $exams = $pets->flatMap->exams->sortByDesc('date');
         return view('portal.exams.index', compact('exams'));
     }
