@@ -15,11 +15,12 @@ class Appointment extends Model
     use HasFactory, BranchScoped;
 
     protected $fillable = [
-        'pet_id', 'vet_id', 'date', 'time', 'duration', 'type',
+        'pet_id', 'vet_id', 'groomer_id', 'date', 'time', 'duration', 'type',
         'status', 'reason', 'notes', 'room', 'created_by',
         'is_recurring', 'recurrence_rule', 'recurrence_end_date', 'parent_appointment_id',
         'branch_id',
     ];
+
 
     protected $casts = [
         'date' => 'date',
@@ -36,6 +37,11 @@ class Appointment extends Model
     public function vet(): BelongsTo
     {
         return $this->belongsTo(User::class, 'vet_id');
+    }
+
+    public function groomer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'groomer_id');
     }
 
     public function creator(): BelongsTo

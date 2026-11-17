@@ -937,6 +937,28 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'emergency-protocols.destroy',
     ]);
 
+    // Grooming Board
+    Route::get('grooming-board', 'App\Http\Controllers\GroomingBoardController@index')->name('grooming-board.index');
+    Route::post('grooming-board/{appointment}/status', 'App\Http\Controllers\GroomingBoardController@updateStatus')->name('grooming-board.update-status');
+
+    // PDV (Ponto de Venda)
+    Route::get('pdv', 'App\Http\Controllers\PdvController@index')->name('pdv.index');
+    Route::get('pdv/search', 'App\Http\Controllers\PdvController@search')->name('pdv.search');
+    Route::get('pdv/service-tiers/{service}', 'App\Http\Controllers\PdvController@serviceTiers')->name('pdv.service-tiers');
+    Route::post('pdv/checkout', 'App\Http\Controllers\PdvController@checkout')->name('pdv.checkout');
+
+    // Táxi Pet (Pet Transport)
+    Route::resource('pet-transports', 'App\Http\Controllers\PetTransportController')->names([
+        'index'   => 'pet-transports.index',
+        'create'  => 'pet-transports.create',
+        'store'   => 'pet-transports.store',
+        'show'    => 'pet-transports.show',
+        'edit'    => 'pet-transports.edit',
+        'update'  => 'pet-transports.update',
+        'destroy' => 'pet-transports.destroy',
+    ]);
+    Route::post('pet-transports/{petTransport}/status', 'App\Http\Controllers\PetTransportController@updateStatus')->name('pet-transports.update-status');
+
     // Corporate Dashboard
     Route::get('corporate-dashboard', 'App\Http\Controllers\CorporateDashboardController@index')->name('corporate-dashboard.index');
 

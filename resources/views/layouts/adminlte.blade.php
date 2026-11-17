@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
@@ -91,7 +91,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#">
-                        <i class="far fa-user"></i> {{ Auth::user()->name ?? 'Usuário' }}
+                        <i class="far fa-user"></i> {{ Auth::user()->name ?? 'UsuÃ¡rio' }}
                     </a>
                 </li>
                 @can('docs.view')
@@ -170,7 +170,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('convenios.index') }}" class="nav-link {{ request()->routeIs('convenios.*') ? 'active' : '' }}">
                                         <i class="fas fa-handshake nav-icon"></i>
-                                        <p>Convênios</p>
+                                        <p>ConvÃªnios</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -214,7 +214,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('medical-records.index') }}" class="nav-link {{ request()->routeIs('medical-records.*') ? 'active' : '' }}">
                                         <i class="fas fa-file-medical nav-icon"></i>
-                                        <p>Prontuários</p>
+                                        <p>ProntuÃ¡rios</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -249,12 +249,26 @@
                                 <p>Hospedagem & Banho/Tosa</p>
                             </a>
                         </li>
+                        @can('atendimentos')
+                        <li class="nav-item">
+                            <a href="{{ route('grooming-board.index') }}" class="nav-link {{ request()->routeIs('grooming-board.*') ? 'active' : '' }}">
+                                <i class="fas fa-cut nav-icon"></i>
+                                <p>Agenda Banho & Tosa</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('pet-transports.index') }}" class="nav-link {{ request()->routeIs('pet-transports.*') ? 'active' : '' }}">
+                                <i class="fas fa-shuttle-van nav-icon"></i>
+                                <p>Táxi Pet</p>
+                            </a>
+                        </li>
+                        @endcan
                         @endcan
                                 @can('protocolo-vacinas')
                                 <li class="nav-item">
                                     <a href="{{ route('vaccine-protocols.index') }}" class="nav-link {{ request()->routeIs('vaccine-protocols.*') ? 'active' : '' }}">
                                         <i class="fas fa-clipboard-check nav-icon"></i>
-                                        <p>Protocolos de Vacinação</p>
+                                        <p>Protocolos de VacinaÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -262,7 +276,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('parasite-controls.index') }}" class="nav-link {{ request()->routeIs('parasite-controls.*') ? 'active' : '' }}">
                                         <i class="fas fa-bug nav-icon"></i>
-                                        <p>Controle Parasitário</p>
+                                        <p>Controle ParasitÃ¡rio</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -270,7 +284,7 @@
                         <li class="nav-item">
                             <a href="{{ route('health-certificates.index') }}" class="nav-link {{ request()->routeIs('health-certificates.*') ? 'active' : '' }}">
                                 <i class="fas fa-file-contract nav-icon"></i>
-                                <p>Certificados Sanitários</p>
+                                <p>Certificados SanitÃ¡rios</p>
                             </a>
                         </li>
                         @endcan
@@ -286,7 +300,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('hospitalizations.index') }}" class="nav-link {{ request()->routeIs('hospitalizations.*') ? 'active' : '' }}">
                                         <i class="fas fa-procedures nav-icon"></i>
-                                        <p>Internações</p>
+                                        <p>InternaÃ§Ãµes</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -301,7 +315,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('pre-anesthetic-evaluations.index') }}" class="nav-link {{ request()->routeIs('pre-anesthetic-evaluations.*') ? 'active' : '' }}">
                                         <i class="fas fa-stethoscope nav-icon"></i>
-                                        <p>Aval. Pré-Anestésica</p>
+                                        <p>Aval. PrÃ©-AnestÃ©sica</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -316,7 +330,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('laboratory-orders.index') }}" class="nav-link {{ request()->routeIs('laboratory-orders.*') ? 'active' : '' }}">
                                         <i class="fas fa-microscope nav-icon"></i>
-                                        <p>Laboratório</p>
+                                        <p>LaboratÃ³rio</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -340,7 +354,7 @@
                         <li class="nav-item">
                             <a href="{{ route('prescriptions.index') }}" class="nav-link {{ request()->routeIs('prescriptions.*') ? 'active' : '' }}">
                                 <i class="fas fa-prescription nav-icon"></i>
-                                <p>Prescrições</p>
+                                <p>PrescriÃ§Ãµes</p>
                             </a>
                         </li>
                         @endcan
@@ -348,7 +362,7 @@
                         <li class="nav-item">
                             <a href="{{ route('drug-interactions.index') }}" class="nav-link {{ request()->routeIs('drug-interactions.*') ? 'active' : '' }}">
                                 <i class="fas fa-exclamation-triangle nav-icon"></i>
-                                <p>Interações Medicamentosas</p>
+                                <p>InteraÃ§Ãµes Medicamentosas</p>
                             </a>
                         </li>
                         @endcan
@@ -396,7 +410,7 @@
                         <li class="nav-item">
                             <a href="{{ route('convenio-claims.index') }}" class="nav-link {{ request()->routeIs('convenio-claims.*') ? 'active' : '' }}">
                                 <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Reembolsos Convênios</p>
+                                <p>Reembolsos ConvÃªnios</p>
                             </a>
                         </li>
                         @endcan
@@ -412,7 +426,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('bank-reconciliation.index') }}" class="nav-link {{ request()->routeIs('bank-reconciliation.*') || request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
                                         <i class="fas fa-handshake nav-icon"></i>
-                                        <p>Conciliação Bancária</p>
+                                        <p>ConciliaÃ§Ã£o BancÃ¡ria</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -420,7 +434,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('commissions.index') }}" class="nav-link {{ request()->routeIs('commissions.*') ? 'active' : '' }}">
                                         <i class="fas fa-percentage nav-icon"></i>
-                                        <p>Comissões</p>
+                                        <p>ComissÃµes</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -428,12 +442,12 @@
                         </li>
                         @endif
 
-                        <!-- COMUNICAÇÃO -->
+                        <!-- COMUNICAÃ‡ÃƒO -->
                         @if(Gate::allows('notificacoes') || Gate::allows('nota-interna') || Gate::allows('chat'))
                         <li class="nav-item has-treeview {{ request()->routeIs('notification-logs.*') || request()->routeIs('staff-notes.*') || request()->routeIs('chat.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-bullhorn"></i>
-                                <p>Comunicação <i class="right fas fa-angle-left"></i></p>
+                                <p>ComunicaÃ§Ã£o <i class="right fas fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 @can('chat')
@@ -456,7 +470,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('notification-logs.index') }}" class="nav-link {{ request()->routeIs('notification-logs.*') ? 'active' : '' }}">
                                         <i class="fas fa-history nav-icon"></i>
-                                        <p>Logs de Notificação</p>
+                                        <p>Logs de NotificaÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -482,7 +496,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('staff-schedules.on-call-calendar') }}" class="nav-link {{ request()->routeIs('staff-schedules.on-call-calendar') ? 'active' : '' }}">
                                         <i class="fas fa-phone-alt nav-icon"></i>
-                                        <p>Plantão</p>
+                                        <p>PlantÃ£o</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -511,9 +525,15 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="{{ route('pdv.index') }}" class="nav-link {{ request()->routeIs('pdv.*') ? 'active' : '' }}">
+                                        <i class="fas fa-cash-register nav-icon"></i>
+                                        <p>PDV — Ponto de Venda</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{ route('reports.financial') }}" class="nav-link {{ request()->routeIs('reports.financial') ? 'active' : '' }}">
                                         <i class="fas fa-chart-bar nav-icon"></i>
-                                        <p>Relatórios</p>
+                                        <p>RelatÃ³rios</p>
                                     </a>
                                 </li>
                                 @can('gateway-pagamento')
@@ -575,7 +595,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('stock.movements') }}" class="nav-link {{ request()->routeIs('stock.movements') ? 'active' : '' }}">
                                         <i class="fas fa-exchange-alt nav-icon"></i>
-                                        <p>Movimentações</p>
+                                        <p>MovimentaÃ§Ãµes</p>
                                     </a>
                                 </li>
                                 @can('stock.create')
@@ -596,7 +616,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('stock.reorder-suggestions') }}" class="nav-link {{ request()->routeIs('stock.reorder-suggestions') ? 'active' : '' }}">
                                         <i class="fas fa-shopping-cart nav-icon"></i>
-                                        <p>Sugestão de Reposição</p>
+                                        <p>SugestÃ£o de ReposiÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -625,7 +645,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('controlled-substances.index') }}" class="nav-link {{ request()->routeIs('controlled-substances.*') ? 'active' : '' }}">
                                         <i class="fas fa-prescription-bottle nav-icon"></i>
-                                        <p>Substâncias Controladas</p>
+                                        <p>SubstÃ¢ncias Controladas</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -638,7 +658,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('lab-equipment-integrations.index') }}" class="nav-link {{ request()->routeIs('lab-equipment-integrations.*') ? 'active' : '' }}">
                                         <i class="fas fa-microscope nav-icon"></i>
-                                        <p>Equip. Laboratório</p>
+                                        <p>Equip. LaboratÃ³rio</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -646,9 +666,9 @@
                         </li>
                         @endcan
 
-                        <!-- DOCUMENTAÇÃO -->
+                        <!-- DOCUMENTAÃ‡ÃƒO -->
                         @can('docs.view')
-                        <li class="nav-header"><i class="fas fa-book"></i> DOCUMENTAÇÃO</li>
+                        <li class="nav-header"><i class="fas fa-book"></i> DOCUMENTAÃ‡ÃƒO</li>
                         <li class="nav-item">
                             <a href="{{ route('docs.index') }}" class="nav-link {{ request()->routeIs('docs.*') ? 'active' : '' }}">
                                 <i class="fas fa-book nav-icon"></i>
@@ -657,32 +677,32 @@
                         </li>
                         @endcan
 
-                        <!-- ADMINISTRAÇÃO -->
+                        <!-- ADMINISTRAÃ‡ÃƒO -->
                         @can('admin')
-                        <li class="nav-header"><i class="fas fa-cog"></i> ADMINISTRAÇÃO</li>
+                        <li class="nav-header"><i class="fas fa-cog"></i> ADMINISTRAÃ‡ÃƒO</li>
                         <li class="nav-item has-treeview {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('services.*') || request()->routeIs('categories.*') || request()->routeIs('consent-templates.*') || request()->routeIs('communication-templates.*') || request()->routeIs('communication-queues.*') || request()->routeIs('branches.*') || request()->routeIs('departments.*') || request()->routeIs('positions.*') || request()->routeIs('employees.*') || request()->routeIs('configuracoes.branding.*') || request()->routeIs('configuracoes.notificacoes.*') || request()->routeIs('breed-defaults.*') || request()->routeIs('zoonotic-diseases.*') || request()->routeIs('llm.config') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shield-alt"></i>
-                                <p>Configurações <i class="right fas fa-angle-left"></i></p>
+                                <p>ConfiguraÃ§Ãµes <i class="right fas fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                                         <i class="fas fa-user-cog nav-icon"></i>
-                                        <p>Usuários</p>
+                                        <p>UsuÃ¡rios</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('roles.index') }}" class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}">
                                         <i class="fas fa-user-shield nav-icon"></i>
-                                        <p>Perfis/Permissões</p>
+                                        <p>Perfis/PermissÃµes</p>
                                     </a>
                                 </li>
                                 @can('employees.view')
                                 <li class="nav-item">
                                     <a href="{{ route('employees.index') }}" class="nav-link {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                                         <i class="fas fa-id-badge nav-icon"></i>
-                                        <p>Funcionários</p>
+                                        <p>FuncionÃ¡rios</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -705,7 +725,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('services.index') }}" class="nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
                                         <i class="fas fa-list-ul nav-icon"></i>
-                                        <p>Serviços</p>
+                                        <p>ServiÃ§os</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -723,13 +743,13 @@
                                 <li class="nav-item">
                                     <a href="{{ route('communication-templates.index') }}" class="nav-link {{ request()->routeIs('communication-templates.*') ? 'active' : '' }}">
                                         <i class="fas fa-envelope-open-text nav-icon"></i>
-                                        <p>Modelos de Comunicação</p>
+                                        <p>Modelos de ComunicaÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('communication-queues.index') }}" class="nav-link {{ request()->routeIs('communication-queues.*') ? 'active' : '' }}">
                                         <i class="fas fa-tasks nav-icon"></i>
-                                        <p>Fila de Comunicação</p>
+                                        <p>Fila de ComunicaÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 @can('unidades')
@@ -752,21 +772,21 @@
                                 <li class="nav-item">
                                     <a href="{{ route('configuracoes.branding.index') }}" class="nav-link {{ request()->routeIs('configuracoes.branding.*') ? 'active' : '' }}">
                                         <i class="fas fa-paint-brush nav-icon"></i>
-                                        <p>Personalização</p>
+                                        <p>PersonalizaÃ§Ã£o</p>
                                     </a>
                                 </li>
                                 @endcan
                                 <li class="nav-item">
                                     <a href="{{ route('configuracoes.notificacoes.index') }}" class="nav-link {{ request()->routeIs('configuracoes.notificacoes.*') ? 'active' : '' }}">
                                         <i class="fas fa-bell nav-icon"></i>
-                                        <p>Notificações</p>
+                                        <p>NotificaÃ§Ãµes</p>
                                     </a>
                                 </li>
                                 @can('configuracoes')
                                 <li class="nav-item">
                                     <a href="{{ route('breed-defaults.index') }}" class="nav-link {{ request()->routeIs('breed-defaults.*') ? 'active' : '' }}">
                                         <i class="fas fa-paw nav-icon"></i>
-                                        <p>Raças</p>
+                                        <p>RaÃ§as</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -782,7 +802,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('llm.config') }}" class="nav-link {{ request()->routeIs('llm.config') ? 'active' : '' }}">
                                         <i class="fas fa-brain nav-icon"></i>
-                                        <p>IA Diagnóstica</p>
+                                        <p>IA DiagnÃ³stica</p>
                                     </a>
                                 </li>
                                 @endcan
@@ -872,7 +892,7 @@
         // Colors: Sim=#455e36, Cancelar=#dc3545
         function swalConfirm(message) {
             return Swal.fire({
-                title: 'Confirmação',
+                title: 'ConfirmaÃ§Ã£o',
                 text: message,
                 icon: 'question',
                 showCancelButton: true,
@@ -991,20 +1011,20 @@
                     }
                     dtConfig.language = {
                             "sEmptyTable": "Nenhum registro encontrado",
-                            "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                            "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                            "sInfo": "Mostrando de _START_ atÃ© _END_ de _TOTAL_ registros",
+                            "sInfoEmpty": "Mostrando 0 atÃ© 0 de 0 registros",
                             "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                            "sLengthMenu": "_MENU_ registros por página",
+                            "sLengthMenu": "_MENU_ registros por pÃ¡gina",
                             "sLoadingRecords": "Carregando...",
                             "sProcessing": "Processando...",
                             "sSearch": "Pesquisar:",
                             "sSearchPlaceholder": "Buscar...",
                             "sZeroRecords": "Nenhum registro encontrado",
                             "oPaginate": {
-                                "sNext": "Próximo",
+                                "sNext": "PrÃ³ximo",
                                 "sPrevious": "Anterior",
                                 "sFirst": "Primeiro",
-                                "sLast": "Último"
+                                "sLast": "Ãšltimo"
                             },
                             "oAria": {
                                 "sSortAscending": ": Ordenar colunas de forma ascendente",

@@ -54,20 +54,22 @@ class AppointmentController extends Controller
     {
         $pets = Pet::with('tutors')->where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
+        $groomers = $this->getGroomers();
         $services = Service::where('is_active', true)->orderBy('name')->get();
         $branches = Branch::where('is_active', true)->orderBy('name')->get();
 
-        return view('appointments.create', compact('pets', 'veterinarians', 'services', 'branches'));
+        return view('appointments.create', compact('pets', 'veterinarians', 'groomers', 'services', 'branches'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
-            'vet_id' => 'required|exists:users,id',
+            'vet_id' => 'nullable|exists:users,id',
+            'groomer_id' => 'nullable|exists:users,id',
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
-            'type' => 'required|in:consulta,retorno,emergencia,cirurgia,vacina,exame',
+            'type' => 'required|in:consulta,retorno,emergencia,cirurgia,vacina,exame,grooming',
             'reason' => 'nullable|string',
             'services' => 'nullable|array',
             'services.*' => 'exists:services,id',
@@ -77,11 +79,13 @@ class AppointmentController extends Controller
             'branch_id' => 'nullable|exists:branches,id',
         ]);
 
+
         DB::beginTransaction();
         try {
             $appointment = Appointment::create([
                 'pet_id' => $validated['pet_id'],
-                'vet_id' => $validated['vet_id'],
+                'vet_id' => $validated['vet_id'] ?? null,
+                'groomer_id' => $validated['groomer_id'] ?? null,
                 'date' => $validated['date'],
                 'time' => $validated['time'],
                 'type' => $validated['type'],
@@ -92,6 +96,7 @@ class AppointmentController extends Controller
                 'recurrence_rule' => $validated['recurrence_rule'] ?? null,
                 'recurrence_end_date' => $validated['recurrence_end_date'] ?? null,
             ]);
+
 
             if (!empty($validated['services'])) {
                 foreach ($validated['services'] as $serviceId) {
@@ -123,20 +128,22 @@ class AppointmentController extends Controller
     {
         $pets = Pet::with('tutors')->where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
+        $groomers = $this->getGroomers();
         $services = Service::where('is_active', true)->orderBy('name')->get();
         $appointment->load('services');
 
-        return view('appointments.edit', compact('appointment', 'pets', 'veterinarians', 'services'));
+        return view('appointments.edit', compact('appointment', 'pets', 'veterinarians', 'groomers', 'services'));
     }
 
     public function update(Request $request, Appointment $appointment)
     {
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
-            'vet_id' => 'required|exists:users,id',
+            'vet_id' => 'nullable|exists:users,id',
+            'groomer_id' => 'nullable|exists:users,id',
             'date' => 'required|date',
             'time' => 'required',
-            'type' => 'required|in:consulta,retorno,emergencia,cirurgia,vacina,exame',
+            'type' => 'required|in:consulta,retorno,emergencia,cirurgia,vacina,exame,grooming',
             'status' => 'required|in:scheduled,confirmed,in_progress,completed,cancelled,no_show',
             'reason' => 'nullable|string',
         ]);
@@ -150,6 +157,7 @@ class AppointmentController extends Controller
 
         return redirect()->route('appointments.index')->with('success', 'Consulta atualizada com sucesso!');
     }
+
 
     public function destroy(Appointment $appointment)
     {
@@ -217,6 +225,14 @@ class AppointmentController extends Controller
     {
         return User::where('is_active', true)
             ->where(fn($q) => $q->whereHas('role', fn($q) => $q->where('slug', 'veterinario'))->orWhere('is_veterinarian', true))
+            ->orderBy('name')
+            ->get();
+    }
+
+    protected function getGroomers()
+    {
+        return User::where('is_active', true)
+            ->where(fn($q) => $q->whereHas('role', fn($q) => $q->whereIn('slug', ['veterinario', 'tecnico', 'recepcionista', 'super-admin'])))
             ->orderBy('name')
             ->get();
     }
