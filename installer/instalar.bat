@@ -32,10 +32,15 @@ if not exist "%BASEDIR%.env" (
     if exist "%BASEDIR%.env.example" (
         copy "%BASEDIR%.env.example" "%BASEDIR%.env" >nul
     )
-    "%PHP%" "%BASEDIR%artisan" key:generate --force
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" key:generate --force
     echo [OK] Arquivo .env gerado com nova chave criptografica.
 ) else (
     echo [OK] Arquivo .env ja existente mantido com seguranca.
+)
+
+:: Garante configuracao correta do SQLite no .env
+if exist "%BASEDIR%.env" (
+    "%PHP%" -r "$f='%BASEDIR%.env'; if(file_exists($f)){ $c=file_get_contents($f); $c=preg_replace('/^DB_CONNECTION=.*$/m','DB_CONNECTION=sqlite',$c); $c=preg_replace('/^DB_DATABASE=.*$/m','DB_DATABASE=database/database.sqlite',$c); file_put_contents($f,$c); }" >nul 2>&1
 )
 
 :: Garante diretorios de storage
@@ -56,7 +61,9 @@ if not exist "%BASEDIR%database\database.sqlite" (
     "%PHP%" "%BASEDIR%artisan" db:seed --force
     echo [OK] Banco de dados criado e populado.
 ) else (
-    "%PHP%" "%BASEDIR%artisan" migrate --force >nul 2>&1
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
     echo [OK] Base de dados validada com sucesso.
 )
 

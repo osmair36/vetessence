@@ -49,17 +49,26 @@ if not exist "%BASEDIR%.env" (
     if exist "%BASEDIR%.env.example" (
         copy "%BASEDIR%.env.example" "%BASEDIR%.env" >nul
     )
-    "%PHP%" "%BASEDIR%artisan" key:generate --force
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" key:generate --force
     echo [OK] Configuracao inicial criada.
+)
+
+:: Garante configuracao correta do SQLite no .env
+if exist "%BASEDIR%.env" (
+    "%PHP%" -r "$f='%BASEDIR%.env'; if(file_exists($f)){ $c=file_get_contents($f); $c=preg_replace('/^DB_CONNECTION=.*$/m','DB_CONNECTION=sqlite',$c); $c=preg_replace('/^DB_DATABASE=.*$/m','DB_DATABASE=database/database.sqlite',$c); file_put_contents($f,$c); }" >nul 2>&1
 )
 
 :: Cria banco de dados SQLite inicial se nao existir
 if not exist "%BASEDIR%database\database.sqlite" (
     echo [INFO] Inicializando banco de dados local...
     type nul > "%BASEDIR%database\database.sqlite"
-    "%PHP%" "%BASEDIR%artisan" migrate --force
-    "%PHP%" "%BASEDIR%artisan" db:seed --force
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --force
     echo [OK] Banco de dados inicializado.
+) else (
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
+    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
 )
 
 :: Detecta endereco IP do Servidor na rede local

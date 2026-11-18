@@ -2,6 +2,21 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.3] — 2026-11-18
+
+### Corrigido
+- **Correção da Conexão Padrão de Banco de Dados para SQLite no Instalador Desktop**:
+  - Ajuste de `config/database.php` definindo `default => env('DB_CONNECTION', 'sqlite')` (evitando fallback incorreto para MySQL em máquinas sem servidor MySQL instalado).
+  - Atualização do modelo `.env.example` com `DB_CONNECTION=sqlite` e `DB_DATABASE=database/database.sqlite`.
+  - Inclusão de rotina de auto-recuperação nos scripts `iniciar.bat` e `installer/instalar.bat` para garantir que o arquivo `.env` utilize SQLite automaticamente.
+  - Empacotamento explícito do `.env` com SQLite pré-configurado no instalador Inno Setup (`installer/setup.iss`).
+- **Aumento do Limite de Memória PHP para 512M (Correção do Erro Fatal na Tela de Pets)**:
+  - Adição de `@ini_set('memory_limit', '512M')` em `bootstrap/app.php`, `public/index.php` e `server.php` para garantir execução estável mesmo com grande volume de dados ou Livewire.
+- **Exclusão Segura de Pets com Tutores Vinculados**:
+  - Ajuste no evento de exclusão do modelo `Pet` e no método `PetController::destroy` para desvincular os tutores automaticamente (`detach()`) dentro de transação, eliminando o erro `RuntimeException`.
+- **Formulário de Funcionários (Unidade, Departamento, Cargo e Tipo de Contrato)**:
+  - Otimização do componente Livewire `EmployeeForm` para renderizar dinamicamente as opções de Unidade, Departamento, Cargo e Tipo de Contrato sem perda de estado em re-renderizações.
+  - Criação do seeder `DepartmentPositionSeeder` e inclusão automática de `BreedDefaultSeeder` no `DatabaseSeeder` e rotinas de inicialização.
 ## [v1.8.2] — 2026-11-18
 
 ### Adicionado

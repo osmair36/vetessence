@@ -5,7 +5,7 @@
 ; ============================================================
 
 #define AppName "Amigo Bicho"
-#define AppVersion "1.8.2"
+#define AppVersion "1.8.3"
 #define AppPublisher "Amigo Bicho - Clínica Veterinária"
 #define AppURL "https://github.com/osmair36/vetessence"
 #define AppExeName "iniciar.bat"
@@ -45,6 +45,9 @@ Source: "..\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createall
 
 ; Base de dados: só copia se não existir, protegendo dados de re-instalações
 Source: "..\database\database.sqlite"; DestDir: "{app}\database"; Flags: onlyifdoesntexist
+
+; Arquivo de ambiente inicial com SQLite pré-configurado
+Source: "..\.env.example"; DestDir: "{app}"; DestName: ".env"; Flags: onlyifdoesntexist
 
 ; Motor PHP portátil 8.4 Thread Safe integrado
 Source: "runtime\php\*"; DestDir: "{app}\runtime\php"; Flags: ignoreversion recursesubdirs createallsubdirs

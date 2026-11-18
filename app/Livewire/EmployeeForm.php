@@ -31,40 +31,16 @@ class EmployeeForm extends Component
 
     public $context = 'user';
 
-    public $roles = [];
-    public $branches = [];
-    public $departments = [];
-    public $positions = [];
-    public $contractTypes = [];
-
     public function mount($id = null)
     {
-        $this->loadOptions();
-        if ($id) $this->load($id);
-    }
-
-    public function loadOptions()
-    {
-        $this->roles = Role::orderBy('name')->get();
-        $this->branches = Branch::orderBy('name')->get();
-        $this->departments = Department::orderBy('name')->pluck('name', 'id');
-        $this->contractTypes = config('hr.contract_types', []);
-        $this->filterPositions($this->department_id);
+        if ($id) {
+            $this->load($id);
+        }
     }
 
     public function updatedDepartmentId($value)
     {
         $this->position_id = '';
-        $this->filterPositions($value);
-    }
-
-    public function filterPositions($departmentId = null)
-    {
-        if ($departmentId) {
-            $this->positions = Position::where('department_id', $departmentId)->orderBy('name')->pluck('name', 'id');
-        } else {
-            $this->positions = Position::orderBy('name')->pluck('name', 'id');
-        }
     }
 
     #[On('editUser')]
@@ -77,16 +53,14 @@ class EmployeeForm extends Component
         $this->phone = $user->phone ?? '';
         $this->role_id = (string) ($user->role_id ?? '');
         $this->branch_id = (string) ($user->branch_id ?? '');
-        $this->is_active = $user->is_active;
-        $this->is_veterinarian = $user->is_veterinarian;
+        $this->is_active = (bool) $user->is_active;
+        $this->is_veterinarian = (bool) $user->is_veterinarian;
         $this->department_id = (string) ($user->department_id ?? '');
         $this->position_id = (string) ($user->position_id ?? '');
         $this->hire_date = $user->hire_date?->format('Y-m-d') ?? '';
-        $this->contract_type = $user->contract_type ?? '';
+        $this->contract_type = (string) ($user->contract_type ?? '');
         $this->password = '';
         $this->password_confirmation = '';
-        $this->loadOptions();
-        $this->filterPositions($this->department_id);
         $this->dispatch('employee-loaded');
     }
 
@@ -107,7 +81,6 @@ class EmployeeForm extends Component
         $this->position_id = '';
         $this->hire_date = '';
         $this->contract_type = '';
-        $this->loadOptions();
         $this->resetValidation();
         $this->dispatch('employee-loaded');
     }
@@ -128,7 +101,7 @@ class EmployeeForm extends Component
             'contract_type' => 'nullable|string|max:30',
         ];
 
-        $canManageSecurity = auth()->user()->can('users.create');
+        $canManageSecurity = auth()->user() && auth()->user()->can('users.create');
 
         if ($this->userId) {
             if ($this->password) {
@@ -197,6 +170,22 @@ class EmployeeForm extends Component
 
     public function render()
     {
-        return view('livewire.employee-form');
+        $positions = $this->department_id
+            ? Position::where('department_id', $this->department_id)->orderBy('name')->pluck('name', 'id')->toArray()
+            : Position::orderBy('name')->pluck('name', 'id')->toArray();
+
+        return view('livewire.employee-form', [
+            'roles' => Role::orderBy('name')->get(),
+            'branches' => Branch::orderBy('name')->get(),
+            'departments' => Department::orderBy('name')->pluck('name', 'id')->toArray(),
+            'positions' => $positions,
+            'contractTypes' => config('hr.contract_types', [
+                'clt' => 'CLT',
+                'pj' => 'PJ',
+                'estagio' => 'Estágio',
+                'terceiro' => 'Terceirizado',
+                'voluntario' => 'Voluntário',
+            ]),
+        ]);
     }
 }

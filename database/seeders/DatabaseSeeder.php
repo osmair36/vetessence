@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             BranchSeeder::class,
             UserSeeder::class,
+            DepartmentPositionSeeder::class,
+            BreedDefaultSeeder::class,
             SampleDataSeeder::class,
             ZoonosisSeeder::class,
             VaccineProtocolSeeder::class,
