@@ -27,6 +27,10 @@ class VaccinationController extends Controller
             $query->where('pet_id', $request->pet_id);
         }
 
+        if (!$request->pet_id && !$request->date_from && !$request->date_to) {
+            $query->limit(500);
+        }
+
         $vaccinations = $query->orderBy('date', 'desc')->get();
 
         $pets = Pet::where('is_active', true)->orderBy('name')->get();
@@ -156,6 +160,10 @@ class VaccinationController extends Controller
             $query->whereDate('date', '<=', $request->date_to);
         }
 
+        if (!$request->pet_id && !$request->date_from && !$request->date_to) {
+            $query->limit(500);
+        }
+
         $vaccinations = $query->orderBy('date', 'desc')->get();
 
         $subtitle = 'Relatório Geral de Vacinações';
@@ -183,6 +191,10 @@ class VaccinationController extends Controller
         }
         if ($request->date_to) {
             $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        if (!$request->pet_id && !$request->date_from && !$request->date_to) {
+            $query->limit(500);
         }
 
         $vaccinations = $query->orderBy('date', 'desc')->get();

@@ -1,5 +1,25 @@
 # Changelog
 
+## [Não versionado] — 2026-11-18
+
+## [v1.7.0] — 2026-11-18
+
+### Adicionado
+- **Importador de Base Legada FoxPro (SISVETW -> Amigo Bicho)**:
+  - Criação do comando Artisan `php artisan sisvetw:import {--path=C:\SISVETW} {--fresh} {--dry-run}` para migração completa e segura da base legada em Visual FoxPro (.DBF e .FPT).
+  - Desenvolvimento do serviço `App\Services\SisvetwImportService` com leitor binário nativo puro PHP para arquivos DBF e blocos de memo FPT com transcodificação CP1252/Windows-1252 para UTF-8.
+  - Implementação de processamento em streaming via PHP Generators (`yield`) e gravação em lotes (batch inserts de 1.000 registros), garantindo consumo de memória constante O(1).
+  - Rotina de higienização prévia (`--fresh`) de tabelas transacionais e operacionais para descarte seguro de dados fictícios de demonstração antes da carga real.
+  - Carga real completa com integridade referencial validada:
+    - **Fornecedores (`DDFORN01.DBF`)**: 3 fornecedores importados.
+    - **Produtos e Estoque (`DDPROD01.DBF`)**: 591 produtos/medicamentos com códigos de barras, unidades, preços de custo/venda e níveis de estoque.
+    - **Tutores / Clientes (`DDPROP01.DBF`)**: 2.824 tutores com telefones sanitizados e vínculos familiares.
+    - **Animais / Pacientes (`DDFICH01.DBF`)**: 4.271 animais mapeados com raças, espécies (canino, felino, etc.), pelagem, datas de nascimento e vínculos `pet_tutor`.
+    - **Históricos Clínicos e Prontuários (`ddfich01.FPT`)**: 2.466 registros médicos históricos preservados e consolidados em `medical_records`.
+    - **Histórico de Vacinações (`DDFI_V01.DBF`)**: 61.429 aplicações de vacinas com lotes, laboratórios e datas de revacinação.
+    - **Histórico de Pesagens (`DDPESO01.DBF`)**: 9.017 pesagens cronológicas importadas em `weight_records`, atualizando o peso mais recente no cadastro de cada paciente.
+    - **Agendamentos e Atendimento (`DDAGEN02.DBF` + `.FPT`)**: 5.000 agendamentos históricos importados e vinculados à unidade principal.
+  - Adicionada proteção de paginação e limitação segura nas rotas de relatório geral de vacinações (`VaccinationController::reportPrint` e `reportPdf`) contra sobrecarga de memória em bases volumosas.
 ## [v1.6.0] — 2026-11-17
 
 ### Adicionado

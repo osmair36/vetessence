@@ -19,3 +19,5 @@ yarn-error.log
 __pycache__/
 *.pyc
 bin/*.mp4
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
