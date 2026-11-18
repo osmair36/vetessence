@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">Monitoramento Anestésico - {{ $monitoring->pet->name ?? '' }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('anesthesia-monitorings.print', $monitoring) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Ficha
+                    </a>
+                    <a href="{{ route('anesthesia-monitorings.pdf', $monitoring) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('anesthesia-monitorings.edit', $monitoring) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>

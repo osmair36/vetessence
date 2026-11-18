@@ -31,6 +31,14 @@ use App\Models\Surgery;
 use App\Models\Tutor;
 use App\Models\User;
 use App\Models\Vaccination;
+use App\Models\Boarding;
+use App\Models\DentalChart;
+use App\Models\AnesthesiaMonitoring;
+use App\Models\CommissionLog;
+use App\Models\StaffSchedule;
+use App\Models\StaffTimeOff;
+use App\Models\Teleconsultation;
+use App\Models\VaccineProtocol;
 use Tests\ModuleTestCase;
 
 class PrintPdfComprehensiveTest extends ModuleTestCase
@@ -429,6 +437,191 @@ class PrintPdfComprehensiveTest extends ModuleTestCase
         $resPrint->assertOk();
 
         $resPdf = $this->get(route('controlled-substances.reports.monthly.pdf', ['month' => date('Y-m')]));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+    }
+
+    public function test_boarding_print_and_pdf()
+    {
+        $pet = Pet::first() ?? Pet::create([
+            'name' => 'Max', 'species' => 'canine', 'breed' => 'Labrador', 'sex' => 'M', 'birth_date' => '2020-01-01', 'is_active' => true,
+        ]);
+        $boarding = Boarding::create([
+            'pet_id' => $pet->id,
+            'type' => 'boarding',
+            'check_in_at' => now(),
+            'expected_check_out' => now()->addDays(3),
+            'daily_rate' => 80.00,
+            'total_amount' => 240.00,
+            'status' => 'checked_in',
+            'created_by' => $this->user->id,
+        ]);
+
+        $resPrint = $this->get(route('boardings.print', $boarding));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('boardings.pdf', $boarding));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+    }
+
+    public function test_dental_chart_print_and_pdf()
+    {
+        $pet = Pet::first() ?? Pet::create([
+            'name' => 'Max', 'species' => 'canine', 'breed' => 'Labrador', 'sex' => 'M', 'birth_date' => '2020-01-01', 'is_active' => true,
+        ]);
+        $chart = DentalChart::create([
+            'pet_id' => $pet->id,
+            'vet_id' => $this->user->id,
+            'examination_date' => now(),
+            'procedure_type' => 'Profilaxia',
+            'tartar_index' => 'Grau II',
+            'general_notes' => 'Tartarectomia e polimento',
+        ]);
+
+        $resPrint = $this->get(route('dental-charts.print', $chart));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('dental-charts.pdf', $chart));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+    }
+
+    public function test_anesthesia_monitoring_print_and_pdf()
+    {
+        $pet = Pet::first() ?? Pet::create([
+            'name' => 'Max', 'species' => 'canine', 'breed' => 'Labrador', 'sex' => 'M', 'birth_date' => '2020-01-01', 'is_active' => true,
+        ]);
+        $surgery = Surgery::create([
+            'pet_id' => $pet->id,
+            'surgery_type' => 'Castração Eletiva',
+            'scheduled_date' => now(),
+            'status' => 'completed',
+            'surgeon_id' => $this->user->id,
+        ]);
+        $monitoring = AnesthesiaMonitoring::create([
+            'surgery_id' => $surgery->id,
+            'pet_id' => $pet->id,
+            'vet_id' => $this->user->id,
+            'anesthetist' => 'Dr. Anestesista',
+            'anesthetic_protocol' => 'MPA + Propofol + Isoflurano',
+            'monitoring_start' => now(),
+        ]);
+
+        $resPrint = $this->get(route('anesthesia-monitorings.print', $monitoring));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('anesthesia-monitorings.pdf', $monitoring));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+    }
+
+    public function test_commissions_print_and_pdf()
+    {
+        $invoice = Invoice::create([
+            'invoice_number' => 'INV-COMM-001',
+            'total' => 300.00,
+            'subtotal' => 300.00,
+            'due_date' => now(),
+            'status' => 'paid',
+            'paid_at' => now(),
+            'payment_method' => 'pix',
+        ]);
+        $log = CommissionLog::create([
+            'user_id' => $this->user->id,
+            'invoice_id' => $invoice->id,
+            'base_value' => 300.00,
+            'commission_rate' => 10.00,
+            'commission_value' => 30.00,
+            'status' => 'paid',
+            'paid_at' => now(),
+            'description' => 'Comissão por atendimento cirúrgico',
+        ]);
+
+        $resPrint = $this->get(route('commissions.print', $log));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('commissions.pdf', $log));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+
+        $resRepPrint = $this->get(route('commissions.report.print'));
+        $resRepPrint->assertOk();
+
+        $resRepPdf = $this->get(route('commissions.report.pdf'));
+        $resRepPdf->assertOk();
+        $this->assertEquals('application/pdf', $resRepPdf->headers->get('content-type'));
+    }
+
+    public function test_staff_schedule_and_time_off_print_and_pdf()
+    {
+        StaffSchedule::create([
+            'user_id' => $this->user->id,
+            'work_date' => now()->toDateString(),
+            'start_time' => '08:00',
+            'end_time' => '17:00',
+            'shift_type' => 'Plantão Diurno',
+            'branch_id' => $this->branch->id,
+            'created_by' => $this->user->id,
+        ]);
+
+        $resPrint = $this->get(route('staff-schedules.print'));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('staff-schedules.pdf'));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+
+        $resTimeOffPrint = $this->get(route('staff-schedules.time-off.print'));
+        $resTimeOffPrint->assertOk();
+
+        $resTimeOffPdf = $this->get(route('staff-schedules.time-off.pdf'));
+        $resTimeOffPdf->assertOk();
+        $this->assertEquals('application/pdf', $resTimeOffPdf->headers->get('content-type'));
+    }
+
+    public function test_teleconsultation_print_and_pdf()
+    {
+        $pet = Pet::first() ?? Pet::create([
+            'name' => 'Max', 'species' => 'canine', 'breed' => 'Labrador', 'sex' => 'M', 'birth_date' => '2020-01-01', 'is_active' => true,
+        ]);
+        $tele = Teleconsultation::create([
+            'pet_id' => $pet->id,
+            'vet_id' => $this->user->id,
+            'room_name' => 'Sala Virtual 101',
+            'room_token' => 'token-test-123456',
+            'provider' => 'jitsi',
+            'scheduled_at' => now(),
+            'status' => 'completed',
+            'notes' => 'Orientação pós-cirúrgica e acompanhamento',
+        ]);
+
+        $resPrint = $this->get(route('teleconsultations.print', $tele));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('teleconsultations.pdf', $tele));
+        $resPdf->assertOk();
+        $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
+    }
+
+    public function test_vaccine_protocol_print_and_pdf()
+    {
+        VaccineProtocol::create([
+            'species' => 'canine',
+            'vaccine_name' => 'V10 Polivalente Canina',
+            'is_core' => true,
+            'is_initial' => true,
+            'age_start_weeks' => 6,
+            'age_end_weeks' => 8,
+            'dose_number' => 1,
+            'booster_interval_months' => 12,
+            'is_active' => true,
+        ]);
+
+        $resPrint = $this->get(route('vaccine-protocols.print'));
+        $resPrint->assertOk();
+
+        $resPdf = $this->get(route('vaccine-protocols.pdf'));
         $resPdf->assertOk();
         $this->assertEquals('application/pdf', $resPdf->headers->get('content-type'));
     }

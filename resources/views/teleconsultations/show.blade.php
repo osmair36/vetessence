@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">{{ $teleconsultation->room_name }}</h3>
         <div class="card-tools">
+            <a href="{{ route('teleconsultations.print', $teleconsultation) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Ficha
+            </a>
+            <a href="{{ route('teleconsultations.pdf', $teleconsultation) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             @if($teleconsultation->status == 'scheduled')
             <a href="{{ route('teleconsultations.start', $teleconsultation) }}" class="btn btn-success btn-sm"><i class="fas fa-play"></i> Iniciar</a>
             <a href="{{ route('teleconsultations.edit', $teleconsultation) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Editar</a>

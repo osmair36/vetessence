@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">Odontograma - {{ $chart->pet->name ?? '' }} ({{ $chart->examination_date->format('d/m/Y') }})</h3>
                 <div class="card-tools">
+                    <a href="{{ route('dental-charts.print', $chart) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Odontograma
+                    </a>
+                    <a href="{{ route('dental-charts.pdf', $chart) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('dental-charts.edit', $chart) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>

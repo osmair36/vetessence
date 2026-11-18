@@ -162,4 +162,32 @@ class AnesthesiaMonitoringController extends Controller
         return redirect()->route('anesthesia-monitorings.index')
             ->with('success', 'Monitoramento anestésico excluído!');
     }
+
+    public function print(AnesthesiaMonitoring $anesthesiaMonitoring)
+    {
+        $anesthesiaMonitoring->load(['surgery.pet', 'pet.tutor', 'vet', 'vitalSigns']);
+
+        return view('anesthesia-monitorings.print', [
+            'monitoring' => $anesthesiaMonitoring,
+            'anesthesiaMonitoring' => $anesthesiaMonitoring,
+            'title' => 'Ficha de Monitoramento Anestésico',
+            'subtitle' => 'Monitoramento #' . $anesthesiaMonitoring->id . ' — Cirurgia: ' . ($anesthesiaMonitoring->surgery->surgery_type ?? '-') . ' | Paciente: ' . ($anesthesiaMonitoring->pet->name ?? $anesthesiaMonitoring->surgery->pet->name ?? '-'),
+            'pdfUrl' => route('anesthesia-monitorings.pdf', $anesthesiaMonitoring),
+        ]);
+    }
+
+    public function pdf(AnesthesiaMonitoring $anesthesiaMonitoring)
+    {
+        $anesthesiaMonitoring->load(['surgery.pet', 'pet.tutor', 'vet', 'vitalSigns']);
+
+        $petName = $anesthesiaMonitoring->pet->name ?? $anesthesiaMonitoring->surgery->pet->name ?? 'pet';
+        $filename = 'monitoramento-anestesico-' . $anesthesiaMonitoring->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $petName));
+
+        return \App\Services\DocumentPdfService::download('anesthesia-monitorings.print', [
+            'monitoring' => $anesthesiaMonitoring,
+            'anesthesiaMonitoring' => $anesthesiaMonitoring,
+            'title' => 'Ficha de Monitoramento Anestésico',
+            'subtitle' => 'Monitoramento #' . $anesthesiaMonitoring->id . ' — Cirurgia: ' . ($anesthesiaMonitoring->surgery->surgery_type ?? '-') . ' | Paciente: ' . ($anesthesiaMonitoring->pet->name ?? $anesthesiaMonitoring->surgery->pet->name ?? '-'),
+        ], $filename, 'landscape');
+    }
 }

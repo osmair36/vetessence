@@ -4,7 +4,17 @@
 <div class="row">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h3 class="card-title">Detalhes da Comissão</h3></div>
+            <div class="card-header">
+                <h3 class="card-title">Detalhes da Comissão</h3>
+                <div class="card-tools">
+                    <a href="{{ route('commissions.print', $commissionLog) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Comprovante
+                    </a>
+                    <a href="{{ route('commissions.pdf', $commissionLog) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
                 <p><strong>Veterinário:</strong> {{ $commissionLog->user->name ?? '-' }}</p>
                 <p>

@@ -92,4 +92,45 @@ class VaccineProtocolController extends Controller
         return redirect()->route('vaccine-protocols.index')
             ->with('success', 'Protocolo excluído com sucesso!');
     }
+
+    public function print(Request $request)
+    {
+        $query = VaccineProtocol::query();
+
+        if ($request->species) {
+            $query->where('species', $request->species);
+        }
+        if ($request->is_core !== null) {
+            $query->where('is_core', $request->is_core);
+        }
+
+        $protocols = $query->orderBy('species')->orderBy('age_start_weeks')->get();
+
+        return view('vaccine-protocols.print', [
+            'protocols' => $protocols,
+            'title' => 'Protocolos e Calendário de Vacinação',
+            'subtitle' => 'Diretrizes Oficiais e Recomendações — Amigo Bicho',
+            'pdfUrl' => route('vaccine-protocols.pdf', $request->all()),
+        ]);
+    }
+
+    public function pdf(Request $request)
+    {
+        $query = VaccineProtocol::query();
+
+        if ($request->species) {
+            $query->where('species', $request->species);
+        }
+        if ($request->is_core !== null) {
+            $query->where('is_core', $request->is_core);
+        }
+
+        $protocols = $query->orderBy('species')->orderBy('age_start_weeks')->get();
+
+        return \App\Services\DocumentPdfService::download('vaccine-protocols.print', [
+            'protocols' => $protocols,
+            'title' => 'Protocolos e Calendário de Vacinação',
+            'subtitle' => 'Diretrizes Oficiais e Recomendações — Amigo Bicho',
+        ], 'protocolos-vacinacao-' . now()->format('Ymd'));
+    }
 }

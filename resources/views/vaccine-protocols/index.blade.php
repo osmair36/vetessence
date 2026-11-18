@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Protocolos de Vacinação</h3>
         <div class="card-tools">
+            <a href="{{ route('vaccine-protocols.print', request()->all()) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Protocolos
+            </a>
+            <a href="{{ route('vaccine-protocols.pdf', request()->all()) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <button onclick="openCreateModal()" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo
             </button>

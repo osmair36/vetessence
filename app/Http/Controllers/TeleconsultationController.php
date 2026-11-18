@@ -133,4 +133,29 @@ class TeleconsultationController extends Controller
 
         return view('teleconsultations.room', compact('teleconsultation'));
     }
+
+    public function print(Teleconsultation $teleconsultation)
+    {
+        $teleconsultation->load(['pet.tutor', 'vet']);
+
+        return view('teleconsultations.print', [
+            'teleconsultation' => $teleconsultation,
+            'title' => 'Registro de Teleconsulta Veterinária',
+            'subtitle' => 'Teleconsulta #' . $teleconsultation->id . ' — Paciente: ' . ($teleconsultation->pet->name ?? '-') . ' | Veterinário: ' . ($teleconsultation->vet->name ?? '-'),
+            'pdfUrl' => route('teleconsultations.pdf', $teleconsultation),
+        ]);
+    }
+
+    public function pdf(Teleconsultation $teleconsultation)
+    {
+        $teleconsultation->load(['pet.tutor', 'vet']);
+
+        $filename = 'teleconsulta-' . $teleconsultation->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $teleconsultation->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('teleconsultations.print', [
+            'teleconsultation' => $teleconsultation,
+            'title' => 'Registro de Teleconsulta Veterinária',
+            'subtitle' => 'Teleconsulta #' . $teleconsultation->id . ' — Paciente: ' . ($teleconsultation->pet->name ?? '-') . ' | Veterinário: ' . ($teleconsultation->vet->name ?? '-'),
+        ], $filename);
+    }
 }

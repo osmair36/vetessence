@@ -44,6 +44,16 @@ class Pet extends Model
             ->withPivot('is_primary', 'relationship');
     }
 
+    public function tutor(): BelongsToMany
+    {
+        return $this->tutors();
+    }
+
+    public function getTutorAttribute(): ?Tutor
+    {
+        return $this->tutors->first();
+    }
+
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);

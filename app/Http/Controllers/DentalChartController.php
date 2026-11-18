@@ -160,4 +160,31 @@ class DentalChartController extends Controller
 
         return redirect()->route('dental-charts.index')->with('success', 'Odontograma excluído!');
     }
+
+    public function print(DentalChart $dentalChart)
+    {
+        $dentalChart->load(['pet.tutor', 'vet', 'conditions']);
+
+        return view('dental-charts.print', [
+            'chart' => $dentalChart,
+            'dentalChart' => $dentalChart,
+            'title' => 'Ficha Odontológica e Odontograma',
+            'subtitle' => 'Odontograma #' . $dentalChart->id . ' — Paciente: ' . ($dentalChart->pet->name ?? '-') . ' | Veterinário: ' . ($dentalChart->vet->name ?? '-'),
+            'pdfUrl' => route('dental-charts.pdf', $dentalChart),
+        ]);
+    }
+
+    public function pdf(DentalChart $dentalChart)
+    {
+        $dentalChart->load(['pet.tutor', 'vet', 'conditions']);
+
+        $filename = 'odontograma-' . $dentalChart->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $dentalChart->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('dental-charts.print', [
+            'chart' => $dentalChart,
+            'dentalChart' => $dentalChart,
+            'title' => 'Ficha Odontológica e Odontograma',
+            'subtitle' => 'Odontograma #' . $dentalChart->id . ' — Paciente: ' . ($dentalChart->pet->name ?? '-') . ' | Veterinário: ' . ($dentalChart->vet->name ?? '-'),
+        ], $filename);
+    }
 }

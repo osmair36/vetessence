@@ -1,6 +1,19 @@
 # Changelog
 
-## [Não versionado] — 2026-11-17
+## [v1.6.0] — 2026-11-17
+
+### Adicionado
+- **Finalização de 100% dos Módulos do Sistema de Impressão e PDF (Projeto Amigo Bicho)**:
+  - **Módulo Hospedagem (Hotel Pet)**: Ficha de hospedagem individual (`boardings/{id}/print` e `pdf`) contendo dados do animal, tutor, período, diária, instruções de alimentação/medicação, tarefas diárias e assinaturas.
+  - **Módulo Odontologia / Gráfico Dental**: Ficha de odontograma e avaliação clínica bucal (`dental-charts/{id}/print` e `pdf`) com índice de tártaro, gengivite, halitose, condições dentárias registradas por dente/quadrante e recomendações.
+  - **Módulo Monitoramento Anestésico**: Boletim anestésico cirúrgico (`anesthesia-monitorings/{id}/print` e `pdf`, formato paisagem) com protocolo, MPA, indução, manutenção, taxa de fluidos e curva cronológica de sinais vitais (FC, FR, SpO2, PA Sist/Diast, Temp, ETCO2 e plano).
+  - **Módulo Comissões**: Comprovante individual de comissão por atendimento (`commissions/{id}/print` e `pdf`) e Relatório Geral de Comissões por período/profissional (`commissions/report/print` e `pdf`, formato paisagem) com totalizações de vendas e comissões.
+  - **Módulo Escala da Equipe**: Espelho de escala de trabalho e plantões (`staff-schedules/print` e `pdf`, formato paisagem) com turnos, horários, unidades e resumo por profissional.
+  - **Módulo Solicitações de Folga e Afastamentos**: Relatório gerencial de folgas e afastamentos da equipe (`staff-time-off/print` e `pdf`) com status de aprovação e períodos.
+  - **Módulo Telemedicina / Teleconsultas**: Ficha e registro de teleconsulta (`teleconsultations/{id}/print` e `pdf`) com plataforma utilizada, horários de início/fim, duração e observações clínicas.
+  - **Módulo Protocolos de Vacinação**: Manual e calendário de protocolos vacinais (`vaccine-protocols/print` e `pdf`) com divisão por espécies (canina, felina, etc.), indicação de vacinas core/não-core, doses iniciais e intervalos de reforço.
+  - **Relacionamento Universal Pet-Tutor**: Adicionados métodos `tutor()` e accessor `getTutorAttribute()` no modelo `Pet` para resiliência e integridade em todas as telas e impressões.
+  - **Expansão da Suíte de Testes Automatizados**: `tests/Feature/Controllers/PrintPdfComprehensiveTest.php` expandido para 25 testes completos e 101 asserções, com 100% de sucesso.
 
 ## [v1.5.0] — 2026-11-17
 

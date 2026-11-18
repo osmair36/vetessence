@@ -94,4 +94,90 @@ class CommissionController extends Controller
         $commissionRate->delete();
         return back()->with('success', 'Taxa de comissão excluída.');
     }
+
+    public function print(CommissionLog $commissionLog)
+    {
+        $commissionLog->load(['user', 'invoice.items', 'commissionRate']);
+
+        return view('commissions.print', [
+            'commissionLog' => $commissionLog,
+            'title' => 'Comprovante de Comissão',
+            'subtitle' => 'Comissão #' . $commissionLog->id . ' — Profissional: ' . ($commissionLog->user->name ?? '-'),
+            'pdfUrl' => route('commissions.pdf', $commissionLog),
+        ]);
+    }
+
+    public function pdf(CommissionLog $commissionLog)
+    {
+        $commissionLog->load(['user', 'invoice.items', 'commissionRate']);
+
+        $filename = 'comissao-' . $commissionLog->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $commissionLog->user->name ?? 'user'));
+
+        return \App\Services\DocumentPdfService::download('commissions.print', [
+            'commissionLog' => $commissionLog,
+            'title' => 'Comprovante de Comissão',
+            'subtitle' => 'Comissão #' . $commissionLog->id . ' — Profissional: ' . ($commissionLog->user->name ?? '-'),
+        ], $filename);
+    }
+
+    public function reportPrint(Request $request)
+    {
+        $query = CommissionLog::with(['user', 'invoice']);
+
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $logs = $query->orderBy('created_at', 'desc')->get();
+        $totals = (clone $query)->toBase()->reorder()->selectRaw('SUM(base_value) as total_base, SUM(commission_value) as total_commission')->first();
+
+        return view('commissions.report-print', [
+            'logs' => $logs,
+            'totals' => $totals,
+            'dateFrom' => $request->date_from,
+            'dateTo' => $request->date_to,
+            'title' => 'Relatório Geral de Comissões',
+            'subtitle' => 'Período: ' . ($request->date_from ? \Carbon\Carbon::parse($request->date_from)->format('d/m/Y') : 'Início') . ' a ' . ($request->date_to ? \Carbon\Carbon::parse($request->date_to)->format('d/m/Y') : 'Hoje'),
+            'pdfUrl' => route('commissions.report.pdf', $request->all()),
+        ]);
+    }
+
+    public function reportPdf(Request $request)
+    {
+        $query = CommissionLog::with(['user', 'invoice']);
+
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $logs = $query->orderBy('created_at', 'desc')->get();
+        $totals = (clone $query)->toBase()->reorder()->selectRaw('SUM(base_value) as total_base, SUM(commission_value) as total_commission')->first();
+
+        return \App\Services\DocumentPdfService::download('commissions.report-print', [
+            'logs' => $logs,
+            'totals' => $totals,
+            'dateFrom' => $request->date_from,
+            'dateTo' => $request->date_to,
+            'title' => 'Relatório Geral de Comissões',
+            'subtitle' => 'Período: ' . ($request->date_from ? \Carbon\Carbon::parse($request->date_from)->format('d/m/Y') : 'Início') . ' a ' . ($request->date_to ? \Carbon\Carbon::parse($request->date_to)->format('d/m/Y') : 'Hoje'),
+        ], 'relatorio-comissoes-' . now()->format('Ymd'), 'landscape');
+    }
 }

@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Comissões</h3>
         <div class="card-tools">
+            <a href="{{ route('commissions.report.print', request()->all()) }}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">
+                <i class="fas fa-print"></i> Imprimir Relatório
+            </a>
+            <a href="{{ route('commissions.report.pdf', request()->all()) }}" class="btn btn-sm btn-outline-danger mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('commissions.rates') }}" class="btn btn-sm btn-default"><i class="fas fa-percent"></i> Taxas</a>
         </div>
     </div>

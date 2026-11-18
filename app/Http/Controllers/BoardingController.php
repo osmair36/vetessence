@@ -282,4 +282,29 @@ class BoardingController extends Controller
 
         return redirect()->back()->with('success', 'Canil atribuído com sucesso!');
     }
+
+    public function print(Boarding $boarding)
+    {
+        $boarding->load(['pet.tutor', 'createdBy', 'checkedOutBy', 'dailyTasks.completedBy']);
+
+        return view('boardings.print', [
+            'boarding' => $boarding,
+            'title' => 'Ficha de Hospedagem Veterinária',
+            'subtitle' => 'Hospedagem #' . $boarding->id . ' — Animal: ' . ($boarding->pet->name ?? '-') . ' | Tutor: ' . ($boarding->pet->tutor->name ?? '-'),
+            'pdfUrl' => route('boardings.pdf', $boarding),
+        ]);
+    }
+
+    public function pdf(Boarding $boarding)
+    {
+        $boarding->load(['pet.tutor', 'createdBy', 'checkedOutBy', 'dailyTasks.completedBy']);
+
+        $filename = 'hospedagem-' . $boarding->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $boarding->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('boardings.print', [
+            'boarding' => $boarding,
+            'title' => 'Ficha de Hospedagem Veterinária',
+            'subtitle' => 'Hospedagem #' . $boarding->id . ' — Animal: ' . ($boarding->pet->name ?? '-') . ' | Tutor: ' . ($boarding->pet->tutor->name ?? '-'),
+        ], $filename);
+    }
 }

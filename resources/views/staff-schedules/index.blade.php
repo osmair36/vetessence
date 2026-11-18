@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Escalas de Trabalho</h3>
         <div class="card-tools">
+            <a href="{{ route('staff-schedules.print', request()->all()) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Escala
+            </a>
+            <a href="{{ route('staff-schedules.pdf', request()->all()) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('staff-schedules.time-off') }}" class="btn btn-warning btn-sm">
                 <i class="fas fa-clock"></i> Solicitações de Folga
             </a>

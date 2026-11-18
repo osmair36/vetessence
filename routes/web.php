@@ -252,6 +252,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('bank-reconciliation/{bankAccount}/suggest', 'App\Http\Controllers\BankReconciliationController@suggest')->name('bank-reconciliation.suggest');
 
     // Commissions
+    Route::get('commissions/report/print', 'App\Http\Controllers\CommissionController@reportPrint')->name('commissions.report.print');
+    Route::get('commissions/report/pdf', 'App\Http\Controllers\CommissionController@reportPdf')->name('commissions.report.pdf');
+    Route::get('commissions/{commissionLog}/print', 'App\Http\Controllers\CommissionController@print')->name('commissions.print');
+    Route::get('commissions/{commissionLog}/pdf', 'App\Http\Controllers\CommissionController@pdf')->name('commissions.pdf');
     Route::get('commissions', 'App\Http\Controllers\CommissionController@index')->name('commissions.index');
     Route::get('commissions/{commissionLog}', 'App\Http\Controllers\CommissionController@show')->name('commissions.show');
     Route::post('commissions/{commissionLog}/mark-paid', 'App\Http\Controllers\CommissionController@markPaid')->name('commissions.mark-paid');
@@ -501,6 +505,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Dental Charts
+    Route::get('dental-charts/{dentalChart}/print', 'App\Http\Controllers\DentalChartController@print')->name('dental-charts.print');
+    Route::get('dental-charts/{dentalChart}/pdf', 'App\Http\Controllers\DentalChartController@pdf')->name('dental-charts.pdf');
     Route::resource('dental-charts', 'App\Http\Controllers\DentalChartController')->names([
         'index' => 'dental-charts.index',
         'create' => 'dental-charts.create',
@@ -533,6 +539,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('controlled-substance-logs.destroy');
 
     // Anesthesia Monitoring
+    Route::get('anesthesia-monitorings/{anesthesiaMonitoring}/print', 'App\Http\Controllers\AnesthesiaMonitoringController@print')->name('anesthesia-monitorings.print');
+    Route::get('anesthesia-monitorings/{anesthesiaMonitoring}/pdf', 'App\Http\Controllers\AnesthesiaMonitoringController@pdf')->name('anesthesia-monitorings.pdf');
     Route::resource('anesthesia-monitorings', 'App\Http\Controllers\AnesthesiaMonitoringController')->names([
         'index' => 'anesthesia-monitorings.index',
         'create' => 'anesthesia-monitorings.create',
@@ -614,6 +622,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Vaccine Protocols
+    Route::get('vaccine-protocols/print', 'App\Http\Controllers\VaccineProtocolController@print')->name('vaccine-protocols.print');
+    Route::get('vaccine-protocols/pdf', 'App\Http\Controllers\VaccineProtocolController@pdf')->name('vaccine-protocols.pdf');
     Route::resource('vaccine-protocols', 'App\Http\Controllers\VaccineProtocolController')->names([
         'index' => 'vaccine-protocols.index',
         'create' => 'vaccine-protocols.create',
@@ -625,6 +635,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Teleconsultations
+    Route::get('teleconsultations/{teleconsultation}/print', 'App\Http\Controllers\TeleconsultationController@print')->name('teleconsultations.print');
+    Route::get('teleconsultations/{teleconsultation}/pdf', 'App\Http\Controllers\TeleconsultationController@pdf')->name('teleconsultations.pdf');
     Route::resource('teleconsultations', 'App\Http\Controllers\TeleconsultationController')->names([
         'index' => 'teleconsultations.index',
         'create' => 'teleconsultations.create',
@@ -792,6 +804,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('prescriptions/{prescription}/pdf', 'App\Http\Controllers\PrescriptionController@pdf')->name('prescriptions.pdf');
 
     // Staff Schedules (on-call-calendar must be before resource to avoid matching show route)
+    Route::get('staff-schedules/print', 'App\Http\Controllers\StaffScheduleController@print')->name('staff-schedules.print');
+    Route::get('staff-schedules/pdf', 'App\Http\Controllers\StaffScheduleController@pdf')->name('staff-schedules.pdf');
     Route::get('staff-schedules/on-call-calendar', 'App\Http\Controllers\StaffScheduleController@onCallCalendar')->name('staff-schedules.on-call-calendar');
     Route::get('staff-schedules/vet-shifts', 'App\Http\Controllers\StaffScheduleController@vetShifts')->name('staff-schedules.vet-shifts');
     Route::resource('staff-schedules', 'App\Http\Controllers\StaffScheduleController')->names([
@@ -802,6 +816,8 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'staff-schedules.update',
         'destroy' => 'staff-schedules.destroy',
     ]);
+    Route::get('staff-time-off/print', 'App\Http\Controllers\StaffScheduleController@timeOffPrint')->name('staff-schedules.time-off.print');
+    Route::get('staff-time-off/pdf', 'App\Http\Controllers\StaffScheduleController@timeOffPdf')->name('staff-schedules.time-off.pdf');
     Route::get('staff-time-off', 'App\Http\Controllers\StaffScheduleController@timeOff')->name('staff-schedules.time-off');
     Route::post('staff-time-off', 'App\Http\Controllers\StaffScheduleController@storeTimeOff')->name('staff-schedules.time-off.store');
     Route::post('staff-time-off/{staffTimeOff}/approve', 'App\Http\Controllers\StaffScheduleController@approveTimeOff')->name('staff-time-off.approve');
@@ -830,6 +846,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('backups/{filename}/download', 'App\Http\Controllers\BackupController@download')->name('backups.download');
 
     // Boarding / Grooming
+    Route::get('boardings/{boarding}/print', 'App\Http\Controllers\BoardingController@print')->name('boardings.print');
+    Route::get('boardings/{boarding}/pdf', 'App\Http\Controllers\BoardingController@pdf')->name('boardings.pdf');
     Route::resource('boardings', 'App\Http\Controllers\BoardingController')->names([
         'index' => 'boardings.index',
         'create' => 'boardings.create',

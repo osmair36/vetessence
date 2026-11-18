@@ -258,4 +258,80 @@ class StaffScheduleController extends Controller
         $staffTimeOff->update(['status' => 'rejected']);
         return back()->with('success', 'Folga rejeitada.');
     }
+
+    public function print(Request $request)
+    {
+        $query = StaffSchedule::with(['user', 'branch'])
+            ->when(\App\Services\BranchContext::hasBranch(), fn($q) => $q->where('branch_id', \App\Services\BranchContext::get()));
+
+        if ($request->month) {
+            $start = \Carbon\Carbon::parse($request->month . '-01');
+            $end = $start->copy()->endOfMonth();
+            $query->whereBetween('work_date', [$start, $end]);
+        } elseif ($request->date_from && $request->date_to) {
+            $query->whereBetween('work_date', [$request->date_from, $request->date_to]);
+        }
+
+        $schedules = $query->orderBy('work_date')->orderBy('start_time')->get();
+
+        return view('staff-schedules.print', [
+            'schedules' => $schedules,
+            'month' => $request->month,
+            'title' => 'Escala de Trabalho da Equipe',
+            'subtitle' => 'Período: ' . ($request->month ? \Carbon\Carbon::parse($request->month . '-01')->format('F/Y') : 'Geral'),
+            'pdfUrl' => route('staff-schedules.pdf', $request->all()),
+        ]);
+    }
+
+    public function pdf(Request $request)
+    {
+        $query = StaffSchedule::with(['user', 'branch'])
+            ->when(\App\Services\BranchContext::hasBranch(), fn($q) => $q->where('branch_id', \App\Services\BranchContext::get()));
+
+        if ($request->month) {
+            $start = \Carbon\Carbon::parse($request->month . '-01');
+            $end = $start->copy()->endOfMonth();
+            $query->whereBetween('work_date', [$start, $end]);
+        } elseif ($request->date_from && $request->date_to) {
+            $query->whereBetween('work_date', [$request->date_from, $request->date_to]);
+        }
+
+        $schedules = $query->orderBy('work_date')->orderBy('start_time')->get();
+
+        return \App\Services\DocumentPdfService::download('staff-schedules.print', [
+            'schedules' => $schedules,
+            'month' => $request->month,
+            'title' => 'Escala de Trabalho da Equipe',
+            'subtitle' => 'Período: ' . ($request->month ? \Carbon\Carbon::parse($request->month . '-01')->format('F/Y') : 'Geral'),
+        ], 'escala-equipe-' . now()->format('Ymd'), 'landscape');
+    }
+
+    public function timeOffPrint(Request $request)
+    {
+        $isAdmin = auth()->user()->hasRole('super-admin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('human-resources');
+        $timeOffs = StaffTimeOff::with(['user', 'approvedBy'])
+            ->when(!$isAdmin, fn($q) => $q->where('user_id', auth()->id()))
+            ->latest()->get();
+
+        return view('staff-schedules.time-off-print', [
+            'timeOffs' => $timeOffs,
+            'title' => 'Relatório de Solicitações de Folga e Afastamentos',
+            'subtitle' => 'Emissão: ' . now()->format('d/m/Y H:i'),
+            'pdfUrl' => route('staff-schedules.time-off.pdf'),
+        ]);
+    }
+
+    public function timeOffPdf(Request $request)
+    {
+        $isAdmin = auth()->user()->hasRole('super-admin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('human-resources');
+        $timeOffs = StaffTimeOff::with(['user', 'approvedBy'])
+            ->when(!$isAdmin, fn($q) => $q->where('user_id', auth()->id()))
+            ->latest()->get();
+
+        return \App\Services\DocumentPdfService::download('staff-schedules.time-off-print', [
+            'timeOffs' => $timeOffs,
+            'title' => 'Relatório de Solicitações de Folga e Afastamentos',
+            'subtitle' => 'Emissão: ' . now()->format('d/m/Y H:i'),
+        ], 'folgas-afastamentos-' . now()->format('Ymd'));
+    }
 }

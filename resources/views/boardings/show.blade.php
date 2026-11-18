@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">{{ $boarding->pet->name ?? 'N/A' }} - {{ $boarding->type == 'boarding' ? 'Hospedagem' : ($boarding->type == 'grooming' ? 'Banho/Tosa' : 'Ambos') }}</h3>
         <div class="card-tools">
+            <a href="{{ route('boardings.print', $boarding) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Ficha
+            </a>
+            <a href="{{ route('boardings.pdf', $boarding) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             @if($boarding->status == 'checked_in')
                 <a href="{{ route('boardings.edit', $boarding) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Editar</a>
             @endif
