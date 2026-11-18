@@ -5,7 +5,7 @@
 ; ============================================================
 
 #define AppName "Amigo Bicho"
-#define AppVersion "1.8.4"
+#define AppVersion "1.8.5"
 #define AppPublisher "Amigo Bicho - Clínica Veterinária"
 #define AppURL "https://github.com/osmair36/vetessence"
 #define AppExeName "iniciar.bat"
@@ -35,13 +35,13 @@ MinVersion=10.0
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Criar atalho do Servidor na Área de Trabalho"; GroupDescription: "Atalhos adicionais:"; Flags: unchecked
+Name: "desktopicon"; Description: "Criar atalho do Servidor na Área de Trabalho"; GroupDescription: "Atalhos adicionais:"
 Name: "startmenuicon"; Description: "Criar atalho no Menu Iniciar"; GroupDescription: "Atalhos adicionais:"
 
 [Files]
-; Aplicação Amigo Bicho completa com dependências vendor
+; Aplicação Amigo Bicho completa com dependências vendor (sem arquivos locais de dev)
 Source: "..\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; \
-  Excludes: ".git\*,.git,.github\*,node_modules\*,installer\dist\*,installer\runtime\*,scratch\*,tests\*,*.log,storage\logs\*,storage\framework\cache\*,storage\framework\sessions\*,storage\framework\views\*,storage\app\backups\*,database\database.sqlite"
+  Excludes: ".git\*,.git,.github\*,node_modules\*,installer\dist\*,installer\runtime\*,scratch\*,tests\*,*.log,storage\logs\*,storage\framework\cache\*,storage\framework\sessions\*,storage\framework\views\*,storage\app\backups\*,bootstrap\cache\*.php,database\database.sqlite,database\*.bak*,.env,.env.dusk*,.env.testing,server_info.txt,Amigo Bicho - Terminal.url,composer.phar,.phpunit.result.cache"
 
 ; Base de dados: só copia se não existir, protegendo dados de re-instalações
 Source: "..\database\database.sqlite"; DestDir: "{app}\database"; Flags: onlyifdoesntexist
@@ -53,13 +53,17 @@ Source: "..\.env.example"; DestDir: "{app}"; DestName: ".env"; Flags: onlyifdoes
 Source: "runtime\php\*"; DestDir: "{app}\runtime\php"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Dirs]
-Name: "{app}\storage\logs"
-Name: "{app}\storage\app\backups"
-Name: "{app}\storage\framework\cache"
-Name: "{app}\storage\framework\sessions"
-Name: "{app}\storage\framework\views"
-Name: "{app}\bootstrap\cache"
-Name: "{app}\database"
+Name: "{app}"; Permissions: users-modify
+Name: "{app}\storage"; Permissions: users-modify
+Name: "{app}\storage\logs"; Permissions: users-modify
+Name: "{app}\storage\app\backups"; Permissions: users-modify
+Name: "{app}\storage\app\public"; Permissions: users-modify
+Name: "{app}\storage\framework\cache"; Permissions: users-modify
+Name: "{app}\storage\framework\cache\data"; Permissions: users-modify
+Name: "{app}\storage\framework\sessions"; Permissions: users-modify
+Name: "{app}\storage\framework\views"; Permissions: users-modify
+Name: "{app}\bootstrap\cache"; Permissions: users-modify
+Name: "{app}\database"; Permissions: users-modify
 
 [Icons]
 ; Atalhos no Menu Iniciar e Desktop
@@ -69,7 +73,7 @@ Name: "{group}\Desinstalar {#AppName}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"; Tasks: desktopicon
 
 [Run]
-; Configura o banco, firewall e ambiente pós-cópia
+; Configura o banco, permissões, firewall e ambiente pós-cópia
 Filename: "{app}\installer\instalar.bat"; Description: "Configurar ambiente do sistema e rede"; Flags: runhidden waituntilterminated; WorkingDir: "{app}"
 
 ; Opção para iniciar o servidor imediatamente ao finalizar o assistente
@@ -78,7 +82,8 @@ Filename: "{app}\iniciar.bat"; Description: "Iniciar o Servidor {#AppName} agora
 [UninstallRun]
 ; Encerra processos do PHP ao desinstalar
 Filename: "taskkill.exe"; Parameters: "/F /IM php.exe"; Flags: runhidden; RunOnceId: "StopPHP"
-Filename: "netsh.exe"; Parameters: "advfirewall firewall delete rule name=""Amigo Bicho (Porta 8181)"""; Flags: runhidden; RunOnceId: "DelFirewall"
+Filename: "netsh.exe"; Parameters: "advfirewall firewall delete rule name=""Amigo Bicho Porta 8181"""; Flags: runhidden; RunOnceId: "DelFirewallNew"
+Filename: "netsh.exe"; Parameters: "advfirewall firewall delete rule name=""Amigo Bicho (Porta 8181)"""; Flags: runhidden; RunOnceId: "DelFirewallOld"
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
@@ -87,7 +92,8 @@ begin
   begin
     ForceDirectories(ExpandConstant('{app}\storage\logs'));
     ForceDirectories(ExpandConstant('{app}\storage\app\backups'));
-    ForceDirectories(ExpandConstant('{app}\storage\framework\cache'));
+    ForceDirectories(ExpandConstant('{app}\storage\app\public'));
+    ForceDirectories(ExpandConstant('{app}\storage\framework\cache\data'));
     ForceDirectories(ExpandConstant('{app}\storage\framework\sessions'));
     ForceDirectories(ExpandConstant('{app}\storage\framework\views'));
     ForceDirectories(ExpandConstant('{app}\bootstrap\cache'));

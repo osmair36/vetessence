@@ -38,7 +38,9 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => ($sqliteDb = env('DB_DATABASE')) && $sqliteDb !== 'database/database.sqlite' && $sqliteDb !== 'database\\database.sqlite'
+                ? $sqliteDb
+                : database_path('database.sqlite'),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],

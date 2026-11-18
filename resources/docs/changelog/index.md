@@ -2,6 +2,17 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.5] — 2026-11-18
+
+### Corrigido
+- **Reescrita Completa e Blindagem dos Scripts `.bat` e do Instalador Desktop (`v1.8.5`)**:
+  - **Quebras de linha Windows (CRLF) + ASCII puro**: convertidos `iniciar.bat`, `installer/instalar.bat`, `Conectar ao Amigo Bicho (Terminal).bat` e `Criar Atalho no Desktop do Terminal.bat` de LF (Unix) para CRLF estrito (`\r\n`) e adicionada regra `*.bat text eol=crlf` no `.gitattributes` (eliminando erros de salto `goto` e corrupção de blocos no `cmd.exe`).
+  - **Eliminação de lógica frágil em lote**: movida toda a validação de ambiente, geração automática de `APP_KEY` vazia no `.env`, inspeção rápida do SQLite via PDO, detecção inteligente de IP da rede local (ignorando adaptadores virtuais WSL/Hyper-V) e geração de `server_info.txt`/atalho `.url` para o script dedicado `installer/bootstrap.php`.
+  - **Servidor HTTP direto e abertura sincronizada do navegador**: `iniciar.bat` agora detecta se a porta 8181 já está ativa, inicia `php -S 0.0.0.0:8181 -t public server.php` diretamente com 512M de memória e 256M de upload, e aguarda o servidor responder na porta antes de abrir o navegador.
+  - **Caminho absoluto para SQLite**: ajustado `config/database.php` para resolver `database/database.sqlite` sempre via `database_path('database.sqlite')`, independente do diretório de trabalho.
+  - **Permissões e limpeza no instalador Inno Setup (`installer/setup.iss`)**: exclusão de arquivos locais de desenvolvimento (`.env`, caches em `bootstrap/cache/*.php`, `server_info.txt`, backups antigos) e concessão automática de permissão de escrita (`users-modify` + `icacls`) nas pastas de dados (`database`, `storage`, `bootstrap/cache`).
+  - **PHP portátil otimizado**: `installer/runtime/php/php.ini` atualizado com `upload_max_filesize = 256M`, `post_max_size = 256M`, `max_execution_time = 120`, `date.timezone = "America/Sao_Paulo"` e `extension=intl`.
+  - **Scripts de Terminal em rede corrigidos**: corrigida extração de nome de servidor em caminhos UNC (`tokens=1 delims=\`) e detecção automática de Área de Trabalho (compatível com redirecionamento OneDrive).
 ## [v1.8.4] — 2026-11-18
 
 ### Corrigido
