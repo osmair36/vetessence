@@ -269,3 +269,4 @@ Copyright (c) 2026 **HLMI Tecnologia**
 - [Spatie Permissions](https://spatie.be/docs/laravel-permission)
 - [Vertebrate Breed Ontology (VBO)](https://github.com/mcic-science/vertebrate-breed-ontology) — dados de raças licenciados sob CC-BY-4.0
 - Todos os [contribuidores](https://github.com/hlmitecnologia/vetessence/graphs/contributors) que dedicam tempo e esforço a este projeto
+

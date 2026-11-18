@@ -45,7 +45,7 @@ class TreatmentPlan extends Model
         $this->update(['status' => 'approved', 'client_approved_at' => now()]);
     }
 
-    public function reject(string $reason = null): void
+    public function reject(?string $reason = null): void
     {
         $this->update(['status' => 'rejected', 'rejected_at' => now(), 'rejection_reason' => $reason]);
     }

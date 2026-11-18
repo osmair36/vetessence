@@ -159,7 +159,7 @@ class DemoSeed extends Command
         $this->line('  [ users ]      Dr. Carlos, Dra. Beatriz, Dr. Rafael, Marina, Ricardo');
     }
 
-    private function makeUser(string $name, string $email, string $password, ?Role $role, Branch $branch, string $crmv = null): User
+    private function makeUser(string $name, string $email, string $password, ?Role $role, Branch $branch, ?string $crmv = null): User
     {
         return User::firstOrCreate(
             ['email' => $email],
