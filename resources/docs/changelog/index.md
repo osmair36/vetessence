@@ -2,6 +2,16 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.7.2] — 2026-11-18
+
+### Corrigido
+- **Catálogo de Raças e Seleção no Formulário do Pet**:
+  - Povoamento e sincronização da tabela `breed_defaults` com 140 raças catalogadas (seeder padrão + raças da base legada).
+  - Atualização do componente Livewire `PetForm` para exibir todas as raças disponíveis e filtrar dinamicamente por espécie via `wire:model.live`.
+  - Vínculo automático de `breed_default_id` em todos os 4.271 animais cadastrados.
+- **Tratamento Seguro na Exclusão de Pets**:
+  - Correção de erro `RuntimeException` ao tentar excluir um pet com vínculo de tutor em `PetController::destroy`.
+  - Desvinculação transacional segura do tutor antes de remover pets de teste sem prontuários ou agendamentos, com validações amigáveis contra remoção de animais com histórico clínico ativo.
 ## [v1.7.1] — 2026-11-18
 
 ### Corrigido

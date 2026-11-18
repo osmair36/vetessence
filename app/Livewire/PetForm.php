@@ -50,6 +50,7 @@ class PetForm extends Component
     public function mount($id = null)
     {
         $this->speciesOptions = config('species');
+        $this->species = '';
         $this->tutors = Tutor::orderBy('name')->get();
         $this->loadBreeds();
         if ($id) $this->load($id);
@@ -122,7 +123,7 @@ class PetForm extends Component
 
     public function updatedBreedDefaultId($value)
     {
-        if ($value) {
+        if ($value && !str_starts_with((string)$value, 'custom_')) {
             $breed = BreedDefault::find($value);
             $this->breed = $breed?->breed ?? '';
         }
@@ -130,15 +131,19 @@ class PetForm extends Component
 
     public function loadBreeds()
     {
-        if (!$this->species) {
-            $this->breeds = [];
-            return;
+        $query = BreedDefault::where('is_active', true);
+        if ($this->species) {
+            $query->where('species', $this->species);
         }
-        $this->breeds = BreedDefault::where('is_active', true)
-            ->where('species', $this->species)
-            ->orderBy('breed')
+        $this->breeds = $query->orderBy('breed')
             ->pluck('breed', 'id')
             ->toArray();
+
+        // Se o pet atual tiver uma raça que não consta na lista, adiciona na lista
+        if ($this->breed && !in_array($this->breed, $this->breeds)) {
+            $key = $this->breed_default_id ?: ('custom_' . md5($this->breed));
+            $this->breeds[$key] = $this->breed;
+        }
     }
 
     public function save()
@@ -149,7 +154,7 @@ class PetForm extends Component
             'name' => $this->name,
             'species' => $this->species,
             'breed' => $this->breed ?: null,
-            'breed_default_id' => $this->breed_default_id ?: null,
+            'breed_default_id' => (is_numeric($this->breed_default_id) && (int)$this->breed_default_id > 0) ? (int)$this->breed_default_id : null,
             'gender' => $this->gender,
             'birth_date' => $this->birth_date ?: null,
             'weight' => $this->weight ?: null,

@@ -164,12 +164,27 @@ class PetController extends Controller
 
     public function destroy(Pet $pet)
     {
-        if ($pet->appointments()->count() > 0) {
-            return back()->with('error', 'Não é possível excluir pet com atendimentos.');
+        if ($pet->appointments()->exists()) {
+            return back()->with('error', 'Não é possível excluir o pet pois possui agendamentos/atendimentos vinculados.');
         }
 
-        $pet->delete();
+        if ($pet->medicalRecords()->exists()) {
+            return back()->with('error', 'Não é possível excluir o pet pois possui prontuários/histórico clínico vinculado.');
+        }
 
-        return redirect()->route('pets.index')->with('success', 'Pet excluído com sucesso!');
+        if ($pet->vaccinations()->exists()) {
+            return back()->with('error', 'Não é possível excluir o pet pois possui histórico de vacinações.');
+        }
+
+        try {
+            DB::transaction(function () use ($pet) {
+                $pet->tutors()->detach();
+                $pet->delete();
+            });
+
+            return redirect()->route('pets.index')->with('success', 'Pet excluído com sucesso!');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Não foi possível excluir o pet: ' . $e->getMessage());
+        }
     }
 }

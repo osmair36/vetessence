@@ -86,4 +86,16 @@ class PetControllerTest extends ModuleTestCase
         $response->assertRedirect(route('pets.index'));
         $this->assertDatabaseMissing('pets', ['id' => $pet->id]);
     }
+
+    public function test_destroy_deletes_pet_with_tutor_safely()
+    {
+        $tutor = Tutor::factory()->create();
+        $pet = Pet::factory()->create(['name' => 'Pet Com Tutor']);
+        $pet->tutors()->attach($tutor->id, ['is_primary' => true]);
+
+        $response = $this->delete(route('pets.destroy', $pet));
+        $response->assertRedirect(route('pets.index'));
+        $this->assertDatabaseMissing('pets', ['id' => $pet->id]);
+        $this->assertDatabaseMissing('pet_tutor', ['pet_id' => $pet->id]);
+    }
 }
