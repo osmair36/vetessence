@@ -110,9 +110,33 @@
                         @foreach($breeds as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
+                        <option value="other">Outra / Não listada (digitar manualmente)...</option>
                     </select>
                 </div>
             </div>
+            @if($breed_default_id === 'other')
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nome da Raça Personalizada *</label>
+                    <input type="text" wire:model="breed" class="form-control" placeholder="Digite o nome da raça...">
+                </div>
+            </div>
+            @else
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Porte</label>
+                    <select wire:model="size" class="form-control">
+                        <option value="small">Pequeno</option>
+                        <option value="medium">Médio</option>
+                        <option value="large">Grande</option>
+                        <option value="giant">Gigante</option>
+                    </select>
+                </div>
+            </div>
+            @endif
+        </div>
+        @if($breed_default_id === 'other')
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Porte</label>
@@ -125,6 +149,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="row">
             <div class="col-md-6">

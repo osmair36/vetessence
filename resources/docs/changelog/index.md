@@ -2,6 +2,15 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.7.3] — 2026-11-18
+
+### Corrigido
+- **Otimização Extrema do Livewire PetForm e Suporte Universal a Raças**:
+  - Remoção da propriedade pública pesada `$tutors` que serializava 2.824 modelos no estado do Livewire (reduzindo o payload de rede de 1,6 MB para <5 KB e eliminando travamentos de DOM no modal).
+  - Implementação do hook nativo do Livewire v3 `updatedSpecies($value)` para recarga imediata e sem conflitos de rede ao trocar de espécie.
+  - Expansão do catálogo `breed_defaults` para 202 raças abrangendo todas as espécies (caninos, felinos, equinos, bovinos, aves, lagomorfos, roedores e répteis).
+  - Adicionada opção "Outra / Não listada (digitar manualmente)..." com campo de texto automático para qualquer espécie ou raça não catalogada.
+  - Limpeza forçada de views e caches compilados do Blade.
 ## [v1.7.2] — 2026-11-18
 
 ### Corrigido

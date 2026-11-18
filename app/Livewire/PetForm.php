@@ -33,7 +33,6 @@ class PetForm extends Component
     public $photo;
     public $notes = '';
 
-    public $tutors = [];
     public $speciesOptions = [];
     public $breeds = [];
 
@@ -51,7 +50,6 @@ class PetForm extends Component
     {
         $this->speciesOptions = config('species');
         $this->species = '';
-        $this->tutors = Tutor::orderBy('name')->get();
         $this->loadBreeds();
         if ($id) $this->load($id);
     }
@@ -77,7 +75,6 @@ class PetForm extends Component
         $this->rg_issuer = $pet->rg_issuer ?? '';
         $this->size = $pet->size ?? 'medium';
         $this->notes = $pet->notes ?? '';
-        $this->tutors = Tutor::orderBy('name')->get();
         $this->loadBreeds();
     }
 
@@ -109,9 +106,15 @@ class PetForm extends Component
         $this->size = 'medium';
         $this->photo = null;
         $this->notes = '';
-        $this->tutors = Tutor::orderBy('name')->get();
         $this->loadBreeds();
         $this->resetValidation();
+    }
+
+    public function updatedSpecies($value)
+    {
+        $this->breed = '';
+        $this->breed_default_id = '';
+        $this->loadBreeds();
     }
 
     public function onSpeciesChange()
@@ -123,9 +126,20 @@ class PetForm extends Component
 
     public function updatedBreedDefaultId($value)
     {
+        if ($value === 'other') {
+            $this->breed = '';
+            return;
+        }
+
         if ($value && !str_starts_with((string)$value, 'custom_')) {
             $breed = BreedDefault::find($value);
-            $this->breed = $breed?->breed ?? '';
+            if ($breed) {
+                $this->breed = $breed->breed;
+                if (!$this->species) {
+                    $this->species = $breed->species;
+                    $this->loadBreeds();
+                }
+            }
         }
     }
 
@@ -194,6 +208,7 @@ class PetForm extends Component
 
     public function render()
     {
-        return view('livewire.pet-form');
+        $tutors = Tutor::select('id', 'name')->orderBy('name')->get();
+        return view('livewire.pet-form', compact('tutors'));
     }
 }
