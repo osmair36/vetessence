@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\User;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 
 class GroomingBoardController extends Controller
@@ -50,5 +51,65 @@ class GroomingBoardController extends Controller
         $appointment->update(['status' => $request->status]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function printDay(Request $request)
+    {
+        $date = $request->date ?? today()->toDateString();
+
+        $appointmentsList = Appointment::with(['pet.tutors', 'groomer', 'vet', 'services.service'])
+            ->where('type', 'grooming')
+            ->whereDate('date', $date)
+            ->orderBy('time')
+            ->get();
+
+        $appointments = $appointmentsList->groupBy('status');
+
+        return view('grooming-board.print-sheet', [
+            'date' => $date,
+            'appointments' => $appointments,
+            'appointmentsList' => $appointmentsList,
+            'pdfUrl' => route('grooming-board.pdf', ['date' => $date]),
+        ]);
+    }
+
+    public function pdfDay(Request $request)
+    {
+        $date = $request->date ?? today()->toDateString();
+
+        $appointmentsList = Appointment::with(['pet.tutors', 'groomer', 'vet', 'services.service'])
+            ->where('type', 'grooming')
+            ->whereDate('date', $date)
+            ->orderBy('time')
+            ->get();
+
+        $appointments = $appointmentsList->groupBy('status');
+        $filename = 'agenda-banho-tosa-' . $date . '.pdf';
+
+        return DocumentPdfService::download('grooming-board.print-sheet', [
+            'date' => $date,
+            'appointments' => $appointments,
+            'appointmentsList' => $appointmentsList,
+        ], $filename, 'landscape');
+    }
+
+    public function printOrder(Appointment $appointment)
+    {
+        $appointment->load(['pet.tutors', 'groomer', 'vet', 'services.service']);
+
+        return view('grooming.order-print', [
+            'appointment' => $appointment,
+            'pdfUrl' => route('grooming.order.pdf', $appointment),
+        ]);
+    }
+
+    public function pdfOrder(Appointment $appointment)
+    {
+        $appointment->load(['pet.tutors', 'groomer', 'vet', 'services.service']);
+        $filename = 'ordem-servico-banho-tosa-' . $appointment->id . '.pdf';
+
+        return DocumentPdfService::download('grooming.order-print', [
+            'appointment' => $appointment,
+        ], $filename);
     }
 }

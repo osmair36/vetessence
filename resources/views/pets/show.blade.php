@@ -1,10 +1,18 @@
 @extends('layouts.adminlte', ['title' => $pet->name])
 
 @section('content')
-<div class="mb-3">
+<div class="mb-3 d-flex justify-content-between align-items-center">
     <a href="{{ route('pets.index') }}" class="btn btn-outline-secondary btn-sm">
         <i class="fas fa-arrow-left mr-1"></i> Voltar para lista
     </a>
+    <div>
+        <a href="{{ route('pets.print', $pet) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+            <i class="fas fa-print mr-1"></i> Imprimir Ficha
+        </a>
+        <a href="{{ route('pets.pdf', $pet) }}" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-file-pdf mr-1"></i> Baixar PDF
+        </a>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -71,6 +79,12 @@
                 </button>
                 <a href="{{ route('pets.timeline', $pet) }}" class="btn btn-secondary-custom btn-block mt-2">
                     <i class="fas fa-history mr-1"></i> Timeline
+                </a>
+                <a href="{{ route('pets.print', $pet) }}" target="_blank" class="btn btn-outline-primary btn-block mt-2">
+                    <i class="fas fa-print mr-1"></i> Imprimir Ficha
+                </a>
+                <a href="{{ route('pets.pdf', $pet) }}" class="btn btn-outline-danger btn-block mt-2">
+                    <i class="fas fa-file-pdf mr-1"></i> Baixar PDF
                 </a>
             </div>
         </div>

@@ -4,6 +4,14 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Movimentações de Estoque</h3>
+        <div class="card-tools">
+            <a href="{{ route('stock.movements.print', request()->query()) }}" target="_blank" class="btn btn-secondary btn-sm">
+                <i class="fas fa-print"></i> Imprimir Extrato
+            </a>
+            <a href="{{ route('stock.movements.pdf', request()->query()) }}" class="btn btn-success btn-sm">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
+        </div>
     </div>
     <div class="card-body">
         @if($movements->count() > 0)

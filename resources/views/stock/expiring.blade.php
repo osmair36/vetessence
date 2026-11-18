@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title"><i class="fas fa-calendar-times"></i> Produtos Próximos ao Vencimento</h3>
         <div class="card-tools">
+            <a href="{{ route('stock.expiring.print', ['days' => $days]) }}" target="_blank" class="btn btn-secondary btn-sm">
+                <i class="fas fa-print"></i> Imprimir
+            </a>
+            <a href="{{ route('stock.expiring.pdf', ['days' => $days]) }}" class="btn btn-success btn-sm">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('stock.index') }}" class="btn btn-default btn-sm">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>

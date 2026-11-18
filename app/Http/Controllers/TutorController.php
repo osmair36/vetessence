@@ -77,6 +77,31 @@ class TutorController extends Controller
         return view('tutors.show', compact('tutor'));
     }
 
+    public function print(Tutor $tutor)
+    {
+        $tutor->load(['pets.breedRelation', 'invoices' => fn($q) => $q->latest()->take(5)]);
+
+        return view('tutors.print', [
+            'tutor' => $tutor,
+            'title' => 'Ficha Cadastral do Tutor / Cliente',
+            'subtitle' => 'Tutor: ' . $tutor->name . ($tutor->cpf ? ' | CPF: ' . $tutor->cpf : ''),
+            'pdfUrl' => route('tutors.pdf', $tutor),
+        ]);
+    }
+
+    public function pdf(Tutor $tutor)
+    {
+        $tutor->load(['pets.breedRelation', 'invoices' => fn($q) => $q->latest()->take(5)]);
+
+        $filename = 'ficha-tutor-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $tutor->name)) . '-' . $tutor->id;
+
+        return \App\Services\DocumentPdfService::download('tutors.print', [
+            'tutor' => $tutor,
+            'title' => 'Ficha Cadastral do Tutor / Cliente',
+            'subtitle' => 'Tutor: ' . $tutor->name . ($tutor->cpf ? ' | CPF: ' . $tutor->cpf : ''),
+        ], $filename);
+    }
+
     public function edit(Tutor $tutor)
     {
         return redirect()->route('tutors.index');

@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Relatório Mensal de Substâncias Controladas</h3>
         <div class="card-tools">
+            <a href="{{ route('controlled-substances.reports.monthly.print', request()->query()) }}" target="_blank" class="btn btn-secondary btn-sm">
+                <i class="fas fa-print"></i> Imprimir Livro
+            </a>
+            <a href="{{ route('controlled-substances.reports.monthly.pdf', request()->query()) }}" class="btn btn-danger btn-sm">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('controlled-substances.reports.annual') }}" class="btn btn-default btn-sm">
                 <i class="fas fa-calendar-alt"></i> Relatório Anual
             </a>

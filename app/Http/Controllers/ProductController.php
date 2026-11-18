@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -95,5 +96,51 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produto excluído com sucesso!');
+    }
+
+    public function inventoryPrint(Request $request)
+    {
+        $query = Product::with(['category', 'supplier']);
+
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('sku', 'like', "%{$request->search}%");
+            });
+        }
+
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->orderBy('name')->get();
+
+        return view('products.inventory-print', [
+            'products' => $products,
+            'pdfUrl' => route('products.inventory.pdf', $request->query()),
+        ]);
+    }
+
+    public function inventoryPdf(Request $request)
+    {
+        $query = Product::with(['category', 'supplier']);
+
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('sku', 'like', "%{$request->search}%");
+            });
+        }
+
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->orderBy('name')->get();
+        $filename = 'inventario-estoque-' . date('Y-m-d') . '.pdf';
+
+        return DocumentPdfService::download('products.inventory-print', [
+            'products' => $products,
+        ], $filename, 'landscape');
     }
 }

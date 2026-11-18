@@ -93,6 +93,31 @@ class LaboratoryOrderController extends Controller
         return view('laboratory-orders.show', compact('order'));
     }
 
+    public function print(LaboratoryOrder $laboratoryOrder)
+    {
+        $laboratoryOrder->load(['pet.tutors', 'vet', 'tests']);
+
+        return view('laboratory-orders.print', [
+            'order' => $laboratoryOrder,
+            'title' => 'Laudo de Exames Laboratoriais',
+            'subtitle' => 'Pedido ' . $laboratoryOrder->order_number . ' — Paciente: ' . ($laboratoryOrder->pet->name ?? '-'),
+            'pdfUrl' => route('laboratory-orders.pdf', $laboratoryOrder),
+        ]);
+    }
+
+    public function pdf(LaboratoryOrder $laboratoryOrder)
+    {
+        $laboratoryOrder->load(['pet.tutors', 'vet', 'tests']);
+
+        $filename = 'laudo-laboratorio-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $laboratoryOrder->order_number));
+
+        return \App\Services\DocumentPdfService::download('laboratory-orders.print', [
+            'order' => $laboratoryOrder,
+            'title' => 'Laudo de Exames Laboratoriais',
+            'subtitle' => 'Pedido ' . $laboratoryOrder->order_number . ' — Paciente: ' . ($laboratoryOrder->pet->name ?? '-'),
+        ], $filename);
+    }
+
     public function edit(LaboratoryOrder $laboratoryOrder)
     {
         $order = $laboratoryOrder;

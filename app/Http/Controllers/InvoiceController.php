@@ -16,6 +16,7 @@ use App\Services\Nfse\NfseResult;
 use App\Services\Nfe\NfeService;
 use App\Services\Nfe\NfeResult;
 use App\Services\PaymentService;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -457,5 +458,25 @@ class InvoiceController extends Controller
         InvoicePaid::dispatch($invoice);
 
         return response()->json(['success' => true, 'message' => 'Pagamento confirmado via gateway.']);
+    }
+
+    public function print(Invoice $invoice)
+    {
+        $invoice->load(['tutor', 'pet', 'items', 'appointments']);
+
+        return view('invoices.print', [
+            'invoice' => $invoice,
+            'pdfUrl' => route('invoices.pdf', $invoice),
+        ]);
+    }
+
+    public function pdf(Invoice $invoice)
+    {
+        $invoice->load(['tutor', 'pet', 'items', 'appointments']);
+        $filename = ($invoice->status === 'paid' ? 'recibo-' : 'fatura-') . str_replace('/', '-', $invoice->invoice_number) . '.pdf';
+
+        return DocumentPdfService::download('invoices.print', [
+            'invoice' => $invoice,
+        ], $filename);
     }
 }

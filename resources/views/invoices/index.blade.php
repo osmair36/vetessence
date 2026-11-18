@@ -67,6 +67,12 @@
                         <a href="{{ route('invoices.show', $inv) }}" class="btn btn-action btn-info" title="Visualizar">
                             <i class="fas fa-eye"></i>
                         </a>
+                        <a href="{{ route('invoices.print', $inv) }}" target="_blank" class="btn btn-action btn-secondary" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="{{ route('invoices.pdf', $inv) }}" class="btn btn-action btn-success" title="Baixar PDF">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
                         <a href="{{ route('invoices.edit', $inv) }}" class="btn btn-action btn-primary" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>

@@ -32,6 +32,11 @@ class Vaccination extends Model
         return $this->belongsTo(User::class, 'vet_id');
     }
 
+    public function veterinarian(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'vet_id');
+    }
+
     public function medicalRecord(): BelongsTo
     {
         return $this->belongsTo(MedicalRecord::class);

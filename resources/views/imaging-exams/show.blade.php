@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">Exame de Imagem - {{ $exam->exam_number }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('imaging-exams.print', $exam) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Laudo
+                    </a>
+                    <a href="{{ route('imaging-exams.pdf', $exam) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('imaging-exams.edit', $exam) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>

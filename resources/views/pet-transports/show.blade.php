@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-shuttle-van mr-2"></i>Transporte #{{ $petTransport->id }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('pet-transports.print', $petTransport) }}" target="_blank" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-print"></i> Imprimir OS
+                    </a>
+                    <a href="{{ route('pet-transports.pdf', $petTransport) }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('pet-transports.edit', $petTransport) }}" class="btn btn-sm btn-warning">
                         <i class="fas fa-edit"></i> Editar
                     </a>

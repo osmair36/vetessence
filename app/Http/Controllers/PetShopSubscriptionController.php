@@ -7,6 +7,7 @@ use App\Models\PetShopPackage;
 use App\Models\PetShopConsumption;
 use App\Models\Pet;
 use App\Models\Service;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -74,5 +75,26 @@ class PetShopSubscriptionController extends Controller
 
         return redirect()->route('pet-shop-subscriptions.index')
             ->with('success', 'Assinatura cancelada.');
+    }
+
+    public function print(PetShopSubscription $petShopSubscription)
+    {
+        $petShopSubscription->load(['pet.tutors', 'package', 'branch', 'consumptions.service', 'consumptions.user']);
+
+        return view('pet-shop-subscriptions.print', [
+            'petShopSubscription' => $petShopSubscription,
+            'pdfUrl' => route('pet-shop-subscriptions.pdf', $petShopSubscription),
+        ]);
+    }
+
+    public function pdf(PetShopSubscription $petShopSubscription)
+    {
+        $petShopSubscription->load(['pet.tutors', 'package', 'branch', 'consumptions.service', 'consumptions.user']);
+
+        $filename = 'pacote-' . ($petShopSubscription->pet->name ?? 'pet') . '-' . $petShopSubscription->id . '.pdf';
+
+        return DocumentPdfService::download('pet-shop-subscriptions.print', [
+            'petShopSubscription' => $petShopSubscription,
+        ], $filename);
     }
 }

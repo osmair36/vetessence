@@ -52,8 +52,14 @@
             </div>
         </div>
         <div class="d-flex justify-content-between mt-3">
-            <a href="{{ route('surgeries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i>Voltar</a>
-            <a href="{{ route('surgeries.edit', $surgery) }}" class="btn btn-primary"><i class="fas fa-edit mr-1"></i>Editar</a>
+            <div>
+                <a href="{{ route('surgeries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i>Voltar</a>
+                <a href="{{ route('surgeries.edit', $surgery) }}" class="btn btn-primary"><i class="fas fa-edit mr-1"></i>Editar</a>
+            </div>
+            <div>
+                <a href="{{ route('surgeries.print', $surgery) }}" target="_blank" class="btn btn-outline-primary"><i class="fas fa-print mr-1"></i>Imprimir Ficha</a>
+                <a href="{{ route('surgeries.pdf', $surgery) }}" class="btn btn-outline-danger ml-1"><i class="fas fa-file-pdf mr-1"></i>Baixar PDF</a>
+            </div>
         </div>
     </div>
 </div>

@@ -16,7 +16,12 @@
                 <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="form-control">
             </div>
                 <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-filter"></i> Filtrar</button>
-                <button type="button" onclick="window.print()" class="btn btn-secondary mx-2"><i class="fas fa-print"></i> Imprimir</button>
+                <a href="{{ route('reports.export-print', ['start_date' => $startDate->format('Y-m-d'), 'end_date' => $endDate->format('Y-m-d')]) }}" target="_blank" class="btn btn-secondary mx-1">
+                    <i class="fas fa-print"></i> Imprimir Extrato
+                </a>
+                <a href="{{ route('reports.export-pdf', ['start_date' => $startDate->format('Y-m-d'), 'end_date' => $endDate->format('Y-m-d')]) }}" class="btn btn-success mx-1">
+                    <i class="fas fa-file-pdf"></i> Baixar PDF
+                </a>
             </form>
         </div>
     </div>

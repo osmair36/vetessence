@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">Pedido de Laboratório - {{ $order->order_number }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('laboratory-orders.print', $order) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Laudo
+                    </a>
+                    <a href="{{ route('laboratory-orders.pdf', $order) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('laboratory-orders.edit', $order) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>

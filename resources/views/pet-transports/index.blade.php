@@ -62,8 +62,10 @@
                         </td>
                         <td>R$ {{ number_format($t->price, 2, ',', '.') }}</td>
                         <td>
-                            <a href="{{ route('pet-transports.show', $t) }}" class="btn btn-xs btn-info"><i class="fas fa-eye"></i></a>
-                            <a href="{{ route('pet-transports.edit', $t) }}" class="btn btn-xs btn-warning"><i class="fas fa-edit"></i></a>
+                            <a href="{{ route('pet-transports.show', $t) }}" class="btn btn-xs btn-info" title="Visualizar"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('pet-transports.print', $t) }}" target="_blank" class="btn btn-xs btn-secondary" title="Imprimir OS"><i class="fas fa-print"></i></a>
+                            <a href="{{ route('pet-transports.pdf', $t) }}" class="btn btn-xs btn-success" title="Baixar PDF"><i class="fas fa-file-pdf"></i></a>
+                            <a href="{{ route('pet-transports.edit', $t) }}" class="btn btn-xs btn-warning" title="Editar"><i class="fas fa-edit"></i></a>
                         </td>
                     </tr>
                     @empty

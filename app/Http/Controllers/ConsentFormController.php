@@ -7,6 +7,7 @@ use App\Models\ConsentTemplate;
 use App\Models\Pet;
 use App\Models\Tutor;
 use App\Models\User;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 
 class ConsentFormController extends Controller
@@ -154,5 +155,26 @@ class ConsentFormController extends Controller
             'content' => $content,
             'template_name' => $template->name,
         ]);
+    }
+
+    public function print(ConsentForm $consentForm)
+    {
+        $consentForm->load(['pet.tutors', 'tutor', 'template', 'veterinarian', 'witness']);
+
+        return view('consent-forms.print', [
+            'consentForm' => $consentForm,
+            'pdfUrl' => route('consent-forms.pdf', $consentForm),
+        ]);
+    }
+
+    public function pdf(ConsentForm $consentForm)
+    {
+        $consentForm->load(['pet.tutors', 'tutor', 'template', 'veterinarian', 'witness']);
+
+        $filename = 'termo-consentimento-' . str_replace('/', '-', $consentForm->consent_number) . '.pdf';
+
+        return DocumentPdfService::download('consent-forms.print', [
+            'consentForm' => $consentForm,
+        ], $filename);
     }
 }

@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Produtos</h3>
         <div class="card-tools">
+            <a href="{{ route('products.inventory.print', request()->query()) }}" target="_blank" class="btn btn-secondary btn-sm">
+                <i class="fas fa-print"></i> Imprimir Inventário
+            </a>
+            <a href="{{ route('products.inventory.pdf', request()->query()) }}" class="btn btn-success btn-sm">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <button onclick="openCreateModal()" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo
             </button>

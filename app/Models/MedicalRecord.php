@@ -40,6 +40,11 @@ class MedicalRecord extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function veterinarian(): BelongsTo
+    {
+        return $this->vet();
+    }
+
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);

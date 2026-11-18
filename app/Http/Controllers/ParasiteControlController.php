@@ -105,6 +105,92 @@ class ParasiteControlController extends Controller
             ->with('success', 'Controle parasitário excluído!');
     }
 
+    public function petHistoryPrint(Pet $pet)
+    {
+        $pet->load('tutors');
+        $controls = ParasiteControl::where('pet_id', $pet->id)->with('vet')->orderBy('application_date', 'desc')->get();
+
+        return view('parasite-controls.print', [
+            'pet' => $pet,
+            'controls' => $controls,
+            'title' => 'Histórico de Vermifugação e Controle de Parasitas',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+            'pdfUrl' => route('pets.parasite-controls.pdf', $pet),
+        ]);
+    }
+
+    public function petHistoryPdf(Pet $pet)
+    {
+        $pet->load('tutors');
+        $controls = ParasiteControl::where('pet_id', $pet->id)->with('vet')->orderBy('application_date', 'desc')->get();
+
+        $filename = 'controle-parasitario-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $pet->name)) . '-' . $pet->id;
+
+        return \App\Services\DocumentPdfService::download('parasite-controls.print', [
+            'pet' => $pet,
+            'controls' => $controls,
+            'title' => 'Histórico de Vermifugação e Controle de Parasitas',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+        ], $filename);
+    }
+
+    public function reportPrint(Request $request)
+    {
+        $query = ParasiteControl::with(['pet.tutors', 'vet']);
+
+        if ($request->type) {
+            $query->where('type', $request->type);
+        }
+        if ($request->date_from) {
+            $query->whereDate('application_date', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('application_date', '<=', $request->date_to);
+        }
+
+        $controls = $query->orderBy('application_date', 'desc')->get();
+
+        $subtitle = 'Relatório Geral de Controle Parasitário e Vermifugação';
+        if ($request->date_from && $request->date_to) {
+            $subtitle .= ' — Período: ' . \Carbon\Carbon::parse($request->date_from)->format('d/m/Y') . ' a ' . \Carbon\Carbon::parse($request->date_to)->format('d/m/Y');
+        }
+
+        return view('parasite-controls.report-print', [
+            'controls' => $controls,
+            'title' => 'Relatório Geral de Controle de Parasitas',
+            'periodSubtitle' => $subtitle,
+            'pdfUrl' => route('parasite-controls.report.pdf', $request->all()),
+        ]);
+    }
+
+    public function reportPdf(Request $request)
+    {
+        $query = ParasiteControl::with(['pet.tutors', 'vet']);
+
+        if ($request->type) {
+            $query->where('type', $request->type);
+        }
+        if ($request->date_from) {
+            $query->whereDate('application_date', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('application_date', '<=', $request->date_to);
+        }
+
+        $controls = $query->orderBy('application_date', 'desc')->get();
+
+        $subtitle = 'Relatório Geral de Controle Parasitário e Vermifugação';
+        if ($request->date_from && $request->date_to) {
+            $subtitle .= ' — Período: ' . \Carbon\Carbon::parse($request->date_from)->format('d/m/Y') . ' a ' . \Carbon\Carbon::parse($request->date_to)->format('d/m/Y');
+        }
+
+        return \App\Services\DocumentPdfService::download('parasite-controls.report-print', [
+            'controls' => $controls,
+            'title' => 'Relatório Geral de Controle de Parasitas',
+            'periodSubtitle' => $subtitle,
+        ], 'relatorio-parasitarios-' . now()->format('Y-m-d'), 'landscape');
+    }
+
     protected function getVeterinarians()
     {
         return User::where('is_active', true)

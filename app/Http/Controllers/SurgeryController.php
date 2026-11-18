@@ -70,6 +70,31 @@ class SurgeryController extends Controller
         return view('surgeries.show', compact('surgery'));
     }
 
+    public function print(Surgery $surgery)
+    {
+        $surgery->load(['pet.tutors', 'vet', 'medicalRecord']);
+
+        return view('surgeries.print', [
+            'surgery' => $surgery,
+            'title' => 'Ficha e Relatório Cirúrgico Veterinário',
+            'subtitle' => 'Procedimento: ' . $surgery->surgery_type . ' — Paciente: ' . ($surgery->pet->name ?? '-'),
+            'pdfUrl' => route('surgeries.pdf', $surgery),
+        ]);
+    }
+
+    public function pdf(Surgery $surgery)
+    {
+        $surgery->load(['pet.tutors', 'vet', 'medicalRecord']);
+
+        $filename = 'ficha-cirurgica-' . $surgery->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $surgery->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('surgeries.print', [
+            'surgery' => $surgery,
+            'title' => 'Ficha e Relatório Cirúrgico Veterinário',
+            'subtitle' => 'Procedimento: ' . $surgery->surgery_type . ' — Paciente: ' . ($surgery->pet->name ?? '-'),
+        ], $filename);
+    }
+
     public function edit(Surgery $surgery)
     {
         $pets = Pet::with('tutors')->where('is_active', true)->orderBy('name')->get();

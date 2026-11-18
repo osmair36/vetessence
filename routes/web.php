@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'tutors.update',
         'destroy' => 'tutors.destroy',
     ]);
+    Route::get('tutors/{tutor}/print', 'App\Http\Controllers\TutorController@print')->name('tutors.print');
+    Route::get('tutors/{tutor}/pdf', 'App\Http\Controllers\TutorController@pdf')->name('tutors.pdf');
 
     // Pets
     Route::resource('pets', 'App\Http\Controllers\PetController')->names([
@@ -76,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'pets.destroy',
     ]);
     Route::get('pets/{pet}/timeline', 'App\Http\Controllers\PatientTimelineController@index')->name('pets.timeline');
+    Route::get('pets/{pet}/print', 'App\Http\Controllers\PetController@print')->name('pets.print');
+    Route::get('pets/{pet}/pdf', 'App\Http\Controllers\PetController@pdf')->name('pets.pdf');
 
     // Patient Flow Board (must be before appointments resource)
     Route::get('appointments/flow-data', 'App\Http\Controllers\AppointmentController@flowData')->name('appointments.flow-data');
@@ -96,6 +100,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('appointments/{appointment}/reschedule', 'App\Http\Controllers\AppointmentController@reschedule');
 
     // Medical Records
+    Route::get('medical-records/{medicalRecord}/print', 'App\Http\Controllers\MedicalRecordController@print')->name('medical-records.print');
+    Route::get('medical-records/{medicalRecord}/pdf', 'App\Http\Controllers\MedicalRecordController@pdf')->name('medical-records.pdf');
+    Route::get('pets/{pet}/medical-records/print', 'App\Http\Controllers\MedicalRecordController@petHistoryPrint')->name('pets.medical-records.print');
+    Route::get('pets/{pet}/medical-records/pdf', 'App\Http\Controllers\MedicalRecordController@petHistoryPdf')->name('pets.medical-records.pdf');
     Route::resource('medical-records', 'App\Http\Controllers\MedicalRecordController')->names([
         'index' => 'medical-records.index',
         'create' => 'medical-records.create',
@@ -109,6 +117,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('medical-records.generate-invoice');
 
     // Vaccinations
+    Route::get('vaccinations/report/print', 'App\Http\Controllers\VaccinationController@reportPrint')->name('vaccinations.report.print');
+    Route::get('vaccinations/report/pdf', 'App\Http\Controllers\VaccinationController@reportPdf')->name('vaccinations.report.pdf');
+    Route::get('pets/{pet}/vaccination-card/print', 'App\Http\Controllers\VaccinationController@cardPrint')->name('pets.vaccinations.card.print');
+    Route::get('pets/{pet}/vaccination-card/pdf', 'App\Http\Controllers\VaccinationController@cardPdf')->name('pets.vaccinations.card.pdf');
     Route::get('vaccinations/forecast', 'App\Http\Controllers\VaccinationController@forecast')->name('vaccinations.forecast');
     Route::resource('vaccinations', 'App\Http\Controllers\VaccinationController')->names([
         'index' => 'vaccinations.index',
@@ -132,6 +144,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Surgeries
+    Route::get('surgeries/{surgery}/print', 'App\Http\Controllers\SurgeryController@print')->name('surgeries.print');
+    Route::get('surgeries/{surgery}/pdf', 'App\Http\Controllers\SurgeryController@pdf')->name('surgeries.pdf');
     Route::resource('surgeries', 'App\Http\Controllers\SurgeryController')->names([
         'index' => 'surgeries.index',
         'create' => 'surgeries.create',
@@ -175,6 +189,8 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'invoices.destroy',
     ]);
     
+    Route::get('invoices/{invoice}/print', 'App\Http\Controllers\InvoiceController@print')->name('invoices.print');
+    Route::get('invoices/{invoice}/pdf', 'App\Http\Controllers\InvoiceController@pdf')->name('invoices.pdf');
     Route::get('invoices/{invoice}/pix', 'App\Http\Controllers\InvoiceController@generatePix')->name('invoices.pix');
     Route::post('invoices/{invoice}/pay', 'App\Http\Controllers\InvoiceController@pay')->name('invoices.pay');
     Route::post('invoices/{invoice}/charge', 'App\Http\Controllers\InvoiceController@charge')->name('invoices.charge');
@@ -244,6 +260,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('commissions/rates/{commissionRate}', 'App\Http\Controllers\CommissionController@ratesDestroy')->name('commissions.rates-destroy');
 
     // Products
+    Route::get('products/inventory/print', 'App\Http\Controllers\ProductController@inventoryPrint')->name('products.inventory.print');
+    Route::get('products/inventory/pdf', 'App\Http\Controllers\ProductController@inventoryPdf')->name('products.inventory.pdf');
     Route::resource('products', 'App\Http\Controllers\ProductController')->names([
         'index' => 'products.index',
         'create' => 'products.create',
@@ -275,8 +293,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Stock
     Route::get('stock', 'App\Http\Controllers\StockController@dashboard')->name('stock.index');
+    Route::get('stock/movements/print', 'App\Http\Controllers\StockController@movementsPrint')->name('stock.movements.print');
+    Route::get('stock/movements/pdf', 'App\Http\Controllers\StockController@movementsPdf')->name('stock.movements.pdf');
     Route::get('stock/movements', 'App\Http\Controllers\StockController@movements')->name('stock.movements');
     Route::get('stock/reorder-suggestions', 'App\Http\Controllers\StockController@reorderSuggestions')->name('stock.reorder-suggestions');
+    Route::get('stock/expiring/print', 'App\Http\Controllers\StockController@expiringPrint')->name('stock.expiring.print');
+    Route::get('stock/expiring/pdf', 'App\Http\Controllers\StockController@expiringPdf')->name('stock.expiring.pdf');
     Route::get('stock/expiring', 'App\Http\Controllers\StockController@expiring')->name('stock.expiring');
     Route::get('stock/adjust', 'App\Http\Controllers\StockController@create')->name('stock.adjust');
     Route::post('stock/adjust', 'App\Http\Controllers\StockController@store')->name('stock.adjust.store');
@@ -292,6 +314,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('pet-shop-packages/{petShopPackage}', 'App\Http\Controllers\PetShopPackageController@destroy')->name('pet-shop-packages.destroy');
 
     // Pet Shop Subscriptions
+    Route::get('pet-shop-subscriptions/{petShopSubscription}/print', 'App\Http\Controllers\PetShopSubscriptionController@print')->name('pet-shop-subscriptions.print');
+    Route::get('pet-shop-subscriptions/{petShopSubscription}/pdf', 'App\Http\Controllers\PetShopSubscriptionController@pdf')->name('pet-shop-subscriptions.pdf');
     Route::get('pet-shop-subscriptions', 'App\Http\Controllers\PetShopSubscriptionController@index')->name('pet-shop-subscriptions.index');
     Route::get('pet-shop-subscriptions/create', 'App\Http\Controllers\PetShopSubscriptionController@create')->name('pet-shop-subscriptions.create');
     Route::post('pet-shop-subscriptions', 'App\Http\Controllers\PetShopSubscriptionController@store')->name('pet-shop-subscriptions.store');
@@ -341,6 +365,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Reports
     Route::get('reports/financial', 'App\Http\Controllers\ReportController@financial')->name('reports.financial');
+    Route::get('reports/export/print', 'App\Http\Controllers\ReportController@exportPrint')->name('reports.export-print');
+    Route::get('reports/export/pdf', 'App\Http\Controllers\ReportController@exportPdf')->name('reports.export-pdf');
     Route::get('reports/export', 'App\Http\Controllers\ReportController@exportPdf')->name('reports.export');
 
     // Users (Admin)
@@ -366,6 +392,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Hospitalization
+    Route::get('hospitalizations/{hospitalization}/print', 'App\Http\Controllers\HospitalizationController@print')->name('hospitalizations.print');
+    Route::get('hospitalizations/{hospitalization}/pdf', 'App\Http\Controllers\HospitalizationController@pdf')->name('hospitalizations.pdf');
     Route::resource('hospitalizations', 'App\Http\Controllers\HospitalizationController')->names([
         'index' => 'hospitalizations.index',
         'create' => 'hospitalizations.create',
@@ -448,6 +476,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('treatment-plans/{treatmentPlan}/reject', 'App\Http\Controllers\TreatmentPlanController@reject')->name('treatment-plans.reject');
 
     // Consent Forms
+    Route::get('consent-forms/{consentForm}/print', 'App\Http\Controllers\ConsentFormController@print')->name('consent-forms.print');
+    Route::get('consent-forms/{consentForm}/pdf', 'App\Http\Controllers\ConsentFormController@pdf')->name('consent-forms.pdf');
     Route::resource('consent-forms', 'App\Http\Controllers\ConsentFormController')->names([
         'index' => 'consent-forms.index',
         'create' => 'consent-forms.create',
@@ -514,6 +544,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Laboratory Orders
+    Route::get('laboratory-orders/{laboratoryOrder}/print', 'App\Http\Controllers\LaboratoryOrderController@print')->name('laboratory-orders.print');
+    Route::get('laboratory-orders/{laboratoryOrder}/pdf', 'App\Http\Controllers\LaboratoryOrderController@pdf')->name('laboratory-orders.pdf');
     Route::resource('laboratory-orders', 'App\Http\Controllers\LaboratoryOrderController')->names([
         'index' => 'laboratory-orders.index',
         'create' => 'laboratory-orders.create',
@@ -525,6 +557,8 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Imaging Exams
+    Route::get('imaging-exams/{imagingExam}/print', 'App\Http\Controllers\ImagingExamController@print')->name('imaging-exams.print');
+    Route::get('imaging-exams/{imagingExam}/pdf', 'App\Http\Controllers\ImagingExamController@pdf')->name('imaging-exams.pdf');
     Route::resource('imaging-exams', 'App\Http\Controllers\ImagingExamController')->names([
         'index' => 'imaging-exams.index',
         'create' => 'imaging-exams.create',
@@ -565,6 +599,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('communication-queues/{communicationQueue}', 'App\Http\Controllers\CommunicationQueueController@destroy')->name('communication-queues.destroy');
 
     // Parasite Controls
+    Route::get('parasite-controls/report/print', 'App\Http\Controllers\ParasiteControlController@reportPrint')->name('parasite-controls.report.print');
+    Route::get('parasite-controls/report/pdf', 'App\Http\Controllers\ParasiteControlController@reportPdf')->name('parasite-controls.report.pdf');
+    Route::get('pets/{pet}/parasite-controls/print', 'App\Http\Controllers\ParasiteControlController@petHistoryPrint')->name('pets.parasite-controls.print');
+    Route::get('pets/{pet}/parasite-controls/pdf', 'App\Http\Controllers\ParasiteControlController@petHistoryPdf')->name('pets.parasite-controls.pdf');
     Route::resource('parasite-controls', 'App\Http\Controllers\ParasiteControlController')->names([
         'index' => 'parasite-controls.index',
         'create' => 'parasite-controls.create',
@@ -671,6 +709,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'App\Http\Controllers\PurchaseOrderController@index')->name('index');
         Route::get('/create', 'App\Http\Controllers\PurchaseOrderController@create')->name('create');
         Route::post('/', 'App\Http\Controllers\PurchaseOrderController@store')->name('store');
+        Route::get('/{purchaseOrder}/print', 'App\Http\Controllers\PurchaseOrderController@print')->name('print');
+        Route::get('/{purchaseOrder}/pdf', 'App\Http\Controllers\PurchaseOrderController@pdf')->name('pdf');
         Route::get('/{purchaseOrder}', 'App\Http\Controllers\PurchaseOrderController@show')->name('show');
         Route::get('/{purchaseOrder}/edit', 'App\Http\Controllers\PurchaseOrderController@edit')->name('edit');
         Route::put('/{purchaseOrder}', 'App\Http\Controllers\PurchaseOrderController@update')->name('update');
@@ -747,8 +787,9 @@ Route::middleware(['auth'])->group(function () {
     // Tutor Communication History
     Route::get('tutors/{tutor}/communication', 'App\Http\Controllers\TutorController@communication')->name('tutors.communication');
 
-    // Prescription Print
+    // Prescription Print & PDF
     Route::get('prescriptions/{prescription}/print', 'App\Http\Controllers\PrescriptionController@print')->name('prescriptions.print');
+    Route::get('prescriptions/{prescription}/pdf', 'App\Http\Controllers\PrescriptionController@pdf')->name('prescriptions.pdf');
 
     // Staff Schedules (on-call-calendar must be before resource to avoid matching show route)
     Route::get('staff-schedules/on-call-calendar', 'App\Http\Controllers\StaffScheduleController@onCallCalendar')->name('staff-schedules.on-call-calendar');
@@ -773,6 +814,8 @@ Route::middleware(['auth'])->group(function () {
     ])->only(['index', 'show']);
 
     // ANVISA Reports
+    Route::get('controlled-substances/reports/monthly/print', 'App\Http\Controllers\ControlledSubstanceController@reportMonthlyPrint')->name('controlled-substances.reports.monthly.print');
+    Route::get('controlled-substances/reports/monthly/pdf', 'App\Http\Controllers\ControlledSubstanceController@reportMonthlyPdf')->name('controlled-substances.reports.monthly.pdf');
     Route::get('controlled-substances/reports/monthly', 'App\Http\Controllers\ControlledSubstanceController@reportMonthly')->name('controlled-substances.reports.monthly');
     Route::get('controlled-substances/reports/annual', 'App\Http\Controllers\ControlledSubstanceController@reportAnnual')->name('controlled-substances.reports.annual');
     Route::get('controlled-substances/reports/export-csv', 'App\Http\Controllers\ControlledSubstanceController@exportCsv')->name('controlled-substances.reports.export-csv');
@@ -836,6 +879,7 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'health-certificates.update',
         'destroy' => 'health-certificates.destroy',
     ]);
+    Route::get('health-certificates/{healthCertificate}/print', 'App\Http\Controllers\HealthCertificateController@print')->name('health-certificates.print');
     Route::get('health-certificates/{healthCertificate}/pdf', 'App\Http\Controllers\HealthCertificateController@pdf')->name('health-certificates.pdf');
     Route::get('health-certificates/{healthCertificate}/cvi-pdf', 'App\Http\Controllers\HealthCertificateController@downloadCviPdf')->name('health-certificates.cvi-pdf');
 
@@ -937,7 +981,11 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'emergency-protocols.destroy',
     ]);
 
-    // Grooming Board
+    // Grooming Board & Orders
+    Route::get('grooming-board/print', 'App\Http\Controllers\GroomingBoardController@printDay')->name('grooming-board.print');
+    Route::get('grooming-board/pdf', 'App\Http\Controllers\GroomingBoardController@pdfDay')->name('grooming-board.pdf');
+    Route::get('grooming/{appointment}/order/print', 'App\Http\Controllers\GroomingBoardController@printOrder')->name('grooming.order.print');
+    Route::get('grooming/{appointment}/order/pdf', 'App\Http\Controllers\GroomingBoardController@pdfOrder')->name('grooming.order.pdf');
     Route::get('grooming-board', 'App\Http\Controllers\GroomingBoardController@index')->name('grooming-board.index');
     Route::post('grooming-board/{appointment}/status', 'App\Http\Controllers\GroomingBoardController@updateStatus')->name('grooming-board.update-status');
 
@@ -948,6 +996,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('pdv/checkout', 'App\Http\Controllers\PdvController@checkout')->name('pdv.checkout');
 
     // Táxi Pet (Pet Transport)
+    Route::get('pet-transports/{petTransport}/print', 'App\Http\Controllers\PetTransportController@print')->name('pet-transports.print');
+    Route::get('pet-transports/{petTransport}/pdf', 'App\Http\Controllers\PetTransportController@pdf')->name('pet-transports.pdf');
     Route::resource('pet-transports', 'App\Http\Controllers\PetTransportController')->names([
         'index'   => 'pet-transports.index',
         'create'  => 'pet-transports.create',

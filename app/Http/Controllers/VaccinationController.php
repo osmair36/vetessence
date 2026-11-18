@@ -113,6 +113,92 @@ class VaccinationController extends Controller
         return $pdf->download("certificado-vacinas-{$pet->name}.pdf");
     }
 
+    public function cardPrint(Pet $pet)
+    {
+        $vaccinations = $pet->vaccinations()->with(['vet', 'veterinarian'])->orderBy('date', 'desc')->get();
+        $pet->load('tutors');
+
+        return view('vaccinations.card-print', [
+            'pet' => $pet,
+            'vaccinations' => $vaccinations,
+            'title' => 'Carteira de Vacinação Veterinária',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+            'pdfUrl' => route('pets.vaccinations.card.pdf', $pet),
+        ]);
+    }
+
+    public function cardPdf(Pet $pet)
+    {
+        $vaccinations = $pet->vaccinations()->with(['vet', 'veterinarian'])->orderBy('date', 'desc')->get();
+        $pet->load('tutors');
+
+        $filename = 'carteira-vacinacao-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $pet->name)) . '-' . $pet->id;
+
+        return \App\Services\DocumentPdfService::download('vaccinations.card-print', [
+            'pet' => $pet,
+            'vaccinations' => $vaccinations,
+            'title' => 'Carteira de Vacinação Veterinária',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+        ], $filename);
+    }
+
+    public function reportPrint(Request $request)
+    {
+        $query = Vaccination::with(['pet.tutors', 'vet']);
+
+        if ($request->pet_id) {
+            $query->where('pet_id', $request->pet_id);
+        }
+        if ($request->date_from) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $vaccinations = $query->orderBy('date', 'desc')->get();
+
+        $subtitle = 'Relatório Geral de Vacinações';
+        if ($request->date_from && $request->date_to) {
+            $subtitle .= ' — Período: ' . Carbon::parse($request->date_from)->format('d/m/Y') . ' a ' . Carbon::parse($request->date_to)->format('d/m/Y');
+        }
+
+        return view('vaccinations.report-print', [
+            'vaccinations' => $vaccinations,
+            'title' => 'Relatório Geral de Vacinações',
+            'periodSubtitle' => $subtitle,
+            'pdfUrl' => route('vaccinations.report.pdf', $request->all()),
+        ]);
+    }
+
+    public function reportPdf(Request $request)
+    {
+        $query = Vaccination::with(['pet.tutors', 'vet']);
+
+        if ($request->pet_id) {
+            $query->where('pet_id', $request->pet_id);
+        }
+        if ($request->date_from) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $vaccinations = $query->orderBy('date', 'desc')->get();
+
+        $subtitle = 'Relatório Geral de Vacinações';
+        if ($request->date_from && $request->date_to) {
+            $subtitle .= ' — Período: ' . Carbon::parse($request->date_from)->format('d/m/Y') . ' a ' . Carbon::parse($request->date_to)->format('d/m/Y');
+        }
+
+        return \App\Services\DocumentPdfService::download('vaccinations.report-print', [
+            'vaccinations' => $vaccinations,
+            'title' => 'Relatório Geral de Vacinações',
+            'periodSubtitle' => $subtitle,
+        ], 'relatorio-vacinacoes-' . now()->format('Y-m-d'), 'landscape');
+    }
+
     public function forecast(Request $request)
     {
         $days = (int) $request->get('days', 30);

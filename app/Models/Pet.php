@@ -89,6 +89,21 @@ class Pet extends Model
         return $this->belongsTo(Branch::class, 'created_at_branch_id');
     }
 
+    public function weightRecords(): HasMany
+    {
+        return $this->hasMany(WeightRecord::class);
+    }
+
+    public function parasiteControls(): HasMany
+    {
+        return $this->hasMany(ParasiteControl::class);
+    }
+
+    public function hospitalizations(): HasMany
+    {
+        return $this->hasMany(Hospitalization::class);
+    }
+
     public function getAgeMonthsAttribute(): int
     {
         return $this->birth_date ? $this->birth_date->diffInMonths(now()) : 0;

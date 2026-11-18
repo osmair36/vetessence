@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">{{ $petShopSubscription->pet->name }} — {{ $petShopSubscription->package->name }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('pet-shop-subscriptions.print', $petShopSubscription) }}" target="_blank" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-print"></i> Imprimir Contrato
+                    </a>
+                    <a href="{{ route('pet-shop-subscriptions.pdf', $petShopSubscription) }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('pet-shop-subscriptions.index') }}" class="btn btn-default btn-sm"><i class="fas fa-arrow-left"></i> Voltar</a>
                 </div>
             </div>

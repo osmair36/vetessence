@@ -126,11 +126,18 @@
             <div>
                 <a href="{{ route('medical-records.index') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-1"></i> Voltar</a>
                 <a href="{{ route('medical-records.edit', $medicalRecord) }}" class="btn btn-primary"><i class="fas fa-edit mr-1"></i> Editar</a>
+                <a href="{{ route('medical-records.print', $medicalRecord) }}" target="_blank" class="btn btn-outline-primary ml-1"><i class="fas fa-print mr-1"></i> Imprimir Atendimento</a>
+                <a href="{{ route('medical-records.pdf', $medicalRecord) }}" class="btn btn-outline-danger ml-1"><i class="fas fa-file-pdf mr-1"></i> Baixar PDF</a>
             </div>
-            <form action="{{ route('medical-records.generate-invoice', $medicalRecord) }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-success"><i class="fas fa-file-invoice mr-1"></i> Gerar Fatura</button>
-            </form>
+            <div>
+                @if($medicalRecord->pet)
+                <a href="{{ route('pets.medical-records.print', $medicalRecord->pet) }}" target="_blank" class="btn btn-outline-info mr-2"><i class="fas fa-history mr-1"></i> Prontuário Completo</a>
+                @endif
+                <form action="{{ route('medical-records.generate-invoice', $medicalRecord) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-success"><i class="fas fa-file-invoice mr-1"></i> Gerar Fatura</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Controle Parasitário</h3>
         <div class="card-tools">
+            <a href="{{ route('parasite-controls.report.print', request()->all()) }}" target="_blank" class="btn btn-outline-secondary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Relatório
+            </a>
+            <a href="{{ route('parasite-controls.report.pdf', request()->all()) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('parasite-controls.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Novo</a>
         </div>
     </div>
@@ -62,6 +68,9 @@
                     <td>{{ $c->vet->name ?? '-' }}</td>
                     <td>
                         <a href="{{ route('parasite-controls.show', $c) }}" class="btn btn-action btn-info"><i class="fas fa-eye"></i></a>
+                        @if($c->pet)
+                        <a href="{{ route('pets.parasite-controls.print', $c->pet) }}" target="_blank" class="btn btn-action btn-secondary" title="Histórico do Pet"><i class="fas fa-print"></i></a>
+                        @endif
                         <a href="{{ route('parasite-controls.edit', $c) }}" class="btn btn-action btn-primary"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>

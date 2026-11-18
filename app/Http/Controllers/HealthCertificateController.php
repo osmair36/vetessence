@@ -106,6 +106,20 @@ class HealthCertificateController extends Controller
             ->with('success', 'Certificado excluído!');
     }
 
+    public function print(HealthCertificate $healthCertificate)
+    {
+        $healthCertificate->load(['pet.tutors', 'issuerVet']);
+
+        $view = $healthCertificate->is_cvi ? 'health-certificates.cvi-pdf' : 'health-certificates.pdf';
+        $pdfUrl = route('health-certificates.pdf', $healthCertificate);
+
+        return view($view, [
+            'healthCertificate' => $healthCertificate,
+            'isPdf' => false,
+            'pdfUrl' => $pdfUrl,
+        ]);
+    }
+
     public function pdf(HealthCertificate $healthCertificate)
     {
         $healthCertificate->load(['pet', 'issuerVet']);

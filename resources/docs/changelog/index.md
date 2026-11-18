@@ -2,6 +2,32 @@
 
 ## [Não versionado] — 2026-11-17
 
+## [v1.5.0] — 2026-11-17
+
+### Adicionado
+- **Implementação Completa e Padronizada de Impressão e Geração de PDF (Projeto Amigo Bicho)**:
+  - Criação do layout central de impressão A4 `resources/views/layouts/print.blade.php` com suporte a orientação Retrato/Paisagem, barra de ferramentas de controle (`window.print()`, download de PDF e fechar) oculta na impressão (`@media print`), e inclusão automática do cabeçalho oficial padronizado `<x-report-header />`.
+  - Serviço centralizado `App\Services\DocumentPdfService` integrando Dompdf com sanitização de nomes de arquivos, suporte a stream e download em conformidade com o padrão visual Amigo Bicho.
+  - **Módulo Pets (Animais)**: Ficha cadastral e clínica completa individual imprimível (`pets/{pet}/print`) e para download em PDF (`pets/{pet}/pdf`), com histórico de vacinas, vermífugos, pesagens e prontuários.
+  - **Módulo Tutores**: Ficha cadastral completa do tutor (`tutors/{tutor}/print` e `pdf`) com relação de animais vinculados, dados de contato e termo de declaração.
+  - **Módulo Prontuários (Atendimentos Clínicos)**: Ficha individual de consulta com anamnese, sinais vitais, diagnóstico e conduta (`medical-records/{id}/print` e `pdf`) e Histórico Clínico Cronológico Geral do animal (`pets/{pet}/medical-records/print` e `pdf`).
+  - **Módulo Vacinas**: Carteira de vacinação do animal (`pets/{pet}/vaccination-card/print` e `pdf`), Relatório Geral de Imunizações (`vaccinations/report/print` e `pdf`) e padronização do certificado de vacinação existente.
+  - **Módulo Vermífugos e Antiparasitários**: Histórico individual de aplicações do animal (`pets/{pet}/parasite-controls/print` e `pdf`) e Relatório Geral de Controle de Parasitas (`parasite-controls/report/print` e `pdf`).
+  - **Módulo Laboratório**: Laudo laboratorial detalhado com tabela de resultados, faixas de referência e destaque de alterações (`laboratory-orders/{id}/print` e `pdf`).
+  - **Módulo Diagnóstico por Imagem**: Laudo de raio-x e ultrassonografia (`imaging-exams/{id}/print` e `pdf`) com descrição de achados, impressão diagnóstica e recomendações.
+  - **Módulo Cirurgias**: Ficha e boletim cirúrgico (`surgeries/{surgery}/print` e `pdf`) com avaliação pré-operatória, descrição técnica, cuidados pós-operatórios e assinaturas.
+  - **Módulo Internação**: Ficha completa de internação (`hospitalizations/{hospitalization}/print` e `pdf`) com dados de admissão, evolução diária, fluidoterapia, prescrições e resumo de alta.
+  - **Módulo Termos de Consentimento**: Termo de Consentimento Livre e Esclarecido padronizado (`consent-forms/{consentForm}/print` e `pdf`).
+  - **Módulo Certificados Sanitários**: Padronização visual do cabeçalho do Certificado Sanitário e do Certificado Veterinário Internacional (CVI) com `<x-report-header />` e rota de impressão em navegador.
+  - **Módulo Banho & Tosa (Pet Shop)**: Ordem de Serviço individual (`grooming/{appointment}/order/print` e `pdf`) com checklist de entrada/saída, comportamento, restrições e termos; e Programação Diária do Banho & Tosa (`grooming-board/print` e `pdf`).
+  - **Módulo Pacotes e Assinaturas (Pet Shop)**: Contrato e Ficha de Controle de Utilização de Pacote (`pet-shop-subscriptions/{sub}/print` e `pdf`) com saldo de créditos e histórico de consumos.
+  - **Módulo Transporte Pet (Táxi Dog)**: Ordem de transporte (`pet-transports/{transport}/print` e `pdf`) com rota (coleta e destino), horários, pertences e confirmação de entrega.
+  - **Módulo Estoque & Inventário**: Listagem de Inventário Físico para contagem e posição de estoque (`products/inventory/print` e `pdf`), Extrato de Movimentações (`stock/movements/print` e `pdf`) e Relatório de Lotes com Vencimento Próximo (`stock/expiring/print` e `pdf`).
+  - **Módulo Pedidos de Compra**: Pedido de compra e espelho para fornecedor (`purchase-orders/{po}/print` e `pdf`) com guia de conferência física de recebimento.
+  - **Módulo Faturas & Recibos (Financeiro)**: Fatura e Recibo de Quitação Financeira (`invoices/{invoice}/print` e `pdf`) com discriminação de serviços/produtos e declaração de quitação.
+  - **Módulo Relatórios Financeiros**: Extrato de faturamento e exportação em PDF estruturado (`reports/export/print` e `reports/export/pdf`).
+  - **Módulo Medicamentos Controlados (Portaria 344)**: Livro de Registro e Mapa Mensal de Substâncias Controladas (`controlled-substances/reports/monthly/print` e `pdf`) com assinatura da Resp. Técnica Dra. Joelma Scarabelli Neves.
+  - Testes automatizados de integração completos em `tests/Feature/Controllers/PrintPdfComprehensiveTest.php` cobrindo 18 modalidades com 74 asserções bem-sucedidas.
 ## [v1.4.11] — 2026-11-17
 
 ### Alterado

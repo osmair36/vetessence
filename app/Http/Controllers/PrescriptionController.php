@@ -90,7 +90,19 @@ class PrescriptionController extends Controller
 
     public function print(Prescription $prescription)
     {
-        $prescription->load('medicalRecord.pet', 'medicalRecord.vet');
-        return view('prescriptions.print', compact('prescription'));
+        $prescription->load('medicalRecord.pet.tutors', 'medicalRecord.vet');
+        $pdfUrl = route('prescriptions.pdf', $prescription);
+        return view('prescriptions.print', compact('prescription', 'pdfUrl'));
+    }
+
+    public function pdf(Prescription $prescription)
+    {
+        $prescription->load('medicalRecord.pet.tutors', 'medicalRecord.vet');
+        $filename = 'receituario-' . $prescription->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $prescription->medicalRecord->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('prescriptions.print', [
+            'prescription' => $prescription,
+            'isPdf' => true,
+        ], $filename);
     }
 }

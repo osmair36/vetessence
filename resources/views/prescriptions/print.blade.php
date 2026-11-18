@@ -110,8 +110,12 @@
     </style>
 </head>
 <body>
-    <div class="no-print" style="text-align: right; margin-bottom: 1rem;">
-        <button onclick="window.print()" style="padding: 0.5rem 1rem; cursor: pointer;">Imprimir</button>
+    <div class="no-print" style="text-align: right; margin-bottom: 1rem; display: flex; justify-content: flex-end; gap: 8px;">
+        <button onclick="window.print()" style="padding: 0.5rem 1rem; cursor: pointer; background: #1E7E34; color: #fff; border: none; border-radius: 4px; font-weight: bold;">🖨️ Imprimir</button>
+        @if(isset($pdfUrl))
+        <a href="{{ $pdfUrl }}" style="padding: 0.5rem 1rem; cursor: pointer; background: #dc2626; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">📥 Baixar PDF</a>
+        @endif
+        <button onclick="window.close()" style="padding: 0.5rem 1rem; cursor: pointer; background: #6c757d; color: #fff; border: none; border-radius: 4px;">✕ Fechar</button>
     </div>
 
     <x-report-header title="Receituário Veterinário" subtitle="Resp. Técnica: Dra. Joelma Scarabelli Neves — CRMV-PR 08147" />

@@ -103,6 +103,62 @@ class MedicalRecordController extends Controller
         return view('medical-records.show', compact('medicalRecord'));
     }
 
+    public function print(MedicalRecord $medicalRecord)
+    {
+        $medicalRecord->load(['pet.tutors.user', 'vet', 'prescriptions', 'vaccinations']);
+
+        return view('medical-records.print', [
+            'record' => $medicalRecord,
+            'title' => 'Prontuário de Atendimento Clínico',
+            'subtitle' => 'Atendimento #' . $medicalRecord->id . ' — Data: ' . ($medicalRecord->date ? $medicalRecord->date->format('d/m/Y') : $medicalRecord->created_at->format('d/m/Y')),
+            'pdfUrl' => route('medical-records.pdf', $medicalRecord),
+        ]);
+    }
+
+    public function pdf(MedicalRecord $medicalRecord)
+    {
+        $medicalRecord->load(['pet.tutors.user', 'vet', 'prescriptions', 'vaccinations']);
+
+        $filename = 'atendimento-' . $medicalRecord->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $medicalRecord->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('medical-records.print', [
+            'record' => $medicalRecord,
+            'title' => 'Prontuário de Atendimento Clínico',
+            'subtitle' => 'Atendimento #' . $medicalRecord->id . ' — Data: ' . ($medicalRecord->date ? $medicalRecord->date->format('d/m/Y') : $medicalRecord->created_at->format('d/m/Y')),
+        ], $filename);
+    }
+
+    public function petHistoryPrint(Pet $pet)
+    {
+        $pet->load([
+            'tutors.user',
+            'medicalRecords' => fn($q) => $q->with(['vet', 'prescriptions'])->orderBy('date', 'desc'),
+        ]);
+
+        return view('medical-records.pet-history-print', [
+            'pet' => $pet,
+            'title' => 'Histórico Completo do Prontuário Médico',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+            'pdfUrl' => route('pets.medical-records.pdf', $pet),
+        ]);
+    }
+
+    public function petHistoryPdf(Pet $pet)
+    {
+        $pet->load([
+            'tutors.user',
+            'medicalRecords' => fn($q) => $q->with(['vet', 'prescriptions'])->orderBy('date', 'desc'),
+        ]);
+
+        $filename = 'prontuario-completo-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $pet->name)) . '-' . $pet->id;
+
+        return \App\Services\DocumentPdfService::download('medical-records.pet-history-print', [
+            'pet' => $pet,
+            'title' => 'Histórico Completo do Prontuário Médico',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+        ], $filename);
+    }
+
     public function edit(MedicalRecord $medicalRecord)
     {
         if ($medicalRecord->hasGeneratedPaidInvoice()) {

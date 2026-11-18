@@ -84,6 +84,49 @@ class PetController extends Controller
         return view('pets.show', compact('pet'));
     }
 
+    public function print(Pet $pet)
+    {
+        $pet->load([
+            'tutors.user',
+            'weightRecords' => fn($q) => $q->latest('measurement_date')->take(10),
+            'vaccinations' => fn($q) => $q->latest('applied_at'),
+            'parasiteControls' => fn($q) => $q->latest('application_date'),
+            'medicalRecords.veterinarian',
+            'exams' => fn($q) => $q->latest()->take(10),
+            'surgeries' => fn($q) => $q->latest('surgery_date')->take(5),
+            'hospitalizations' => fn($q) => $q->latest('admission_date')->take(5),
+        ]);
+
+        return view('pets.print', [
+            'pet' => $pet,
+            'title' => 'Ficha Cadastral e Clínica do Paciente',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+            'pdfUrl' => route('pets.pdf', $pet),
+        ]);
+    }
+
+    public function pdf(Pet $pet)
+    {
+        $pet->load([
+            'tutors.user',
+            'weightRecords' => fn($q) => $q->latest('measurement_date')->take(10),
+            'vaccinations' => fn($q) => $q->latest('applied_at'),
+            'parasiteControls' => fn($q) => $q->latest('application_date'),
+            'medicalRecords.veterinarian',
+            'exams' => fn($q) => $q->latest()->take(10),
+            'surgeries' => fn($q) => $q->latest('surgery_date')->take(5),
+            'hospitalizations' => fn($q) => $q->latest('admission_date')->take(5),
+        ]);
+
+        $filename = 'ficha-animal-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $pet->name)) . '-' . $pet->id;
+
+        return \App\Services\DocumentPdfService::download('pets.print', [
+            'pet' => $pet,
+            'title' => 'Ficha Cadastral e Clínica do Paciente',
+            'subtitle' => 'Paciente: ' . $pet->name . ' | Espécie: ' . ($pet->species ?? '-') . ' | Raça: ' . ($pet->breed ?? 'SRD'),
+        ], $filename);
+    }
+
     public function edit(Pet $pet)
     {
         $tutors = Tutor::with('user')->get()->sortBy(function($tutor) {

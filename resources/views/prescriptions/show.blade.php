@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Prescrição</h3>
         <div class="card-tools">
+            <a href="{{ route('prescriptions.print', $prescription) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir
+            </a>
+            <a href="{{ route('prescriptions.pdf', $prescription) }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('prescriptions.index') }}" class="btn btn-default btn-sm">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ControlledSubstance;
 use App\Models\ControlledSubstanceLog;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -116,6 +117,44 @@ class ControlledSubstanceController extends Controller
         $grouped = $logs->groupBy('substance.name');
 
         return view('controlled-substances.reports.monthly', compact('logs', 'grouped', 'month'));
+    }
+
+    public function reportMonthlyPrint(Request $request)
+    {
+        $month = $request->month ?? now()->format('Y-m');
+        $logs = ControlledSubstanceLog::with('substance', 'user')
+            ->whereYear('created_at', substr($month, 0, 4))
+            ->whereMonth('created_at', substr($month, 5, 2))
+            ->orderBy('created_at')
+            ->get();
+
+        $grouped = $logs->groupBy('substance.name');
+
+        return view('controlled-substances.reports.monthly-print', [
+            'logs' => $logs,
+            'grouped' => $grouped,
+            'month' => $month,
+            'pdfUrl' => route('controlled-substances.reports.monthly.pdf', ['month' => $month]),
+        ]);
+    }
+
+    public function reportMonthlyPdf(Request $request)
+    {
+        $month = $request->month ?? now()->format('Y-m');
+        $logs = ControlledSubstanceLog::with('substance', 'user')
+            ->whereYear('created_at', substr($month, 0, 4))
+            ->whereMonth('created_at', substr($month, 5, 2))
+            ->orderBy('created_at')
+            ->get();
+
+        $grouped = $logs->groupBy('substance.name');
+        $filename = 'livro-controlados-' . $month . '.pdf';
+
+        return DocumentPdfService::download('controlled-substances.reports.monthly-print', [
+            'logs' => $logs,
+            'grouped' => $grouped,
+            'month' => $month,
+        ], $filename, 'landscape');
     }
 
     public function reportAnnual(Request $request)

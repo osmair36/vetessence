@@ -24,7 +24,11 @@
                             </td>
                             <td>R$ {{ number_format($o->total, 2, ',', '.') }}</td>
                             <td>{{ $o->created_at->format('d/m/Y') }}</td>
-                            <td><a href="{{ route('purchase-orders.show', $o) }}" class="btn btn-sm btn-outline-info">Ver</a></td>
+                            <td>
+                                <a href="{{ route('purchase-orders.show', $o) }}" class="btn btn-sm btn-outline-info" title="Ver"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('purchase-orders.print', $o) }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Imprimir"><i class="fas fa-print"></i></a>
+                                <a href="{{ route('purchase-orders.pdf', $o) }}" class="btn btn-sm btn-outline-success" title="Baixar PDF"><i class="fas fa-file-pdf"></i></a>
+                            </td>
                         </tr>
                     @empty
                         <tr><td colspan="7" class="text-center text-muted">Nenhum pedido encontrado.</td></tr>

@@ -8,13 +8,17 @@ use App\Models\StockMovement;
 use App\Models\Branch;
 use App\Services\Nfe\NfeService;
 use App\Services\StockForecastService;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:stock.view')->only(['movements', 'dashboard', 'reorderSuggestions', 'expiring']);
+        $this->middleware('can:stock.view')->only([
+            'movements', 'dashboard', 'reorderSuggestions', 'expiring',
+            'movementsPrint', 'movementsPdf', 'expiringPrint', 'expiringPdf'
+        ]);
         $this->middleware('can:stock.create')->only(['create', 'store']);
         $this->middleware('can:stock.transfer')->only(['transferForm', 'transfer']);
     }
@@ -231,5 +235,85 @@ class StockController extends Controller
             'totalProducts', 'lowStock', 'belowReorder',
             'expiringSoon', 'expired', 'totalStockValue'
         ));
+    }
+
+    public function movementsPrint(Request $request)
+    {
+        $query = StockMovement::with(['product', 'user']);
+
+        if ($request->product_id) {
+            $query->where('product_id', $request->product_id);
+        }
+
+        if ($request->type) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $movements = $query->orderBy('created_at', 'desc')->get();
+
+        return view('stock.movements-print', [
+            'movements' => $movements,
+            'pdfUrl' => route('stock.movements.pdf', $request->query()),
+        ]);
+    }
+
+    public function movementsPdf(Request $request)
+    {
+        $query = StockMovement::with(['product', 'user']);
+
+        if ($request->product_id) {
+            $query->where('product_id', $request->product_id);
+        }
+
+        if ($request->type) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $movements = $query->orderBy('created_at', 'desc')->get();
+        $filename = 'movimentacoes-estoque-' . date('Y-m-d') . '.pdf';
+
+        return DocumentPdfService::download('stock.movements-print', [
+            'movements' => $movements,
+        ], $filename, 'landscape');
+    }
+
+    public function expiringPrint(StockForecastService $service, Request $request)
+    {
+        $days = $request->integer('days', 30);
+        $products = $service->expiringProducts($days);
+
+        return view('stock.expiring-print', [
+            'products' => $products,
+            'days' => $days,
+            'pdfUrl' => route('stock.expiring.pdf', ['days' => $days]),
+        ]);
+    }
+
+    public function expiringPdf(StockForecastService $service, Request $request)
+    {
+        $days = $request->integer('days', 30);
+        $products = $service->expiringProducts($days);
+        $filename = 'produtos-vencendo-' . $days . 'dias-' . date('Y-m-d') . '.pdf';
+
+        return DocumentPdfService::download('stock.expiring-print', [
+            'products' => $products,
+            'days' => $days,
+        ], $filename, 'landscape');
     }
 }

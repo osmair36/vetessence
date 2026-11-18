@@ -10,6 +10,12 @@
                         <h3 class="card-title">{{ $invoice->invoice_number }}</h3>
                     </div>
                     <div class="col-md-6 text-right">
+                        <a href="{{ route('invoices.print', $invoice) }}" target="_blank" class="btn btn-secondary btn-sm mr-1">
+                            <i class="fas fa-print"></i> Imprimir {{ $invoice->status === 'paid' ? 'Recibo' : 'Fatura' }}
+                        </a>
+                        <a href="{{ route('invoices.pdf', $invoice) }}" class="btn btn-success btn-sm mr-2">
+                            <i class="fas fa-file-pdf"></i> Baixar PDF
+                        </a>
                         @php
                             $statusColors = ['paid' => 'badge badge-success', 'pending' => 'badge badge-warning', 'overdue' => 'badge badge-danger', 'cancelled' => 'badge badge-secondary'];
                         @endphp

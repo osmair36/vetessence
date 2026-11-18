@@ -7,6 +7,7 @@ use App\Models\Pet;
 use App\Models\Tutor;
 use App\Models\User;
 use App\Models\Branch;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 
 class PetTransportController extends Controller
@@ -62,7 +63,7 @@ class PetTransportController extends Controller
         $transport = PetTransport::create($validated + ['status' => 'scheduled']);
 
         return redirect()->route('pet-transports.show', $transport)
-            ->with('success', 'Táxi Pet agendado com sucesso!');
+            ->with('success', 'TÃ¡xi Pet agendado com sucesso!');
     }
 
     public function show(PetTransport $petTransport)
@@ -101,17 +102,17 @@ class PetTransportController extends Controller
         $petTransport->update($validated);
 
         return redirect()->route('pet-transports.show', $petTransport)
-            ->with('success', 'Táxi Pet atualizado com sucesso!');
+            ->with('success', 'TÃ¡xi Pet atualizado com sucesso!');
     }
 
     public function destroy(PetTransport $petTransport)
     {
         if (in_array($petTransport->status, ['collected', 'in_route'])) {
-            return back()->with('error', 'Não é possível excluir um transporte em andamento.');
+            return back()->with('error', 'NÃ£o Ã© possÃ­vel excluir um transporte em andamento.');
         }
 
         $petTransport->delete();
-        return redirect()->route('pet-transports.index')->with('success', 'Registro excluído.');
+        return redirect()->route('pet-transports.index')->with('success', 'Registro excluÃ­do.');
     }
 
     public function updateStatus(Request $request, PetTransport $petTransport)
@@ -123,5 +124,25 @@ class PetTransportController extends Controller
         $petTransport->update(['status' => $request->status]);
 
         return response()->json(['success' => true, 'status_label' => PetTransport::STATUSES[$request->status]]);
+    }
+
+    public function print(PetTransport $petTransport)
+    {
+        $petTransport->load(['pet.tutors', 'tutor', 'driver', 'branch', 'invoice']);
+
+        return view('pet-transports.print', [
+            'petTransport' => $petTransport,
+            'pdfUrl' => route('pet-transports.pdf', $petTransport),
+        ]);
+    }
+
+    public function pdf(PetTransport $petTransport)
+    {
+        $petTransport->load(['pet.tutors', 'tutor', 'driver', 'branch', 'invoice']);
+        $filename = 'ordem-transporte-' . $petTransport->id . '.pdf';
+
+        return DocumentPdfService::download('pet-transports.print', [
+            'petTransport' => $petTransport,
+        ], $filename);
     }
 }

@@ -4,6 +4,12 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4><i class="fas fa-shopping-cart"></i> Pedido {{ $purchaseOrder->order_number }}</h4>
         <div>
+            <a href="{{ route('purchase-orders.print', $purchaseOrder) }}" target="_blank" class="btn btn-secondary">
+                <i class="fas fa-print"></i> Imprimir Pedido
+            </a>
+            <a href="{{ route('purchase-orders.pdf', $purchaseOrder) }}" class="btn btn-success">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             @if($purchaseOrder->status === 'draft' && auth()->user()->can('purchase-orders.edit'))
                 <a href="{{ route('purchase-orders.edit', $purchaseOrder) }}" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
                 <form action="{{ route('purchase-orders.destroy', $purchaseOrder) }}" method="POST" class="d-inline" data-confirm="Excluir pedido?">

@@ -79,6 +79,31 @@ class ImagingExamController extends Controller
         return view('imaging-exams.show', compact('exam'));
     }
 
+    public function print(ImagingExam $imagingExam)
+    {
+        $imagingExam->load(['pet.tutors', 'vet', 'radiologist']);
+
+        return view('imaging-exams.print', [
+            'exam' => $imagingExam,
+            'title' => 'Laudo de Exame por Imagem',
+            'subtitle' => 'Exame ' . $imagingExam->exam_number . ' — Paciente: ' . ($imagingExam->pet->name ?? '-'),
+            'pdfUrl' => route('imaging-exams.pdf', $imagingExam),
+        ]);
+    }
+
+    public function pdf(ImagingExam $imagingExam)
+    {
+        $imagingExam->load(['pet.tutors', 'vet', 'radiologist']);
+
+        $filename = 'laudo-imagem-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $imagingExam->exam_number));
+
+        return \App\Services\DocumentPdfService::download('imaging-exams.print', [
+            'exam' => $imagingExam,
+            'title' => 'Laudo de Exame por Imagem',
+            'subtitle' => 'Exame ' . $imagingExam->exam_number . ' — Paciente: ' . ($imagingExam->pet->name ?? '-'),
+        ], $filename);
+    }
+
     public function edit(ImagingExam $imagingExam)
     {
         $veterinarians = User::where('is_active', true)->orderBy('name')->get();

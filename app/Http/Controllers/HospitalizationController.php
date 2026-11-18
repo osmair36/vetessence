@@ -83,6 +83,31 @@ class HospitalizationController extends Controller
         return view('hospitalizations.show', compact('hospitalization'));
     }
 
+    public function print(Hospitalization $hospitalization)
+    {
+        $hospitalization->load(['pet.tutors', 'tutor', 'vet', 'dailyRecords.user', 'fluidTherapies', 'prescriptions']);
+
+        return view('hospitalizations.print', [
+            'hospitalization' => $hospitalization,
+            'title' => 'Boletim e Ficha de Internação Veterinária',
+            'subtitle' => 'Internação #' . $hospitalization->id . ' — Paciente: ' . ($hospitalization->pet->name ?? '-') . ' | Leito: ' . ($hospitalization->bed ?? '-'),
+            'pdfUrl' => route('hospitalizations.pdf', $hospitalization),
+        ]);
+    }
+
+    public function pdf(Hospitalization $hospitalization)
+    {
+        $hospitalization->load(['pet.tutors', 'tutor', 'vet', 'dailyRecords.user', 'fluidTherapies', 'prescriptions']);
+
+        $filename = 'internacao-' . $hospitalization->id . '-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $hospitalization->pet->name ?? 'pet'));
+
+        return \App\Services\DocumentPdfService::download('hospitalizations.print', [
+            'hospitalization' => $hospitalization,
+            'title' => 'Boletim e Ficha de Internação Veterinária',
+            'subtitle' => 'Internação #' . $hospitalization->id . ' — Paciente: ' . ($hospitalization->pet->name ?? '-') . ' | Leito: ' . ($hospitalization->bed ?? '-'),
+        ], $filename);
+    }
+
     public function edit(Hospitalization $hospitalization)
     {
         $hospitalization->load(['pet', 'tutor', 'vet']);

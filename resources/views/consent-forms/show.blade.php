@@ -7,6 +7,12 @@
             <div class="card-header">
                 <h3 class="card-title">Termo de Consentimento - {{ $consentForm->consent_number }}</h3>
                 <div class="card-tools">
+                    <a href="{{ route('consent-forms.print', $consentForm) }}" target="_blank" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-print"></i> Imprimir
+                    </a>
+                    <a href="{{ route('consent-forms.pdf', $consentForm) }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('consent-forms.edit', $consentForm) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>
@@ -100,9 +106,12 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button onclick="window.print()" class="btn btn-secondary">
-                    <i class="fas fa-print"></i> Imprimir
-                </button>
+                <a href="{{ route('consent-forms.print', $consentForm) }}" target="_blank" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Imprimir Documento
+                </a>
+                <a href="{{ route('consent-forms.pdf', $consentForm) }}" class="btn btn-success">
+                    <i class="fas fa-file-pdf"></i> Baixar PDF
+                </a>
             </div>
         </div>
     </div>

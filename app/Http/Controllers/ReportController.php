@@ -13,6 +13,7 @@ use App\Models\ZoonoticDisease;
 use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\DocumentPdfService;
 use Carbon\Carbon;
 
 class ReportController extends Controller
@@ -152,6 +153,25 @@ class ReportController extends Controller
         ));
     }
 
+    public function exportPrint(Request $request)
+    {
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : Carbon::now()->startOfMonth();
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : Carbon::now()->endOfMonth();
+
+        $invoices = Invoice::where('status', 'paid')
+            ->whereBetween('paid_at', [$startDate, $endDate])
+            ->with(['tutor', 'pet', 'items'])
+            ->orderBy('paid_at', 'desc')
+            ->get();
+
+        return view('reports.export-print', [
+            'invoices' => $invoices,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'pdfUrl' => route('reports.export-pdf', ['start_date' => $startDate->format('Y-m-d'), 'end_date' => $endDate->format('Y-m-d')]),
+        ]);
+    }
+
     public function exportPdf(Request $request)
     {
         $startDate = $request->start_date ? Carbon::parse($request->start_date) : Carbon::now()->startOfMonth();
@@ -159,9 +179,16 @@ class ReportController extends Controller
 
         $invoices = Invoice::where('status', 'paid')
             ->whereBetween('paid_at', [$startDate, $endDate])
-            ->with(['tutor', 'items'])
+            ->with(['tutor', 'pet', 'items'])
+            ->orderBy('paid_at', 'desc')
             ->get();
 
-        return view('reports.export', compact('invoices', 'startDate', 'endDate'));
+        $filename = 'relatorio-faturamento-' . $startDate->format('Ymd') . '-a-' . $endDate->format('Ymd') . '.pdf';
+
+        return DocumentPdfService::download('reports.export-print', [
+            'invoices' => $invoices,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ], $filename, 'landscape');
     }
 }

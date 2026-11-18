@@ -5,6 +5,12 @@
     <div class="card-header">
         <h3 class="card-title">Vacinas</h3>
         <div class="card-tools">
+            <a href="{{ route('vaccinations.report.print') }}" target="_blank" class="btn btn-outline-secondary btn-sm mr-1">
+                <i class="fas fa-print"></i> Imprimir Relatório
+            </a>
+            <a href="{{ route('vaccinations.report.pdf') }}" class="btn btn-outline-danger btn-sm mr-1">
+                <i class="fas fa-file-pdf"></i> Baixar PDF
+            </a>
             <a href="{{ route('vaccinations.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo
             </a>
@@ -35,6 +41,14 @@
                         <a href="{{ route('vaccinations.show', $vac) }}" class="btn btn-action btn-info" title="Visualizar">
                             <i class="fas fa-eye"></i>
                         </a>
+                        @if($vac->pet)
+                        <a href="{{ route('pets.vaccinations.card.print', $vac->pet) }}" target="_blank" class="btn btn-action btn-secondary" title="Carteira de Vacinação">
+                            <i class="fas fa-id-card"></i>
+                        </a>
+                        <a href="{{ route('vaccinations.certificate', $vac->pet) }}" class="btn btn-action btn-warning" title="Certificado PDF">
+                            <i class="fas fa-certificate"></i>
+                        </a>
+                        @endif
                         <a href="{{ route('vaccinations.edit', $vac) }}" class="btn btn-action btn-primary" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>

@@ -12,6 +12,12 @@
                     @endif
                 </h3>
                 <div class="card-tools">
+                    <a href="{{ route('hospitalizations.print', $hospitalization) }}" target="_blank" class="btn btn-outline-primary btn-sm mr-1">
+                        <i class="fas fa-print"></i> Imprimir Ficha
+                    </a>
+                    <a href="{{ route('hospitalizations.pdf', $hospitalization) }}" class="btn btn-outline-danger btn-sm mr-1">
+                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    </a>
                     <a href="{{ route('hospitalizations.edit', $hospitalization) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>

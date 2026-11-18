@@ -45,6 +45,12 @@
                         <a href="{{ route('consent-forms.show', $form) }}" class="btn btn-action btn-info" title="Visualizar">
                             <i class="fas fa-eye"></i>
                         </a>
+                        <a href="{{ route('consent-forms.print', $form) }}" target="_blank" class="btn btn-action btn-secondary" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="{{ route('consent-forms.pdf', $form) }}" class="btn btn-action btn-success" title="Baixar PDF">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
                         <a href="{{ route('consent-forms.edit', $form) }}" class="btn btn-action btn-primary" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>

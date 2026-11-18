@@ -33,21 +33,15 @@
 <body>
     <div class="watermark">REPÚBLICA FEDERATIVA DO BRASIL</div>
     <div class="border-page">
-        <div class="header">
-            <div style="margin-bottom: 8px;">
-                <img src="{{ branding_header_base64() }}" alt="{{ branding_clinic_name() }}" style="max-width: 100%; height: auto; max-height: 85px; display: block; margin: 0 auto;">
-            </div>
-            <h1 style="font-size: 16px; margin: 4px 0;">Certificado Veterinário Internacional</h1>
-            <h2 style="font-size: 12px; margin: 0;">Resp. Técnica: Dra. Joelma Scarabelli Neves — CRMV-PR 08147</h2>
-            <p style="font-size: 10px; margin-top: 5px;">
-                Emissão: {{ $healthCertificate->issue_date->format('d/m/Y') }}
-                @if($healthCertificate->embarkation_date)
-                    &nbsp;|&nbsp; Embarque: {{ $healthCertificate->embarkation_date->format('d/m/Y') }}
-                @endif
-                @if($healthCertificate->expiration_date)
-                    &nbsp;|&nbsp; Validade: {{ $healthCertificate->expiration_date->format('d/m/Y') }}
-                @endif
-            </p>
+        <x-report-header title="Certificado Veterinário Internacional" subtitle="Resp. Técnica: Dra. Joelma Scarabelli Neves — CRMV-PR 08147" />
+        <div style="text-align: center; font-size: 10px; margin-top: -10px; margin-bottom: 15px; color: #555;">
+            Emissão: {{ $healthCertificate->issue_date->format('d/m/Y') }}
+            @if($healthCertificate->embarkation_date)
+                &nbsp;|&nbsp; Embarque: {{ $healthCertificate->embarkation_date->format('d/m/Y') }}
+            @endif
+            @if($healthCertificate->expiration_date)
+                &nbsp;|&nbsp; Validade: {{ $healthCertificate->expiration_date->format('d/m/Y') }}
+            @endif
         </div>
 
         <div class="cvi-number">

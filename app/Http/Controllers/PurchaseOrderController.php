@@ -9,13 +9,14 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Role;
+use App\Services\DocumentPdfService;
 use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:purchase-orders.view')->only(['index', 'show']);
+        $this->middleware('can:purchase-orders.view')->only(['index', 'show', 'print', 'pdf']);
         $this->middleware('can:purchase-orders.create')->only(['create', 'store']);
         $this->middleware('can:purchase-orders.edit')->only(['edit', 'update']);
         $this->middleware('can:purchase-orders.delete')->only(['destroy']);
@@ -177,5 +178,25 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->update(['status' => 'received', 'received_at' => now()]);
         return redirect()->route('purchase-orders.show', $purchaseOrder)
             ->with('success', 'Pedido recebido com sucesso.');
+    }
+
+    public function print(PurchaseOrder $purchaseOrder)
+    {
+        $purchaseOrder->load(['supplier', 'requester', 'approver', 'items.product']);
+
+        return view('purchase-orders.print', [
+            'purchaseOrder' => $purchaseOrder,
+            'pdfUrl' => route('purchase-orders.pdf', $purchaseOrder),
+        ]);
+    }
+
+    public function pdf(PurchaseOrder $purchaseOrder)
+    {
+        $purchaseOrder->load(['supplier', 'requester', 'approver', 'items.product']);
+        $filename = 'pedido-compra-' . str_replace(['/', '\\'], '-', $purchaseOrder->order_number) . '.pdf';
+
+        return DocumentPdfService::download('purchase-orders.print', [
+            'purchaseOrder' => $purchaseOrder,
+        ], $filename);
     }
 }

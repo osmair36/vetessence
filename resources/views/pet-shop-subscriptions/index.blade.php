@@ -49,7 +49,9 @@
                         <span class="badge {{ $statusClass }}">{{ ucfirst($s->status) }}</span>
                     </td>
                     <td>
-                        <a href="{{ route('pet-shop-subscriptions.show', $s) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
+                        <a href="{{ route('pet-shop-subscriptions.show', $s) }}" class="btn btn-sm btn-info" title="Visualizar"><i class="fas fa-eye"></i></a>
+                        <a href="{{ route('pet-shop-subscriptions.print', $s) }}" target="_blank" class="btn btn-sm btn-secondary" title="Imprimir"><i class="fas fa-print"></i></a>
+                        <a href="{{ route('pet-shop-subscriptions.pdf', $s) }}" class="btn btn-sm btn-success" title="Baixar PDF"><i class="fas fa-file-pdf"></i></a>
                         @if($s->status === 'active')
                         <form action="{{ route('pet-shop-subscriptions.cancel', $s) }}" method="POST" class="d-inline">
                             @csrf
