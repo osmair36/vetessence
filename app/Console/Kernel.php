@@ -21,8 +21,25 @@ class Kernel extends ConsoleKernel
         $schedule->command('appointments:remind --days=1')->dailyAt('18:00');
         $schedule->command('recall:process')->weekly()->mondays()->at('09:00');
         $schedule->command('birthday:process')->dailyAt('08:00');
-        $schedule->command('backup:database --compress')->dailyAt('01:00');
-        $schedule->command('backup:cleanup --keep=30')->dailyAt('02:00');
+        $backupEnabled = \App\Models\Setting::get('backup.enabled', '1') === '1';
+        if ($backupEnabled) {
+            $freq = \App\Models\Setting::get('backup.frequency', 'daily');
+            $time = \App\Models\Setting::get('backup.time', '01:00');
+            $compress = \App\Models\Setting::get('backup.compress', '1') === '1' ? ' --compress' : '';
+
+            $backupCmd = $schedule->command('backup:database' . $compress);
+
+            match ($freq) {
+                'every_six_hours' => $backupCmd->everySixHours(),
+                'every_twelve_hours' => $backupCmd->everyTwelveHours(),
+                'weekly' => $backupCmd->weekly()->sundays()->at($time),
+                'monthly' => $backupCmd->monthlyOn(1, $time),
+                default => $backupCmd->dailyAt($time),
+            };
+
+            $keepDays = (int) \App\Models\Setting::get('backup.keep_days', 30);
+            $schedule->command("backup:cleanup --keep={$keepDays}")->dailyAt('02:00');
+        }
         $schedule->command('queue:process')->everyMinute();
         $schedule->command('staff:remind')->dailyAt('18:00');
         $schedule->command('nfse:emit-pending')->everyTenMinutes();

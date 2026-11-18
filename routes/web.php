@@ -836,14 +836,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('controlled-substances/reports/annual', 'App\Http\Controllers\ControlledSubstanceController@reportAnnual')->name('controlled-substances.reports.annual');
     Route::get('controlled-substances/reports/export-csv', 'App\Http\Controllers\ControlledSubstanceController@exportCsv')->name('controlled-substances.reports.export-csv');
 
-    // Database Backups
-    Route::resource('backups', 'App\Http\Controllers\BackupController')->names([
-        'index' => 'backups.index',
-        'create' => 'backups.create',
-        'destroy' => 'backups.destroy',
-        'show' => 'backups.show',
-    ])->only(['index', 'create', 'destroy']);
+    // Database Backups & Restore
+    Route::get('backups', 'App\Http\Controllers\BackupController@index')->name('backups.index');
+    Route::match(['get', 'post'], 'backups/create', 'App\Http\Controllers\BackupController@create')->name('backups.create');
+    Route::post('backups/run', 'App\Http\Controllers\BackupController@create')->name('backups.run');
+    Route::put('backups/settings', 'App\Http\Controllers\BackupController@updateSettings')->name('backups.settings');
+    Route::post('backups/test-destination', 'App\Http\Controllers\BackupController@testDestination')->name('backups.test-destination');
+    Route::post('backups/restore', 'App\Http\Controllers\BackupController@restore')->name('backups.restore');
+    Route::post('backups/cleanup', 'App\Http\Controllers\BackupController@cleanup')->name('backups.cleanup');
     Route::get('backups/{filename}/download', 'App\Http\Controllers\BackupController@download')->name('backups.download');
+    Route::delete('backups/{filename}', 'App\Http\Controllers\BackupController@destroy')->name('backups.destroy');
 
     // Boarding / Grooming
     Route::get('boardings/{boarding}/print', 'App\Http\Controllers\BoardingController@print')->name('boardings.print');

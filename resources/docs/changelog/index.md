@@ -2,6 +2,17 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.0] — 2026-11-18
+
+### Adicionado
+- **Módulo Completo de Backup e Restauração da Base de Dados**:
+  - Desenvolvimento do serviço `App\Services\Backup\BackupService` para execução, agendamento, compactação Gzip, validação de integridade e restauração completa de bases de dados (SQLite e MySQL).
+  - Rotina de backup manual sob demanda com suporte a compactação rápida e download direto.
+  - Rotina automática periódica e configurável pelo usuário: seleção de frequência (a cada 6h, a cada 12h, diária, semanal ou mensal), horário de disparo e política de retenção por dias.
+  - Suporte a múltiplos locais de destino: além do armazenamento local do sistema (`storage/app/backups`), permite configurar pastas externas ou de rede (HD externo, pendrive, etc.) com teste de gravação em tempo real.
+  - Rotina de restauração segura (via lista de backups ou upload de arquivo `.sql`, `.sqlite`, `.gz`) com geração automática de snapshot prévio de segurança e confirmação explícita de segurança (`RESTAURAR`).
+  - Criação do comando CLI `php artisan backup:restore {file} {--no-snapshot}` para restaurações avançadas via terminal.
+  - Inclusão do botão de acesso **"Backup do Sistema"** no menu lateral posicionado logo abaixo da opção **"Configurações"**.
 ## [v1.7.5] — 2026-11-18
 
 ### Alterado

@@ -2,30 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Backup\BackupService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class DatabaseBackupCleanup extends Command
 {
-    protected $signature = 'backup:cleanup {--keep=30}';
-    protected $description = 'Remove database backups older than specified days';
+    protected $signature = 'backup:cleanup {--keep= : Quantidade de dias de retenção}';
+    protected $description = 'Remover backups antigos conforme política de retenção';
 
-    public function handle()
+    public function handle(BackupService $backupService): int
     {
-        $keep = $this->option('keep');
-        $cutoff = now()->subDays($keep);
+        $keep = $this->option('keep') !== null ? (int) $this->option('keep') : null;
+        $deleted = $backupService->cleanupOldBackups($keep);
 
-        $files = Storage::files('backups');
-        $deleted = 0;
-
-        foreach ($files as $file) {
-            $timestamp = Storage::lastModified($file);
-            if ($timestamp < $cutoff->timestamp) {
-                Storage::delete($file);
-                $deleted++;
-            }
-        }
-
-        $this->info("Excluídos {$deleted} arquivos de backup antigos.");
+        $this->info("Rotina de limpeza concluída: {$deleted} backup(s) antigo(s) removido(s).");
+        return 0;
     }
 }

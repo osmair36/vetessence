@@ -124,7 +124,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('auditoria', fn($user) => $user->hasPermissionTo('audit-logs.view'));
 
         // Backup
-        Gate::define('backup', fn($user) => $user->hasPermissionTo('backups.view'));
+        Gate::define('backup', fn($user) => $user->hasPermissionTo('backups.view') || $user->hasRole('admin'));
 
         // NFSe
         Gate::define('nfse.view', fn($user) => $user->hasPermissionTo('nfse.view'));
