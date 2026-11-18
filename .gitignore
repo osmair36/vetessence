@@ -21,3 +21,7 @@ __pycache__/
 bin/*.mp4
 /storage/framework/sessions/*
 !/storage/framework/sessions/.gitignore
+/Backups/
+/installer/dist/
+/installer/runtime/
+server_info.txt

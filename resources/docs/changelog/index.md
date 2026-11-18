@@ -2,6 +2,15 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.1] — 2026-11-18
+
+### Adicionado
+- **Instalador Autônomo para Windows 10 e 11 e Suporte a Rede Local (Terminais Clientes)**:
+  - Geração de instalador executável completo (`AmigoBicho-Instalador-*.exe`) via Inno Setup 6 compilando a aplicação, o banco SQLite com dados reais importados, todas as dependências e o motor PHP 8.4 ZTS integrado.
+  - Script de inicialização do Servidor (`iniciar.bat`) com vinculação a todas as interfaces de rede (`--host=0.0.0.0 --port=8181`), memória ampliada para 512M (`-d memory_limit=512M`), liberação automática da porta no Firewall do Windows e abertura automática do navegador.
+  - Arquitetura de rede local (LAN) com pasta compartilhada: qualquer terminal cliente acessa a pasta `\\SERVIDOR\Amigo Bicho` e conecta-se à aplicação instantaneamente através do script `Conectar ao Amigo Bicho (Terminal).bat` ou do atalho `Amigo Bicho - Terminal.url`, sem necessidade de instalar PHP ou servidores adicionais no terminal.
+  - Script utilitário `Criar Atalho no Desktop do Terminal.bat` para instalação com 1 clique do atalho na Área de Trabalho dos computadores clientes com ícone oficial.
+  - Preservação da base de dados SQLite (`database/database.sqlite`) com flag `onlyifdoesntexist` no instalador, garantindo que futuras atualizações nunca sobrescrevam os dados clínicos e cadastrais já existentes.
 ## [v1.8.0] — 2026-11-18
 
 ### Adicionado

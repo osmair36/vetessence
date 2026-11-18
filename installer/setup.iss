@@ -1,61 +1,57 @@
 ; ============================================================
-; Amigo Bicho - Inno Setup Script
-; Gera instalador .exe para Windows 10/11
-; ============================================================
-; Para compilar: instale o Inno Setup e abra este arquivo
-; Download: https://jrsoftware.org/isinfo.php
+; Amigo Bicho - Script Inno Setup 6
+; Gera instalador executável (.exe) para Windows 10 e 11
+; Suporte a Servidor Local e Terminais em Rede
 ; ============================================================
 
 #define AppName "Amigo Bicho"
-#define AppVersion "1.4.0"
-#define AppPublisher "HLM Tecnologia"
+#define AppVersion "1.8.1"
+#define AppPublisher "Amigo Bicho - Clínica Veterinária"
 #define AppURL "https://github.com/osmair36/vetessence"
 #define AppExeName "iniciar.bat"
-#define AppIcon "public\favicon.ico"
 
 [Setup]
-AppId={{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
+AppId={{E6F7A8B9-C0D1-4E2F-A3B4-5C6D7E8F9A0B}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
 AppSupportURL={#AppURL}
 AppUpdatesURL={#AppURL}
-DefaultDirName=C:\AmigoBicho
+DefaultDirName=C:\Amigo Bicho
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
-; Descomente a linha abaixo para exigir privilégios de admin:
-; PrivilegesRequired=admin
-OutputDir=installer\dist
-OutputBaseFilename=AmigoBicho-Setup-v{#AppVersion}
+PrivilegesRequired=admin
+OutputDir=dist
+OutputBaseFilename=AmigoBicho-Instalador-v{#AppVersion}
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-WizardImageFile=installer\wizard.bmp
-WizardSmallImageFile=installer\wizard-small.bmp
+SetupIconFile=..\public\favicon.ico
 UninstallDisplayIcon={app}\public\favicon.ico
-SetupIconFile=installer\setup-icon.ico
 MinVersion=10.0
 
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "startmenuicon"; Description: "Criar atalho no Menu Iniciar"; GroupDescription: "{cm:AdditionalIcons}";
+Name: "desktopicon"; Description: "Criar atalho do Servidor na Área de Trabalho"; GroupDescription: "Atalhos adicionais:"; Flags: unchecked
+Name: "startmenuicon"; Description: "Criar atalho no Menu Iniciar"; GroupDescription: "Atalhos adicionais:"
 
 [Files]
-; Aplicação Laravel completa
-Source: "..\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; \
-  Excludes: ".git,*.log,node_modules,installer\dist,storage\logs\*,storage\framework\cache\*,storage\framework\sessions\*,storage\framework\views\*"
+; Aplicação Amigo Bicho completa com dependências vendor
+Source: "..\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; \
+  Excludes: ".git\*,.git,.github\*,node_modules\*,installer\dist\*,installer\runtime\*,scratch\*,tests\*,*.log,storage\logs\*,storage\framework\cache\*,storage\framework\sessions\*,storage\framework\views\*,storage\app\backups\*,database\database.sqlite"
 
-; PHP portátil (deve estar em runtime\php\)
-; Baixe o PHP 8.4 "Thread Safe" ZIP de https://windows.php.net/download/
-; e extraia em installer\runtime\php\
+; Base de dados: só copia se não existir, protegendo dados de re-instalações
+Source: "..\database\database.sqlite"; DestDir: "{app}\database"; Flags: onlyifdoesntexist
+
+; Motor PHP portátil 8.4 Thread Safe integrado
 Source: "runtime\php\*"; DestDir: "{app}\runtime\php"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Dirs]
 Name: "{app}\storage\logs"
+Name: "{app}\storage\app\backups"
 Name: "{app}\storage\framework\cache"
 Name: "{app}\storage\framework\sessions"
 Name: "{app}\storage\framework\views"
@@ -63,33 +59,35 @@ Name: "{app}\bootstrap\cache"
 Name: "{app}\database"
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"
+; Atalhos no Menu Iniciar e Desktop
+Name: "{group}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"
+Name: "{group}\Conectar Terminal em Rede"; Filename: "{app}\Conectar ao Amigo Bicho (Terminal).bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"
 Name: "{group}\Desinstalar {#AppName}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#AppName}"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"; Tasks: desktopicon
+Name: "{commondesktop}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"; Tasks: desktopicon
 
 [Run]
-; Executa o instalador do sistema após copiar os arquivos
-Filename: "{app}\installer\instalar.bat"; Description: "Configurar sistema agora"; Flags: postinstall runascurrentuser shellexec; WorkingDir: "{app}"
+; Configura o banco, firewall e ambiente pós-cópia
+Filename: "{app}\installer\instalar.bat"; Description: "Configurar ambiente do sistema e rede"; Flags: runhidden waituntilterminated; WorkingDir: "{app}"
 
-; Abre o sistema após instalação
-Filename: "{app}\iniciar.bat"; Description: "Iniciar {#AppName} agora"; Flags: postinstall nowait runascurrentuser shellexec unchecked; WorkingDir: "{app}"
+; Opção para iniciar o servidor imediatamente ao finalizar o assistente
+Filename: "{app}\iniciar.bat"; Description: "Iniciar o Servidor {#AppName} agora"; Flags: postinstall nowait runascurrentuser shellexec; WorkingDir: "{app}"
 
 [UninstallRun]
-; Para o servidor PHP antes de desinstalar
+; Encerra processos do PHP ao desinstalar
 Filename: "taskkill.exe"; Parameters: "/F /IM php.exe"; Flags: runhidden; RunOnceId: "StopPHP"
+Filename: "netsh.exe"; Parameters: "advfirewall firewall delete rule name=""Amigo Bicho (Porta 8181)"""; Flags: runhidden; RunOnceId: "DelFirewall"
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ResultCode: Integer;
 begin
   if CurStep = ssPostInstall then
   begin
-    // Cria diretórios necessários para o Laravel
     ForceDirectories(ExpandConstant('{app}\storage\logs'));
+    ForceDirectories(ExpandConstant('{app}\storage\app\backups'));
     ForceDirectories(ExpandConstant('{app}\storage\framework\cache'));
     ForceDirectories(ExpandConstant('{app}\storage\framework\sessions'));
     ForceDirectories(ExpandConstant('{app}\storage\framework\views'));
     ForceDirectories(ExpandConstant('{app}\bootstrap\cache'));
+    ForceDirectories(ExpandConstant('{app}\database'));
   end;
 end;
