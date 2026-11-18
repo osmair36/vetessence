@@ -17,7 +17,10 @@ class ConsentTemplate extends Model
 
     protected static function booted()
     {
-        static::creating(fn ($t) => $t->slug = $t->slug ?: Str::slug($t->name));
+        static::creating(function ($t) {
+            $t->slug = $t->slug ?: Str::slug($t->name);
+            $t->category = $t->category ?: 'geral';
+        });
     }
 
     public function consentForms(): HasMany { return $this->hasMany(ConsentForm::class); }

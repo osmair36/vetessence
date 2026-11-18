@@ -6,6 +6,11 @@
 ])
 
 @section('content')
+@if($pet->is_aggressive)
+<div style="background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 6px 10px; margin-bottom: 8px; border-radius: 4px; font-weight: bold; text-align: center; font-size: 12px;">
+    ⚠️ ALERTA: ANIMAL BRAVO / CUIDADO NO MANEJO CLÍNICO
+</div>
+@endif
 {{-- IDENTIFICAÇÃO DO PACIENTE E TUTOR --}}
 <div class="section-box">
     <div class="section-title">1. Dados Cadastrais do Animal</div>
@@ -54,10 +59,16 @@
     </div>
 </div>
 
-@if($pet->allergies || $pet->notes || $pet->chronic_conditions)
+@if($pet->pathologies || $pet->surgical_history || $pet->allergies || $pet->notes || $pet->chronic_conditions)
 <div class="section-box">
-    <div class="section-title" style="background: #fff3cd; color: #856404;">3. Alertas Médicos, Alergias e Condições Especiais</div>
+    <div class="section-title" style="background: #fff3cd; color: #856404;">3. Alertas Médicos, Patologias e Cirurgias Prévias</div>
     <div class="section-body">
+        @if($pet->pathologies)
+            <p style="margin: 0 0 4px 0;"><strong>Patologias / Condições Pré-existentes:</strong> {{ $pet->pathologies }}</p>
+        @endif
+        @if($pet->surgical_history)
+            <p style="margin: 0 0 4px 0;"><strong>Cirurgias Prévias:</strong> {{ $pet->surgical_history }}</p>
+        @endif
         @if($pet->allergies)
             <p style="margin: 0 0 4px 0;"><strong>Alergias:</strong> {{ $pet->allergies }}</p>
         @endif

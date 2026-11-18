@@ -229,6 +229,46 @@
 
         <div class="row">
             <div class="col-md-6">
+                <div class="form-group p-2 rounded border bg-light">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" wire:model="is_neutered" class="custom-control-input" id="petIsNeutered">
+                        <label class="custom-control-label font-weight-bold text-dark" for="petIsNeutered">
+                            <i class="fas fa-cut text-info mr-1"></i> Animal Castrado
+                        </label>
+                    </div>
+                    <small class="text-muted d-block mt-1">Marque se o animal já foi castrado/esterilizado.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group p-2 rounded border bg-light">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" wire:model="is_aggressive" class="custom-control-input" id="petIsAggressive">
+                        <label class="custom-control-label font-weight-bold text-danger" for="petIsAggressive">
+                            <i class="fas fa-exclamation-triangle text-danger mr-1"></i> Animal Bravo / Cuidado no Manejo
+                        </label>
+                    </div>
+                    <small class="text-muted d-block mt-1">Exibe alerta de segurança destacado na ficha clínica.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label><i class="fas fa-notes-medical text-danger mr-1"></i> Patologias / Condições Pré-existentes</label>
+                    <input type="text" wire:model="pathologies" class="form-control" placeholder="Ex: Cardiopata, Atópico/Alérgico, Diabético, Renal...">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label><i class="fas fa-syringe text-primary mr-1"></i> Cirurgias Prévias</label>
+                    <input type="text" wire:model="surgical_history" class="form-control" placeholder="Ex: Castração em 2023, Ortopédica em membro pélvico...">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Órgão Emissor RG</label>
                     <input type="text" wire:model="rg_issuer" class="form-control" placeholder="Ex: CFMV">

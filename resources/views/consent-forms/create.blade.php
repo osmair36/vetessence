@@ -17,9 +17,9 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="pet_id">Pet *</label>
-                        <x-tom-select name="pet_id" id="pet_id" :value="old('pet_id')" required>
+                        <x-tom-select name="pet_id" id="pet_id" :value="old('pet_id', request('pet_id'))" required>
                             @foreach($pets as $pet)
-                                <option value="{{ $pet->id }}" {{ old('pet_id') == $pet->id ? 'selected' : '' }}>
+                                <option value="{{ $pet->id }}" {{ old('pet_id', request('pet_id')) == $pet->id ? 'selected' : '' }}>
                                     {{ $pet->name }} - {{ $pet->tutors->first()->name ?? '' }}
                                 </option>
                             @endforeach
@@ -129,3 +129,53 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const templatesData = @json($templates->keyBy('id'));
+        const petsData = @json($pets->keyBy('id'));
+
+        const templateSelect = document.getElementById('consent_template_id');
+        const petSelect = document.getElementById('pet_id');
+
+        function updateTemplateContent(tId) {
+            if (templatesData[tId]) {
+                const content = templatesData[tId].content || '';
+                if (typeof tinymce !== 'undefined' && tinymce.get('signed_content')) {
+                    tinymce.get('signed_content').setContent(content);
+                } else {
+                    const ta = document.getElementById('signed_content');
+                    if (ta) ta.value = content;
+                }
+            }
+        }
+
+        function updateTutorData(pId) {
+            if (petsData[pId] && petsData[pId].tutors && petsData[pId].tutors.length > 0) {
+                const tutor = petsData[pId].tutors[0];
+                const nameInput = document.getElementById('client_name');
+                const docInput = document.getElementById('client_document');
+                if (nameInput) nameInput.value = tutor.name || '';
+                if (docInput) docInput.value = tutor.cpf || tutor.rg || '';
+            }
+        }
+
+        if (templateSelect) {
+            templateSelect.addEventListener('change', function() {
+                updateTemplateContent(this.value);
+            });
+        }
+
+        if (petSelect) {
+            petSelect.addEventListener('change', function() {
+                updateTutorData(this.value);
+            });
+            // Inicializa se já houver pet pré-selecionado via URL
+            if (petSelect.value) {
+                updateTutorData(petSelect.value);
+            }
+        }
+    });
+</script>
+@endpush

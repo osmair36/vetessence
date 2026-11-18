@@ -13,6 +13,7 @@ class TutorForm extends Component
 {
     public $tutorId;
     public $name = '';
+    public $birth_date = '';
     public $cpf = '';
     public $email = '';
     public $phone = '';
@@ -52,6 +53,7 @@ class TutorForm extends Component
         $this->tutorId = $id;
         $tutor = Tutor::findOrFail($id);
         $this->name = $tutor->name;
+        $this->birth_date = $tutor->birth_date ? $tutor->birth_date->format('Y-m-d') : '';
         $this->cpf = $tutor->cpf;
         $this->email = $tutor->email;
         $this->phone = $tutor->phone;
@@ -70,6 +72,7 @@ class TutorForm extends Component
     {
         $this->tutorId = null;
         $this->name = '';
+        $this->birth_date = '';
         $this->cpf = '';
         $this->email = '';
         $this->phone = '';
@@ -154,6 +157,7 @@ class TutorForm extends Component
 
         $data = [
             'name' => $this->name,
+            'birth_date' => $this->birth_date ?: null,
             'cpf' => $this->cpf,
             'email' => $this->email,
             'phone' => $this->phone,

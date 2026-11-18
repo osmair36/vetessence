@@ -133,9 +133,11 @@ class TutorFormTest extends ModuleTestCase
     public function test_user_with_permission_can_create()
     {
         $role = \Spatie\Permission\Models\Role::create(['name' => 'PermTutor', 'guard_name' => 'web', 'slug' => 'perm-tutor']);
+        $p1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'tutors.create', 'guard_name' => 'web']);
+        $p2 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'tutors.view', 'guard_name' => 'web']);
+        $role->givePermissionTo([$p1, $p2]);
         $user = \App\Models\User::factory()->create(['role_id' => $role->id, 'is_active' => true]);
-        $user->givePermissionTo(\Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'tutors.create', 'guard_name' => 'web']));
-        $user->givePermissionTo(\Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'tutors.view', 'guard_name' => 'web']));
+        $user->assignRole($role);
         $this->actingAs($user);
 
         Livewire::test('tutor-form')

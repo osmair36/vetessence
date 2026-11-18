@@ -88,4 +88,26 @@ class PetTest extends TestCase
         $this->assertDatabaseHas('pets', ['microchip_number' => $pet->microchip_number]);
         $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $pet->microchip_date);
     }
+
+    public function test_clinical_flags_and_history_fillable()
+    {
+        $pet = Pet::factory()->create([
+            'is_neutered' => true,
+            'is_aggressive' => true,
+            'pathologies' => 'Dermatite Atópica, Cardiopatia',
+            'surgical_history' => 'Castração eletiva em 2024',
+        ]);
+
+        $this->assertTrue($pet->is_neutered);
+        $this->assertTrue($pet->is_aggressive);
+        $this->assertEquals('Dermatite Atópica, Cardiopatia', $pet->pathologies);
+        $this->assertEquals('Castração eletiva em 2024', $pet->surgical_history);
+        $this->assertDatabaseHas('pets', [
+            'id' => $pet->id,
+            'is_neutered' => 1,
+            'is_aggressive' => 1,
+            'pathologies' => 'Dermatite Atópica, Cardiopatia',
+            'surgical_history' => 'Castração eletiva em 2024',
+        ]);
+    }
 }

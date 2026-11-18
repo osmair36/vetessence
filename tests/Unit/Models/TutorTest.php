@@ -59,4 +59,16 @@ class TutorTest extends TestCase
 
         $this->assertTrue($tutor->city()->first()->is($city));
     }
+
+    public function test_birth_date_fillable_and_cast()
+    {
+        $tutor = Tutor::factory()->create([
+            'birth_date' => '1985-05-20',
+        ]);
+
+        $fresh = Tutor::find($tutor->id);
+        $this->assertNotNull($fresh->birth_date);
+        $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $fresh->birth_date);
+        $this->assertEquals('1985-05-20', $fresh->birth_date->format('Y-m-d'));
+    }
 }

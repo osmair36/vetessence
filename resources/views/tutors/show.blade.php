@@ -33,6 +33,12 @@
                         <i class="fas fa-id-card text-muted mr-2" style="width: 18px;"></i>
                         <span>{{ $tutor->cpf }}</span>
                     </div>
+                    @if($tutor->birth_date)
+                    <div class="mb-2">
+                        <i class="fas fa-birthday-cake text-muted mr-2" style="width: 18px;"></i>
+                        <span>Nascimento: {{ $tutor->birth_date->format('d/m/Y') }}</span>
+                    </div>
+                    @endif
                     <div class="mb-2">
                         <i class="fas fa-phone text-muted mr-2" style="width: 18px;"></i>
                         <span>{{ $tutor->phone }}</span>

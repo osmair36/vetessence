@@ -58,8 +58,16 @@
                                 </div>
                             @endif
                             <div class="ml-2">
-                                <div class="font-weight-bold">{{ $pet->name }}</div>
-                                <small class="text-muted">{{ $pet->gender === 'male' ? 'Macho' : 'Fêmea' }}</small>
+                                <div class="font-weight-bold d-flex align-items-center">
+                                    {{ $pet->name }}
+                                    @if($pet->is_aggressive)
+                                        <span class="badge badge-danger ml-1" title="Animal Bravo / Cuidado no Manejo"><i class="fas fa-exclamation-triangle mr-1"></i>Bravo</span>
+                                    @endif
+                                </div>
+                                <small class="text-muted">
+                                    {{ $pet->gender === 'male' ? 'Macho' : 'Fêmea' }}
+                                    @if($pet->is_neutered) <span class="badge badge-light border ml-1">Castrado</span> @endif
+                                </small>
                             </div>
                         </div>
                     </td>

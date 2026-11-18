@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             SampleDataSeeder::class,
             ZoonosisSeeder::class,
             VaccineProtocolSeeder::class,
+            ConsentTemplateSeeder::class,
             GeoSeeder::class,
             AmigoBichoSettingsSeeder::class,
         ]);

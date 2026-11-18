@@ -2,6 +2,27 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.2] — 2026-11-18
+
+### Adicionado
+- **Ficha Clínica Veterinária Completa do Animal (Castrado, Bravo, Patologias e Cirurgias)**:
+  - Adição dos campos `is_neutered` (Castrado: Sim / Não), `is_aggressive` (Animal Bravo / Alerta de Manejo), `pathologies` (Patologias / Condições Pré-existentes) e `surgical_history` (Cirurgias Prévias) na tabela `pets` e modelo `Pet`.
+  - Exibição de banner de alerta vermelho destacado na ficha clínica do paciente para animais bravos (`ANIMAL BRAVO / CUIDADO NO MANEJO CLÍNICO`), visível também nas listagens e na impressão oficial da ficha.
+  - Alertas de patologias pré-existentes (cardiopata, diabético, atópico, etc.) e histórico cirúrgico em destaque visual no perfil do paciente.
+  - Barra de ações rápidas clínicas na ficha do animal (`pets/show.blade.php`), com acesso direto em 1 clique para Novo Atendimento, Vacina, Vermífugo/Antiparasitário (Simparic), Receita, Pedido de Laboratório, Exame de Imagem, Emitir Termo e Atestado de Viagem.
+  - Card integrado de **Vermífugos e Antiparasitários** no perfil do animal com indicação visual de repetições/reforços vencidos ou em dia.
+- **Data de Nascimento do Tutor**:
+  - Inclusão do campo `birth_date` na tabela `tutors` e no formulário de cadastro/edição do tutor (`TutorForm`), com exibição no perfil do cliente.
+- **7 Modelos Oficiais de Termos de Consentimento Veterinário**:
+  - Criação do seeder `ConsentTemplateSeeder` com 7 modelos pré-cadastrados conforme padrões ético-jurídicos do CFMV:
+    1. *Termo de Consentimento para Internamento Hospitalar*
+    2. *Termo de Consentimento para Eutanásia e Destinação de Cadáver*
+    3. *Termo de Consentimento e Risco Cirúrgico / Anestésico*
+    4. *Termo de Ciência e Cuidados para Paciente Atópico / Dermatite Alérgica*
+    5. *Termo de Esclarecimento e Consentimento de Vacinação*
+    6. *Termo de Ciência e Autorização para Tosa de Raças com Subpelo (Spitz Alemão, Chow Chow, Husky, etc.)*
+    7. *Termo de Declaração Sanitária e Viagem / Trânsito Animal*
+  - Preenchimento dinâmico e inteligente: ao selecionar o animal ou o modelo de termo, o sistema preenche automaticamente os dados do tutor, documento e o texto completo do termo para assinatura e impressão imediata.
 ## [v1.8.1] — 2026-11-18
 
 ### Adicionado

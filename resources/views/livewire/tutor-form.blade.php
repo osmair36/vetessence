@@ -16,17 +16,28 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
+                    <label>Data de Nascimento</label>
+                    <input type="date" wire:model="birth_date" class="form-control @error('birth_date') is-invalid @enderror">
+                    @error('birth_date') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
                     <label>Telefone *</label>
                     <input type="text" wire:model="phone" class="form-control @error('phone') is-invalid @enderror" required>
                     @error('phone') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label>E-mail *</label>
-            <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror" required>
-            @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>E-mail *</label>
+                    <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror" required>
+                    @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                </div>
+            </div>
         </div>
 
         <div class="row">

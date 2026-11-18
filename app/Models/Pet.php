@@ -21,9 +21,9 @@ class Pet extends Model
     }
 
     protected $fillable = [
-        'name', 'species', 'breed', 'breed_default_id', 'gender', 'birth_date', 'weight',
-        'color', 'microchip_number', 'microchip_date', 'rg_number', 'rg_issuer',
-        'coat', 'size', 'is_active', 'notes', 'photo', 'created_at_branch_id',
+        'name', 'species', 'breed', 'breed_default_id', 'gender', 'is_neutered', 'is_aggressive',
+        'birth_date', 'weight', 'color', 'microchip_number', 'microchip_date', 'rg_number', 'rg_issuer',
+        'coat', 'size', 'is_active', 'notes', 'pathologies', 'surgical_history', 'photo', 'created_at_branch_id',
     ];
 
     protected $casts = [
@@ -31,6 +31,8 @@ class Pet extends Model
         'microchip_date' => 'date',
         'weight' => 'decimal:2',
         'is_active' => 'boolean',
+        'is_neutered' => 'boolean',
+        'is_aggressive' => 'boolean',
     ];
 
     public function tutors(): BelongsToMany

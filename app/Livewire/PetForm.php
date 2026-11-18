@@ -30,6 +30,10 @@ class PetForm extends Component
     public $rg_number = '';
     public $rg_issuer = '';
     public $size = 'medium';
+    public $is_neutered = false;
+    public $is_aggressive = false;
+    public $pathologies = '';
+    public $surgical_history = '';
     public $photo;
     public $notes = '';
 
@@ -75,6 +79,10 @@ class PetForm extends Component
         $this->rg_number = $pet->rg_number ?? '';
         $this->rg_issuer = $pet->rg_issuer ?? '';
         $this->size = $pet->size ?? 'medium';
+        $this->is_neutered = (bool) $pet->is_neutered;
+        $this->is_aggressive = (bool) $pet->is_aggressive;
+        $this->pathologies = $pet->pathologies ?? '';
+        $this->surgical_history = $pet->surgical_history ?? '';
         $this->notes = $pet->notes ?? '';
         $this->loadBreeds();
     }
@@ -132,6 +140,10 @@ class PetForm extends Component
         $this->rg_number = '';
         $this->rg_issuer = '';
         $this->size = 'medium';
+        $this->is_neutered = false;
+        $this->is_aggressive = false;
+        $this->pathologies = '';
+        $this->surgical_history = '';
         $this->photo = null;
         $this->notes = '';
         $this->loadBreeds();
@@ -198,6 +210,8 @@ class PetForm extends Component
             'breed' => $this->breed ?: null,
             'breed_default_id' => (is_numeric($this->breed_default_id) && (int)$this->breed_default_id > 0) ? (int)$this->breed_default_id : null,
             'gender' => $this->gender,
+            'is_neutered' => (bool) $this->is_neutered,
+            'is_aggressive' => (bool) $this->is_aggressive,
             'birth_date' => $this->birth_date ?: null,
             'weight' => $this->weight ?: null,
             'color' => $this->color ?: null,
@@ -207,6 +221,8 @@ class PetForm extends Component
             'rg_issuer' => $this->rg_issuer ?: null,
             'size' => $this->size,
             'notes' => $this->notes ?: null,
+            'pathologies' => $this->pathologies ?: null,
+            'surgical_history' => $this->surgical_history ?: null,
             'is_active' => true,
         ];
 

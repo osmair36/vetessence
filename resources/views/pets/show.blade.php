@@ -26,12 +26,18 @@
                 </div>
                 @endif
                 <h5 class="font-weight-bold">{{ $pet->name }}</h5>
-                <p class="text-muted">
+                <p class="text-muted mb-2">
                     @php
                         $speciesLabels = config('species');
                     @endphp
                     {{ $speciesLabels[$pet->species] ?? $pet->species }} - {{ $pet->breedRelation?->name ?? $pet->breed ?? 'SRD' }}
                 </p>
+
+                @if($pet->is_aggressive)
+                <div class="alert alert-danger py-1 px-2 mb-2 font-weight-bold text-center small shadow-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> ANIMAL BRAVO / CUIDADO NO MANEJO
+                </div>
+                @endif
 
                 <hr>
 
@@ -39,6 +45,10 @@
                     <div class="d-flex justify-content-between mb-1">
                         <span class="text-muted">Gênero:</span>
                         <span>{{ $pet->gender === 'male' ? 'Macho' : 'Fêmea' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Castrado:</span>
+                        <span class="badge {{ $pet->is_neutered ? 'badge-success' : 'badge-secondary' }}">{{ $pet->is_neutered ? 'Sim' : 'Não' }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <span class="text-muted">Idade:</span>
@@ -52,6 +62,12 @@
                         <span class="text-muted">Porte:</span>
                         <span>{{ ucfirst($pet->size ?? '-') }}</span>
                     </div>
+                    @if($pet->color)
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Pelagem/Cor:</span>
+                        <span>{{ $pet->color }}</span>
+                    </div>
+                    @endif
                     @if($pet->microchip)
                     <div class="d-flex justify-content-between mb-1">
                         <span class="text-muted">Microchip:</span>
@@ -68,6 +84,27 @@
                     <div class="d-flex justify-content-between mb-1">
                         <span class="text-muted">RG Animal:</span>
                         <span>{{ $pet->rg_number }} @if($pet->rg_issuer)({{ $pet->rg_issuer }})@endif</span>
+                    </div>
+                    @endif
+
+                    @if($pet->pathologies)
+                    <div class="mt-2 p-2 bg-light rounded border-left border-danger">
+                        <span class="font-weight-bold text-danger d-block"><i class="fas fa-notes-medical mr-1"></i> Patologias:</span>
+                        <span class="text-dark">{{ $pet->pathologies }}</span>
+                    </div>
+                    @endif
+
+                    @if($pet->surgical_history)
+                    <div class="mt-2 p-2 bg-light rounded border-left border-primary">
+                        <span class="font-weight-bold text-primary d-block"><i class="fas fa-syringe mr-1"></i> Cirurgias Prévias:</span>
+                        <span class="text-dark">{{ $pet->surgical_history }}</span>
+                    </div>
+                    @endif
+
+                    @if($pet->notes)
+                    <div class="mt-2 p-2 bg-light rounded border-left border-secondary">
+                        <span class="font-weight-bold text-muted d-block"><i class="fas fa-comment-alt mr-1"></i> Observações:</span>
+                        <span class="text-dark">{!! nl2br(e($pet->notes)) !!}</span>
                     </div>
                     @endif
                 </div>
@@ -114,6 +151,37 @@
     </div>
 
     <div class="col-md-8">
+        {{-- BARRA DE AÇÕES RÁPIDAS CLÍNICAS --}}
+        <div class="card mb-3 shadow-sm border-0 bg-light">
+            <div class="card-body p-2 d-flex flex-wrap align-items-center">
+                <span class="small font-weight-bold text-muted mr-2 mb-1"><i class="fas fa-bolt text-warning mr-1"></i> Ações Rápidas:</span>
+                <a href="{{ route('medical-records.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-primary mr-1 mb-1">
+                    <i class="fas fa-file-medical mr-1"></i> Atendimento
+                </a>
+                <a href="{{ route('vaccinations.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-success mr-1 mb-1">
+                    <i class="fas fa-syringe mr-1"></i> Vacina
+                </a>
+                <a href="{{ route('parasite-controls.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-info mr-1 mb-1">
+                    <i class="fas fa-shield-virus mr-1"></i> Vermífugo / Antiparasitário
+                </a>
+                <a href="{{ route('prescriptions.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-warning text-dark mr-1 mb-1">
+                    <i class="fas fa-prescription mr-1"></i> Receita
+                </a>
+                <a href="{{ route('laboratory-orders.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-secondary mr-1 mb-1">
+                    <i class="fas fa-flask mr-1"></i> Pedido Exames
+                </a>
+                <a href="{{ route('imaging-exams.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-dark mr-1 mb-1">
+                    <i class="fas fa-x-ray mr-1"></i> Exame Imagem
+                </a>
+                <a href="{{ route('consent-forms.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-outline-primary mr-1 mb-1">
+                    <i class="fas fa-file-contract mr-1"></i> Emitir Termo
+                </a>
+                <a href="{{ route('health-certificates.create') }}?pet_id={{ $pet->id }}" class="btn btn-xs btn-outline-success mr-1 mb-1">
+                    <i class="fas fa-plane mr-1"></i> Atestado Viagem
+                </a>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-file-medical mr-2"></i>Últimos Atendimentos</h5>
@@ -172,6 +240,60 @@
                 </table>
                 @else
                 <p class="text-muted text-center mb-0 py-4">Nenhuma vacina registrada.</p>
+                @endif
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-shield-virus mr-2"></i>Vermífugos e Antiparasitários (Simparic, etc.)</h5>
+                <a href="{{ route('parasite-controls.create') }}?pet_id={{ $pet->id }}" class="btn btn-sm btn-info">
+                    <i class="fas fa-plus mr-1"></i> Novo
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if($pet->parasiteControls && $pet->parasiteControls->count() > 0)
+                <table class="table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Tipo</th>
+                            <th>Aplicação</th>
+                            <th>Próximo Reforço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pet->parasiteControls as $pc)
+                        <tr>
+                            <td><strong>{{ $pc->product_name }}</strong> @if($pc->dose)<small class="text-muted">({{ $pc->dose }})</small>@endif</td>
+                            <td>
+                                @php
+                                    $typeLabels = [
+                                        'flea' => 'Pulgas',
+                                        'tick' => 'Carrapatos',
+                                        'heartworm' => 'Verme do Coração',
+                                        'intestinal' => 'Vermífugo',
+                                        'combination' => 'Combinado'
+                                    ];
+                                @endphp
+                                <span class="badge badge-light border">{{ $typeLabels[$pc->type] ?? ucfirst($pc->type) }}</span>
+                            </td>
+                            <td>{{ $pc->application_date ? $pc->application_date->format('d/m/Y') : '-' }}</td>
+                            <td>
+                                @if($pc->next_due_date)
+                                    <span class="font-weight-bold {{ $pc->next_due_date->isPast() ? 'text-danger' : 'text-success' }}">
+                                        {{ $pc->next_due_date->format('d/m/Y') }}
+                                    </span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @else
+                <p class="text-muted text-center mb-0 py-4">Nenhum controle parasitário registrado.</p>
                 @endif
             </div>
         </div>

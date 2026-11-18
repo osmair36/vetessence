@@ -20,6 +20,15 @@ class ConsentForm extends Model
 
     protected $casts = ['signed_at' => 'datetime'];
 
+    protected static function booted()
+    {
+        static::creating(function ($f) {
+            if (empty($f->client_name)) {
+                $f->client_name = $f->tutor_id ? (Tutor::find($f->tutor_id)?->name ?? 'Tutor Não Informado') : 'Tutor Não Informado';
+            }
+        });
+    }
+
     public static function generateNumber(): string
     {
         return 'CON-' . date('Ymd') . '-' . str_pad(self::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);

@@ -79,7 +79,7 @@ class PetController extends Controller
 
     public function show(Pet $pet)
     {
-        $pet->load(['tutors', 'appointments', 'medicalRecords', 'vaccinations']);
+        $pet->load(['tutors', 'appointments', 'medicalRecords', 'vaccinations', 'parasiteControls', 'weightRecords']);
         return view('pets.show', compact('pet'));
     }
 

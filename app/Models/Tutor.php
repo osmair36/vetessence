@@ -29,7 +29,7 @@ class Tutor extends Authenticatable
     }
 
     protected $fillable = [
-        'name', 'user_id', 'cpf', 'rg', 'phone', 'phone_secondary', 'email',
+        'name', 'birth_date', 'user_id', 'cpf', 'rg', 'phone', 'phone_secondary', 'email',
         'zipcode', 'address', 'number', 'complement', 'neighborhood',
         'city', 'state', 'profession', 'photo', 'notes',
         'password', 'remember_token',
@@ -45,6 +45,7 @@ class Tutor extends Authenticatable
     protected $appends = ['name'];
 
     protected $casts = [
+        'birth_date' => 'date',
         'email_verified_at' => 'datetime',
         'notify_sms' => 'boolean',
         'notify_whatsapp' => 'boolean',

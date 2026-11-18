@@ -1,0 +1,17 @@
+http://127.0.0.1:8181/
+Login: super@vet.com
+Senha password
+
+
+O que este Instalador Contém:
+Aplicação Completa Amigo Bicho (v1.8.1): Todos os módulos (Prontuários, Cirurgia, Vacinas, Exames, Farmácia, Estoque, Financeiro, Agendamento, Tutores, Pets, Backup e Restauração).
+
+Base de Dados Real Importada: Inclui a base de dados SQLite (database/database.sqlite) preservada de forma segura (a flag onlyifdoesntexist garante que futuras atualizações nunca apaguem dados existentes).
+Motor PHP 8.4 Thread Safe Portátil Integrado: Com extensões ativadas (pdo_sqlite, curl, gd, fileinfo, mbstring, openssl, zip) e limite de memória configurado em 512 MB (eliminando qualquer erro de memória).
+Scripts de Rede e Terminais:
+
+- iniciar.bat: Inicia o servidor principal vinculado à rede (0.0.0.0:8181), libera a porta no Firewall do Windows e abre o navegador local.
+
+- Conectar ao Amigo Bicho (Terminal).bat: Permite aos computadores clientes conectar instantaneamente pela rede local.
+
+-Criar Atalho no Desktop do Terminal.bat: Cria o atalho com o ícone oficial na Área de Trabalho do terminal cliente.
