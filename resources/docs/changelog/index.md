@@ -2,6 +2,14 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.7.5] — 2026-11-18
+
+### Alterado
+- **Novo Logo Oficial Amigo Bicho no Topo do Menu Lateral (Sidebar)**:
+  - Substituição do texto estático "Amigo Bicho / Clínica Veterinária" no topo do menu lateral pelo novo logotipo oficial ilustrado (gato, cachorro e tipografia oficial).
+  - Dimensionamento responsivo no layout AdminLTE (`max-height: 110px; max-width: 175px`) com cantos arredondados (`border-radius: 12px`), sombra sutil e destaque sobre o fundo escuro do menu lateral.
+  - Suporte completo ao modo recolhido (`sidebar-collapse`), redimensionando o logotipo automaticamente para 42x42px centralizado.
+  - Atualização dos arquivos de imagem padrão e de fallback em `public/img/logo-sidebar.png`, `public/img/logo-amigobicho.png`, `public/img/logo-default.png` e `public/img/logositebackft.png`.
 ## [v1.7.4] — 2026-11-18
 
 ### Corrigido

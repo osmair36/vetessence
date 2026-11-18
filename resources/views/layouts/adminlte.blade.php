@@ -24,6 +24,37 @@
         .main-sidebar .brand-link {
             white-space: normal !important;
             line-height: 1.25 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+            padding: 0.85rem 0.75rem !important;
+            background: transparent !important;
+            transition: all 0.3s ease;
+        }
+        .main-sidebar .brand-link .brand-logo-img {
+            max-height: 110px;
+            width: auto;
+            max-width: 175px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: all 0.3s ease-in-out;
+            display: block;
+        }
+        .main-sidebar .brand-link:hover .brand-logo-img {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+        }
+        body.sidebar-collapse .main-sidebar .brand-link {
+            padding: 0.5rem 0.25rem !important;
+        }
+        body.sidebar-collapse .main-sidebar .brand-link .brand-logo-img {
+            max-height: 42px !important;
+            max-width: 42px !important;
+            border-radius: 6px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
         }
         .main-sidebar .brand-link .brand-text {
             white-space: normal !important;
@@ -124,21 +155,12 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: {{ $sidebarBg }} !important;">
             @php
                 $clinicName = branding('clinic_name', 'Amigo Bicho - Clínica Veterinária');
-                if (str_contains($clinicName, ' - ')) {
-                    $parts = explode(' - ', $clinicName, 2);
-                    $line1 = trim($parts[0]);
-                    $line2 = trim($parts[1]);
-                    if (str_contains($line2, ' e Pet Shop')) {
-                        $line2 = 'Clínica Veterinária';
-                    }
-                } else {
-                    $line1 = 'Amigo Bicho';
-                    $line2 = 'Clínica Veterinária';
-                }
+                $logoPath = file_exists(public_path('img/logo-sidebar.png')) ? 'img/logo-sidebar.png' : 'img/logo-amigobicho.png';
             @endphp
-            <a href="{{ route('dashboard') }}" class="brand-link d-flex flex-column align-items-center justify-content-center text-center py-2" style="height: auto; min-height: 56px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 0.65rem 0.75rem !important;">
-                <span class="brand-text font-weight-bold text-white text-center w-100" style="font-size: 1.05rem; letter-spacing: 0.02em; display: block; line-height: 1.2;">{{ $line1 }}</span>
-                <span class="brand-text text-center w-100" style="font-size: 0.8rem; color: var(--brand-accent, #d6c38d); font-weight: 600; letter-spacing: 0.03em; margin-top: 3px; display: block; line-height: 1.2;">{{ $line2 }}</span>
+            <a href="{{ route('dashboard') }}" class="brand-link" title="{{ $clinicName }}">
+                <img src="{{ asset($logoPath) }}"
+                     alt="{{ $clinicName }}"
+                     class="brand-logo-img img-fluid">
             </a>
             <div class="sidebar">
                 <nav class="mt-2">

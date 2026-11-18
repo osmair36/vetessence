@@ -27,7 +27,7 @@
             <a href="/" class="d-flex align-items-center justify-content-center" style="min-height:60px;">
                 @php $logoUrl = branding_sidebar_logo_url(); $hasLogo = (bool) $logoUrl; $showName = branding('show_clinic_name', '0') === '1'; @endphp
                 @if($hasLogo)
-                    <img src="{{ $logoUrl }}" style="width:100%;height:auto;" alt="Logo">
+                    <img src="{{ $logoUrl }}" style="max-height: 120px; width: auto; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);" alt="Logo">
                 @else
                     <i class="fas fa-paw fa-2x"></i>
                 @endif

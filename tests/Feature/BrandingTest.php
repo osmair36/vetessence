@@ -18,7 +18,7 @@ class BrandingTest extends TestCase
     private function adminUser(): User
     {
         $user = User::factory()->create();
-        $role = Role::firstOrCreate(['name' => 'branding-test', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'branding-test', 'guard_name' => 'web'], ['slug' => 'branding-test']);
         $role->givePermissionTo(Permission::firstOrCreate(['name' => 'configuracoes.branding', 'guard_name' => 'web']));
         $user->assignRole($role);
         return $user;
