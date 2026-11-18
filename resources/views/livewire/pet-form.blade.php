@@ -26,23 +26,54 @@
         <div class="form-group">
             <label>Tutor Responsável *</label>
             @if($petId)
-                <input type="text" class="form-control-plaintext" value="{{ $tutorName }}" readonly>
+                <input type="text" class="form-control-plaintext font-weight-bold" value="{{ $tutorName }}" readonly>
                 <input type="hidden" wire:model="tutor_id">
             @else
-            <div class="input-group">
-                <x-tom-select wire="tutor_id" :value="$tutor_id" required>
-                    @foreach($tutors as $tutor)
-                    <option value="{{ $tutor->id }}">{{ $tutor->name }}</option>
-                    @endforeach
-                </x-tom-select>
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-primary" onclick="openNewTutorModal()" title="Novo Tutor">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
+                @if($tutor_id)
+                    <div class="d-flex align-items-center justify-content-between p-2 border rounded bg-light mb-1">
+                        <div>
+                            <i class="fas fa-user-check text-success mr-2"></i>
+                            <strong>{{ $tutorName }}</strong>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" wire:click="clearTutor">
+                            <i class="fas fa-times mr-1"></i> Trocar
+                        </button>
+                    </div>
+                    <input type="hidden" wire:model="tutor_id">
+                @else
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input type="text"
+                               wire:model.live.debounce.300ms="tutorSearch"
+                               class="form-control @error('tutor_id') is-invalid @enderror"
+                               placeholder="Buscar tutor por nome, CPF ou telefone...">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-primary" onclick="openNewTutorModal()" title="Novo Tutor">
+                                <i class="fas fa-plus"></i> Novo
+                            </button>
+                        </div>
+                    </div>
+                    @if(isset($tutorResults) && count($tutorResults) > 0)
+                        <div class="list-group border rounded shadow-sm mb-2" style="max-height: 200px; overflow-y: auto;">
+                            @foreach($tutorResults as $t)
+                                <button type="button"
+                                        wire:click="selectTutor({{ $t->id }}, '{{ addslashes($t->name) }}')"
+                                        class="list-group-item list-group-item-action py-2 px-3 d-flex justify-content-between align-items-center">
+                                    <span><strong>{{ $t->name }}</strong></span>
+                                    <small class="text-muted">{{ $t->cpf ? 'CPF: ' . $t->cpf : ($t->phone ?? '') }}</small>
+                                </button>
+                            @endforeach
+                        </div>
+                    @elseif(!empty($tutorSearch))
+                        <div class="text-muted small p-2 border rounded bg-light mb-2">
+                            <i class="fas fa-info-circle mr-1"></i> Nenhum tutor encontrado com esse termo. Clique em <strong>Novo</strong> para cadastrar.
+                        </div>
+                    @endif
+                @endif
             @endif
-            @error('tutor_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+            @error('tutor_id') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
         </div>
 
         <div id="tutorOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:1055;">

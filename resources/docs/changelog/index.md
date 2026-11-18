@@ -2,6 +2,21 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.7.4] — 2026-11-18
+
+### Corrigido
+- **Campos de Funcionário no Modal (Unidade, Departamento, Cargo e Tipo de Contrato)**:
+  - Substituição de componentes `<x-tom-select>` com `wire:ignore` por selects HTML nativos do Bootstrap 4 integrados ao Livewire v3 (`wire:model` e `wire:model.live`), eliminando o problema de campos em branco no modal.
+  - Implementação de filtragem dinâmica reativa de cargos por departamento (`updatedDepartmentId`), preservando o cargo selecionado na edição de funcionários existentes.
+  - Remoção de regra de senha obrigatória no contexto de funcionários (`employee`), alinhando o backend com a interface onde o funcionário recebe convite por e-mail para definir sua própria senha.
+  - Remoção de scripts desnecessários e incompatíveis de recarga de TomSelect (`refreshTomSelects`) nas listagens e detalhes de funcionários e usuários.
+- **Otimização de Memória e Busca de Tutores no Modal de Pets**:
+  - Eliminação da renderização de 2.824 elementos `<option>` no DOM do modal de Pets, substituindo por busca interativa leve (`tutorSearch`) com autocompletar e limite de resultados, reduzindo drasticamente o processamento do Livewire v3.
+  - Configuração de `ini_set('memory_limit', '512M')` no `public/index.php`, prevenindo erros de memória exaurida (`Allowed memory size exhausted`) ao lidar com bases volumosas.
+  - Remoção de carregamentos desnecessários de todos os tutores em `PetController::create()` e `PetController::edit()`.
+- **Desvinculação Segura e Exclusão de Pets Sem Registros Clínicos**:
+  - Ajuste do hook `deleting` no modelo `Pet` para desvincular automaticamente os registros de `pet_tutor` ao excluir o animal, impedindo o disparo de `RuntimeException` não tratada.
+  - Proteção mantida e validada amigavelmente contra exclusão de animais que possuam prontuários, agendamentos ou histórico de vacinação.
 ## [v1.7.3] — 2026-11-18
 
 ### Corrigido

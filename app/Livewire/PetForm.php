@@ -35,6 +35,7 @@ class PetForm extends Component
 
     public $speciesOptions = [];
     public $breeds = [];
+    public $tutorSearch = '';
 
     protected function rules()
     {
@@ -83,6 +84,32 @@ class PetForm extends Component
     {
         $this->resetForm();
         $this->tutor_id = (string) $tutorId;
+        $this->tutorName = Tutor::find($tutorId)?->name ?? '';
+    }
+
+    public function selectTutor($id, $name)
+    {
+        $this->tutor_id = (string) $id;
+        $this->tutorName = $name;
+        $this->tutorSearch = '';
+    }
+
+    public function clearTutor()
+    {
+        $this->tutor_id = '';
+        $this->tutorName = '';
+        $this->tutorSearch = '';
+    }
+
+    #[On('tutor-saved')]
+    public function onTutorSaved($tutorId = null)
+    {
+        if ($tutorId) {
+            $tutor = Tutor::find($tutorId);
+            if ($tutor) {
+                $this->selectTutor($tutor->id, $tutor->name);
+            }
+        }
     }
 
     #[On('resetForm')]
@@ -92,6 +119,7 @@ class PetForm extends Component
         $this->name = '';
         $this->tutor_id = '';
         $this->tutorName = '';
+        $this->tutorSearch = '';
         $this->species = '';
         $this->breed = '';
         $this->breed_default_id = '';
@@ -208,7 +236,28 @@ class PetForm extends Component
 
     public function render()
     {
-        $tutors = Tutor::select('id', 'name')->orderBy('name')->get();
-        return view('livewire.pet-form', compact('tutors'));
+        if ($this->tutor_id && empty($this->tutorName)) {
+            $this->tutorName = Tutor::find($this->tutor_id)?->name ?? '';
+        }
+
+        $tutorResults = [];
+        if (!$this->petId && !$this->tutor_id) {
+            $query = Tutor::select('id', 'name', 'cpf', 'phone');
+            if (trim($this->tutorSearch) !== '') {
+                $search = trim($this->tutorSearch);
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('cpf', 'like', "%{$search}%")
+                      ->orWhere('phone', 'like', "%{$search}%");
+                });
+                $tutorResults = $query->orderBy('name')->limit(15)->get();
+            } else {
+                $tutorResults = $query->orderBy('name')->limit(10)->get();
+            }
+        }
+
+        return view('livewire.pet-form', [
+            'tutorResults' => $tutorResults,
+        ]);
     }
 }

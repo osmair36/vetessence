@@ -39,19 +39,29 @@ class EmployeeForm extends Component
 
     public function mount($id = null)
     {
+        $this->loadOptions();
+        if ($id) $this->load($id);
+    }
+
+    public function loadOptions()
+    {
         $this->roles = Role::orderBy('name')->get();
         $this->branches = Branch::orderBy('name')->get();
         $this->departments = Department::orderBy('name')->pluck('name', 'id');
-        $this->positions = Position::orderBy('name')->pluck('name', 'id');
         $this->contractTypes = config('hr.contract_types', []);
-        if ($id) $this->load($id);
+        $this->filterPositions($this->department_id);
     }
 
     public function updatedDepartmentId($value)
     {
         $this->position_id = '';
-        if ($value) {
-            $this->positions = Position::where('department_id', $value)->orderBy('name')->pluck('name', 'id');
+        $this->filterPositions($value);
+    }
+
+    public function filterPositions($departmentId = null)
+    {
+        if ($departmentId) {
+            $this->positions = Position::where('department_id', $departmentId)->orderBy('name')->pluck('name', 'id');
         } else {
             $this->positions = Position::orderBy('name')->pluck('name', 'id');
         }
@@ -75,11 +85,8 @@ class EmployeeForm extends Component
         $this->contract_type = $user->contract_type ?? '';
         $this->password = '';
         $this->password_confirmation = '';
-        $this->roles = Role::orderBy('name')->get();
-        $this->branches = Branch::orderBy('name')->get();
-        $this->departments = Department::orderBy('name')->pluck('name', 'id');
-        $this->contractTypes = config('hr.contract_types', []);
-        $this->updatedDepartmentId($this->department_id);
+        $this->loadOptions();
+        $this->filterPositions($this->department_id);
         $this->dispatch('employee-loaded');
     }
 
@@ -100,11 +107,7 @@ class EmployeeForm extends Component
         $this->position_id = '';
         $this->hire_date = '';
         $this->contract_type = '';
-        $this->roles = Role::orderBy('name')->get();
-        $this->branches = Branch::orderBy('name')->get();
-        $this->departments = Department::orderBy('name')->pluck('name', 'id');
-        $this->positions = Position::orderBy('name')->pluck('name', 'id');
-        $this->contractTypes = config('hr.contract_types', []);
+        $this->loadOptions();
         $this->resetValidation();
         $this->dispatch('employee-loaded');
     }
@@ -131,7 +134,7 @@ class EmployeeForm extends Component
             if ($this->password) {
                 $rules['password'] = 'min:8|confirmed';
             }
-        } elseif ($canManageSecurity) {
+        } elseif ($this->context === 'user' && $canManageSecurity) {
             $rules['password'] = 'required|min:8|confirmed';
         }
 
@@ -171,7 +174,7 @@ class EmployeeForm extends Component
             }
             $this->dispatch('user-saved');
         } else {
-            if (!$canManageSecurity) {
+            if (!$canManageSecurity || $this->context === 'employee' || empty($this->password)) {
                 $data['password'] = bcrypt(Str::random(32));
             }
             $user = User::create($data);

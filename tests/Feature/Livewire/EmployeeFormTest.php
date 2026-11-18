@@ -227,4 +227,62 @@ class EmployeeFormTest extends ModuleTestCase
             ->assertSet('is_active', true)
             ->assertSet('is_veterinarian', false);
     }
+
+    public function test_can_create_employee_with_department_position_and_contract()
+    {
+        $dept = \App\Models\Department::firstOrCreate(['name' => 'Clínica Médica']);
+        $pos = \App\Models\Position::firstOrCreate(['name' => 'Veterinário Plantonista', 'department_id' => $dept->id]);
+        $branch = Branch::factory()->create();
+
+        Livewire::test('employee-form', ['context' => 'employee'])
+            ->set('name', 'Funcionário Completo')
+            ->set('email', 'func.completo@teste.com')
+            ->set('branch_id', (string) $branch->id)
+            ->set('department_id', (string) $dept->id)
+            ->set('position_id', (string) $pos->id)
+            ->set('contract_type', 'clt')
+            ->set('hire_date', '2026-01-15')
+            ->call('save')
+            ->assertDispatched('user-saved');
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'func.completo@teste.com',
+            'department_id' => $dept->id,
+            'position_id' => $pos->id,
+            'contract_type' => 'clt',
+            'branch_id' => $branch->id,
+        ]);
+    }
+
+    public function test_department_change_filters_positions()
+    {
+        $dept1 = \App\Models\Department::firstOrCreate(['name' => 'Dep Teste 1']);
+        $dept2 = \App\Models\Department::firstOrCreate(['name' => 'Dep Teste 2']);
+        $pos1 = \App\Models\Position::firstOrCreate(['name' => 'Cargo Teste 1', 'department_id' => $dept1->id]);
+        $pos2 = \App\Models\Position::firstOrCreate(['name' => 'Cargo Teste 2', 'department_id' => $dept2->id]);
+
+        $test = Livewire::test('employee-form', ['context' => 'employee'])
+            ->set('department_id', (string) $dept1->id);
+
+        $positions = $test->get('positions');
+        $this->assertArrayHasKey($pos1->id, $positions);
+        $this->assertArrayNotHasKey($pos2->id, $positions);
+    }
+
+    public function test_edit_employee_preserves_department_and_position()
+    {
+        $dept = \App\Models\Department::firstOrCreate(['name' => 'Dep Preservado']);
+        $pos = \App\Models\Position::firstOrCreate(['name' => 'Cargo Preservado', 'department_id' => $dept->id]);
+
+        $user = User::factory()->create([
+            'department_id' => $dept->id,
+            'position_id' => $pos->id,
+            'contract_type' => 'pj',
+        ]);
+
+        Livewire::test('employee-form', ['id' => $user->id, 'context' => 'employee'])
+            ->assertSet('department_id', (string) $dept->id)
+            ->assertSet('position_id', (string) $pos->id)
+            ->assertSet('contract_type', 'pj');
+    }
 }

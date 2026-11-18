@@ -53,35 +53,38 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Perfil</label>
-                    <x-tom-select wire="role_id" :value="$role_id">
+                    <select wire:model="role_id" class="form-control @error('role_id') is-invalid @enderror">
                         <option value="">Nenhum</option>
                         @foreach($roles as $role)
                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                         @endforeach
-                    </x-tom-select>
+                    </select>
+                    @error('role_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Unidade</label>
-                    <x-tom-select wire="branch_id" :value="$branch_id">
+                    <select wire:model="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
                         <option value="">Todas as unidades</option>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
-                    </x-tom-select>
+                    </select>
+                    @error('branch_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
         @else
         <div class="form-group">
             <label>Unidade</label>
-            <x-tom-select wire="branch_id" :value="$branch_id">
+            <select wire:model="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
                 <option value="">Todas as unidades</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                 @endforeach
-            </x-tom-select>
+            </select>
+            @error('branch_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
         </div>
         @endif
 
@@ -93,23 +96,25 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Departamento</label>
-                    <x-tom-select wire="department_id" :value="$department_id">
+                    <select wire:model.live="department_id" class="form-control @error('department_id') is-invalid @enderror">
                         <option value="">Nenhum</option>
                         @foreach($departments as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
-                    </x-tom-select>
+                    </select>
+                    @error('department_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Cargo</label>
-                    <x-tom-select wire="position_id" :value="$position_id">
+                    <select wire:model="position_id" class="form-control @error('position_id') is-invalid @enderror">
                         <option value="">Nenhum</option>
                         @foreach($positions as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
-                    </x-tom-select>
+                    </select>
+                    @error('position_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
@@ -125,12 +130,13 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Tipo de Contrato</label>
-                    <x-tom-select wire="contract_type" :value="$contract_type">
+                    <select wire:model="contract_type" class="form-control @error('contract_type') is-invalid @enderror">
                         <option value="">Nenhum</option>
                         @foreach($contractTypes as $value => $label)
                             <option value="{{ $value }}">{{ $label }}</option>
                         @endforeach
-                    </x-tom-select>
+                    </select>
+                    @error('contract_type') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>

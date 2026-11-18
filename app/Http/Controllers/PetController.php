@@ -36,10 +36,7 @@ class PetController extends Controller
 
     public function create()
     {
-        $tutors = Tutor::with('user')->get()->sortBy(function($tutor) {
-            return $tutor->user ? $tutor->user->name : '';
-        });
-        return view('pets.create', compact('tutors'));
+        return view('pets.create');
     }
 
     public function store(Request $request)
@@ -131,11 +128,7 @@ class PetController extends Controller
 
     public function edit(Pet $pet)
     {
-        $tutors = Tutor::with('user')->get()->sortBy(function($tutor) {
-            return $tutor->user ? $tutor->user->name : '';
-        });
-        $petTutor = $pet->tutors()->first();
-        return view('pets.edit', compact('pet', 'tutors', 'petTutor'));
+        return view('pets.edit', compact('pet'));
     }
 
     public function update(Request $request, Pet $pet)

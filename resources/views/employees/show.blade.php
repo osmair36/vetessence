@@ -63,25 +63,9 @@
 
 @push('scripts')
 <script>
-    function refreshTomSelects() {
-        var modal = document.getElementById('employeeModal');
-        modal.querySelectorAll('.tom-select-wrapper[data-wire]').forEach(function(wrapper) {
-            var wireModel = wrapper.dataset.wire;
-            var componentEl = wrapper.closest('[wire\\:id]');
-            if (!componentEl || !window.Livewire) return;
-            var component = Livewire.find(componentEl.getAttribute('wire:id'));
-            if (!component) return;
-            var value = component.get(wireModel);
-            wrapper.dataset.value = typeof value !== 'undefined' && value !== null ? String(value) : '';
-        });
-        destroyTomSelects(modal);
-        initTomSelects(modal);
-    }
-
     document.addEventListener('livewire:initialized', function() {
         Livewire.on('close-modal', function() { $('#employeeModal').modal('hide'); });
         Livewire.on('user-saved', function() { location.reload(); });
-        Livewire.on('employee-loaded', function() { refreshTomSelects(); });
     });
 </script>
 @endpush

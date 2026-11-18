@@ -16,12 +16,7 @@ class Pet extends Model
     protected static function booted(): void
     {
         static::deleting(function (Pet $pet) {
-            if ($pet->tutors()->exists()) {
-                throw new \RuntimeException(
-                    'Não é possível excluir o pet "' . $pet->name . '" pois possui ' .
-                    $pet->tutors()->count() . ' tutor(es) vinculado(s).'
-                );
-            }
+            $pet->tutors()->detach();
         });
     }
 
