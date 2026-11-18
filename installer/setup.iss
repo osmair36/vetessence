@@ -5,7 +5,7 @@
 ; ============================================================
 
 #define AppName "Amigo Bicho"
-#define AppVersion "1.8.3"
+#define AppVersion "1.8.4"
 #define AppPublisher "Amigo Bicho - Clínica Veterinária"
 #define AppURL "https://github.com/osmair36/vetessence"
 #define AppExeName "iniciar.bat"

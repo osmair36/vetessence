@@ -10,6 +10,17 @@ class GeoSeeder extends Seeder
 {
     public function run(): void
     {
+        if (City::count() >= 5000 && State::count() >= 27) {
+            return;
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () {
+            $this->seedGeoData();
+        });
+    }
+
+    private function seedGeoData(): void
+    {
         $states = [
             "AC" => ["name" => "ACRE", "uf" => "AC"],
             "AL" => ["name" => "ALAGOAS", "uf" => "AL"],
@@ -88,3 +99,4 @@ class GeoSeeder extends Seeder
         }
     }
 }
+

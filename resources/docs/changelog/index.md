@@ -2,6 +2,13 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.8.4] — 2026-11-18
+
+### Corrigido
+- **Correção da Rotina de Inicialização do Banco no Instalador e Servidor**:
+  - Eliminação da falha de sintaxe de lote (`'else' não é reconhecido como um comando interno ou externo`) nos scripts `iniciar.bat` e `installer/instalar.bat` através de rotulagem direta com `goto :db_ready`.
+  - Normalização da detecção de caminho absoluto (`cd /d "%~dp0.."`) em `installer/instalar.bat`, evitando falsos negativos com caminhos relativos contendo `..\` que causavam a recriação indevida da base de dados pré-existente.
+  - Otimização do seeder `GeoSeeder` com guard de contagem (`City::count() >= 5000`) e transação `DB::transaction()`, eliminando o atraso de mais de 10 minutos (614 segundos) na inserção de cidades brasileiras.
 ## [v1.8.3] — 2026-11-18
 
 ### Corrigido

@@ -59,17 +59,21 @@ if exist "%BASEDIR%.env" (
 )
 
 :: Cria banco de dados SQLite inicial se nao existir
-if not exist "%BASEDIR%database\database.sqlite" (
-    echo [INFO] Inicializando banco de dados local...
-    type nul > "%BASEDIR%database\database.sqlite"
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --force
-    echo [OK] Banco de dados inicializado.
-) else (
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
-)
+if exist "%BASEDIR%database\database.sqlite" goto :db_exists
+
+echo [INFO] Inicializando banco de dados local...
+type nul > "%BASEDIR%database\database.sqlite"
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --force
+echo [OK] Banco de dados inicializado.
+goto :db_ready
+
+:db_exists
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
+
+:db_ready
 
 :: Detecta endereco IP do Servidor na rede local
 set "SERVER_IP="

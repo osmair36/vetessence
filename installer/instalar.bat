@@ -2,8 +2,8 @@
 chcp 65001 >nul 2>&1
 title Amigo Bicho - Instalador do Servidor
 
-set "BASEDIR=%~dp0..\"
-if "%BASEDIR:~-1%"=="\" set "BASEDIR=%BASEDIR:~0,-1%\"
+cd /d "%~dp0.."
+set "BASEDIR=%CD%\"
 
 echo.
 echo  ========================================================================
@@ -55,17 +55,21 @@ if not exist "%BASEDIR%database" mkdir "%BASEDIR%database"
 
 :: Garante banco de dados SQLite
 echo [4/6] Verificando base de dados...
-if not exist "%BASEDIR%database\database.sqlite" (
-    type nul > "%BASEDIR%database\database.sqlite"
-    "%PHP%" "%BASEDIR%artisan" migrate --force
-    "%PHP%" "%BASEDIR%artisan" db:seed --force
-    echo [OK] Banco de dados criado e populado.
-) else (
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
-    "%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
-    echo [OK] Base de dados validada com sucesso.
-)
+if exist "%BASEDIR%database\database.sqlite" goto :inst_db_exists
+
+type nul > "%BASEDIR%database\database.sqlite"
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --force
+echo [OK] Banco de dados criado e populado.
+goto :inst_db_ready
+
+:inst_db_exists
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" migrate --force >nul 2>&1
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\DepartmentPositionSeeder" --force >nul 2>&1
+"%PHP%" -d memory_limit=512M "%BASEDIR%artisan" db:seed --class="Database\Seeders\BreedDefaultSeeder" --force >nul 2>&1
+echo [OK] Base de dados validada com sucesso.
+
+:inst_db_ready
 
 :: Libera porta 8181 no Firewall do Windows para acesso em rede
 echo [5/6] Configurando regra no Firewall do Windows (Porta 8181)...
@@ -115,5 +119,4 @@ echo  ========================================================================
 echo    CONFIGURACAO CONCLUIDA COM SUCESSO!
 echo  ========================================================================
 echo.
-timeout /t 2 >nul
 exit /b 0
