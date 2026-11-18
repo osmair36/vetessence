@@ -17,7 +17,7 @@ class TutorController extends Controller
 
     public function index(Request $request)
     {
-        $query = Tutor::query();
+        $query = Tutor::withCount('pets');
 
         if ($request->search) {
             $query->where(function($q) use ($request) {
@@ -28,8 +28,7 @@ class TutorController extends Controller
             });
         }
 
-        $tutors = $query->orderBy('name')
-            ->get();
+        $tutors = $query->orderBy('name')->paginate(20);
 
         return view('tutors.index', compact('tutors'));
     }

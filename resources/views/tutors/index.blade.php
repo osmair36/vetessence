@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Tutores</h3>
+        <h3 class="card-title">Tutores ({{ $tutors->total() }})</h3>
         <div class="card-tools">
             <button onclick="openCreateModal()" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo
@@ -11,6 +11,20 @@
         </div>
     </div>
     <div class="card-body">
+        <form method="GET" action="{{ route('tutors.index') }}" class="mb-3">
+            <div class="row">
+                <div class="col-md-9 mb-2">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por nome, CPF, telefone ou e-mail..." value="{{ request('search') }}">
+                </div>
+                <div class="col-md-3 mb-2 d-flex">
+                    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request('search'))
+                        <a href="{{ route('tutors.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Limpar</a>
+                    @endif
+                </div>
+            </div>
+        </form>
+
         @if($tutors->count() > 0)
         <table class="table table-bordered table-striped">
             <thead>
@@ -40,7 +54,7 @@
                     <td>{{ $tutor->cpf }}</td>
                     <td>{{ $tutor->phone }}</td>
                     <td>{{ $tutor->email }}</td>
-                    <td><span class="badge badge-primary">{{ $tutor->pets->count() ?? 0 }}</span></td>
+                    <td><span class="badge badge-primary">{{ $tutor->pets_count ?? $tutor->pets->count() }}</span></td>
                     <td>
                         <a href="{{ route('tutors.show', $tutor) }}" class="btn btn-action btn-info" title="Visualizar">
                             <i class="fas fa-eye"></i>
@@ -64,6 +78,11 @@
         <p class="text-center text-muted">Nenhum registro encontrado.</p>
         @endif
     </div>
+    @if($tutors->hasPages())
+    <div class="card-footer clearfix">
+        {{ $tutors->withQueryString()->links() }}
+    </div>
+    @endif
 </div>
 
 @endsection

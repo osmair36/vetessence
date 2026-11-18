@@ -19,15 +19,17 @@ class PetController extends Controller
         $query = Pet::with('tutors', 'breedRelation');
 
         if ($request->search) {
-            $query->where('name', 'like', "%{$request->search}%")
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
                   ->orWhere('breed', 'like', "%{$request->search}%");
+            });
         }
 
         if ($request->species) {
             $query->where('species', $request->species);
         }
 
-        $pets = $query->orderBy('name')->get();
+        $pets = $query->orderBy('name')->paginate(20);
 
         return view('pets.index', compact('pets'));
     }

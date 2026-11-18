@@ -27,15 +27,24 @@ class VaccinationController extends Controller
             $query->where('pet_id', $request->pet_id);
         }
 
-        if (!$request->pet_id && !$request->date_from && !$request->date_to) {
-            $query->limit(500);
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('vaccine', 'like', "%{$request->search}%")
+                  ->orWhereHas('pet', fn($pq) => $pq->where('name', 'like', "%{$request->search}%"));
+            });
         }
 
-        $vaccinations = $query->orderBy('date', 'desc')->get();
+        if ($request->date_from) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
 
-        $pets = Pet::where('is_active', true)->orderBy('name')->get();
+        if ($request->date_to) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
 
-        return view('vaccinations.index', compact('vaccinations', 'pets'));
+        $vaccinations = $query->orderBy('date', 'desc')->paginate(20);
+
+        return view('vaccinations.index', compact('vaccinations'));
     }
 
     public function create(Request $request)

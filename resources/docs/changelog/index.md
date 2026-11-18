@@ -2,6 +2,16 @@
 
 ## [Não versionado] — 2026-11-18
 
+## [v1.7.1] — 2026-11-18
+
+### Corrigido
+- **Otimização de Memória e Paginação em Listagens com Base Real Volumosa**:
+  - Correção de estouro de memória (`Allowed memory size exhausted`) ao acessar `/pets` e demais telas de listagem após a carga dos 4.271 animais e 2.824 tutores reais.
+  - Implementação de paginação de 20 registros por página em `PetController::index`, `TutorController::index`, `ProductController::index`, `VaccinationController::index`, `MedicalRecordController::index` e `AppointmentController::index`.
+  - Otimização de consultas adicionando `withCount('pets')` no `TutorController` para eliminar queries N+1 na contagem de animais por tutor.
+  - Adicionados filtros avançados de busca por texto, espécie, categoria e intervalo de datas com links de paginação persistentes (`withQueryString()`) nas views Blade correspondentes.
+  - Configurado limite de memória de segurança de 512M no `AppServiceProvider::boot()` para navegação web e operações em lote.
+  - Consumo de memória de pico na renderização de `/pets` reduzido de >128 MB para apenas 49 MB.
 ## [v1.7.0] — 2026-11-18
 
 ### Adicionado

@@ -21,15 +21,18 @@ class ProductController extends Controller
         $query = Product::with(['category', 'supplier']);
 
         if ($request->search) {
-            $query->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('sku', 'like', "%{$request->search}%");
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('sku', 'like', "%{$request->search}%")
+                  ->orWhere('barcode', 'like', "%{$request->search}%");
+            });
         }
 
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);
         }
 
-        $products = $query->orderBy('name')->get();
+        $products = $query->orderBy('name')->paginate(20);
 
         $categories = Category::where('type', 'product')->orderBy('name')->get();
 

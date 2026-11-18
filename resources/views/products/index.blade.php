@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Produtos</h3>
+        <h3 class="card-title">Produtos ({{ $products->total() }})</h3>
         <div class="card-tools">
             <a href="{{ route('products.inventory.print', request()->query()) }}" target="_blank" class="btn btn-secondary btn-sm">
                 <i class="fas fa-print"></i> Imprimir Inventário
@@ -17,6 +17,28 @@
         </div>
     </div>
     <div class="card-body">
+        <form method="GET" action="{{ route('products.index') }}" class="mb-3">
+            <div class="row">
+                <div class="col-md-5 mb-2">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por produto, SKU ou código de barras..." value="{{ request('search') }}">
+                </div>
+                <div class="col-md-4 mb-2">
+                    <select name="category_id" class="form-control">
+                        <option value="">Todas as Categorias</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2 d-flex">
+                    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request('search') || request('category_id'))
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Limpar</a>
+                    @endif
+                </div>
+            </div>
+        </form>
+
         @if($products->count() > 0)
         <table class="table table-bordered table-striped">
             <thead>
@@ -80,6 +102,11 @@
         <p class="text-center text-muted">Nenhum registro encontrado.</p>
         @endif
     </div>
+    @if($products->hasPages())
+    <div class="card-footer clearfix">
+        {{ $products->withQueryString()->links() }}
+    </div>
+    @endif
 </div>
 
 <!-- Product Modal -->

@@ -28,6 +28,15 @@ class MedicalRecordController extends Controller
             $query->where('pet_id', $request->pet_id);
         }
 
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('diagnosis', 'like', "%{$request->search}%")
+                  ->orWhere('treatment', 'like', "%{$request->search}%")
+                  ->orWhere('notes', 'like', "%{$request->search}%")
+                  ->orWhereHas('pet', fn($pq) => $pq->where('name', 'like', "%{$request->search}%"));
+            });
+        }
+
         if ($request->date_from) {
             $query->whereDate('date', '>=', $request->date_from);
         }
@@ -36,11 +45,9 @@ class MedicalRecordController extends Controller
             $query->whereDate('date', '<=', $request->date_to);
         }
 
-        $records = $query->orderBy('date', 'desc')->get();
+        $records = $query->orderBy('date', 'desc')->paginate(20);
 
-        $pets = Pet::where('is_active', true)->orderBy('name')->get();
-
-        return view('medical-records.index', compact('records', 'pets'));
+        return view('medical-records.index', compact('records'));
     }
 
     public function create(Request $request)

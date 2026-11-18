@@ -15,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        @ini_set('memory_limit', '512M');
+
         Validator::extend('cpf', function ($attribute, $value, $parameters, $validator) {
             return (new Cpf)->passes($attribute, $value);
         });

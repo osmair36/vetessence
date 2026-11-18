@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Vacinas</h3>
+        <h3 class="card-title">Vacinas ({{ $vaccinations->total() }})</h3>
         <div class="card-tools">
             <a href="{{ route('vaccinations.report.print') }}" target="_blank" class="btn btn-outline-secondary btn-sm mr-1">
                 <i class="fas fa-print"></i> Imprimir Relatório
@@ -17,6 +17,24 @@
         </div>
     </div>
     <div class="card-body">
+        <form method="GET" action="{{ route('vaccinations.index') }}" class="mb-3">
+            <div class="row">
+                <div class="col-md-5 mb-2">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por vacina ou nome do pet..." value="{{ request('search') }}">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}" placeholder="Data Inicial">
+                </div>
+                <div class="col-md-4 mb-2 d-flex">
+                    <input type="date" name="date_to" class="form-control mr-1" value="{{ request('date_to') }}" placeholder="Data Final">
+                    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request('search') || request('date_from') || request('date_to') || request('pet_id'))
+                        <a href="{{ route('vaccinations.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Limpar</a>
+                    @endif
+                </div>
+            </div>
+        </form>
+
         @if($vaccinations->count() > 0)
         <table class="table table-bordered table-striped">
             <thead>
@@ -61,5 +79,10 @@
         <p class="text-center text-muted">Nenhum registro encontrado.</p>
         @endif
     </div>
+    @if($vaccinations->hasPages())
+    <div class="card-footer clearfix">
+        {{ $vaccinations->withQueryString()->links() }}
+    </div>
+    @endif
 </div>
 @endsection
