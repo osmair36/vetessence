@@ -36,6 +36,7 @@ class Tutor extends Authenticatable
         'created_at_branch_id',
         'state_id', 'city_id',
         'notify_sms', 'notify_whatsapp', 'notify_email',
+        'whatsapp_opt_in', 'whatsapp_opt_in_at', 'whatsapp_opt_out_at', 'whatsapp_opt_in_source',
     ];
 
     protected $hidden = [
@@ -50,7 +51,48 @@ class Tutor extends Authenticatable
         'notify_sms' => 'boolean',
         'notify_whatsapp' => 'boolean',
         'notify_email' => 'boolean',
+        'whatsapp_opt_in' => 'boolean',
+        'whatsapp_opt_in_at' => 'datetime',
+        'whatsapp_opt_out_at' => 'datetime',
     ];
+
+    /**
+     * Normaliza telefone brasileiro para envio WhatsApp (retorna null se invalido).
+     */
+    public function normalizedWhatsAppPhone(): ?string
+    {
+        $candidates = array_filter([$this->phone, $this->phone_secondary]);
+        foreach ($candidates as $raw) {
+            $digits = preg_replace('/\D/', '', (string) $raw);
+            if (!$digits) {
+                continue;
+            }
+            $digits = ltrim($digits, '0');
+            // 10 ou 11 digitos (DDD + numero BR)
+            if (strlen($digits) === 10 || strlen($digits) === 11) {
+                return '55' . $digits;
+            }
+            // 12 ou 13 digitos ja com DDI 55
+            if ((strlen($digits) === 12 || strlen($digits) === 13) && str_starts_with($digits, '55')) {
+                return $digits;
+            }
+        }
+        return null;
+    }
+
+    public function hasValidWhatsAppPhone(): bool
+    {
+        return $this->normalizedWhatsAppPhone() !== null;
+    }
+
+    /**
+     * Verifica consentimento explicito para envios automaticos pelo WhatsApp (LGPD).
+     * Nao presume autorizacao apenas porque o telefone esta cadastrado.
+     */
+    public function canReceiveAutoWhatsApp(): bool
+    {
+        return $this->whatsapp_opt_in === true && $this->hasValidWhatsAppPhone();
+    }
 
     public function getNameAttribute()
     {

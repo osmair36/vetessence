@@ -2,6 +2,16 @@
 
 ## [Não versionado] — 2026-11-19
 
+## [v1.10.0] — 2026-11-19
+
+### Adicionado
+- **Central Automatizada de Notificações e Lembretes de Vacinação via WhatsApp**:
+  - **Painel de Vacinações no Dashboard**: 7 indicadores clicáveis (Vencem Hoje, Em Atraso, Próximos 7 dias, Próximos 30 dias, WhatsApp Enviadas, Aguardando Envio e Falhas de Envio) + tabela detalhada de vacinações previstas para hoje com ações rápidas (histórico, cadastro do animal, cadastro do tutor, pré-visualização e envio manual de WhatsApp, registrar contato e registrar vacinação aplicada).
+  - **Central Administrativa (`/central-vacinas`)**: abas dedicadas para Acompanhamento por Classificação, Histórico e Fila de Mensagens (com 7 estados: Preparada, Aguardando envio, Enviada à API, Entregue, Lida, Com falha e Cancelada + botão Reprocessar), Gestão de Tutores (sem telefone válido, sem autorização LGPD, recusados e autorizados) e Configurações Gerais + 3 Modelos de Mensagens Editáveis (protegidos por `can:configuracoes`).
+  - **Rotina Automática Diária (`php artisan vaccines:process-reminders`)**: executada no horário configurável (padrão `09:00`, `America/Sao_Paulo`), com trava anti-concorrência (`Cache::lock` / `withoutOverlapping()`), chave única `idempotency_key` no banco contra duplicidades, periodicidade configurável para atrasos e limite máximo de tentativas; inclui script `installer/instalar-agendador-windows.bat` para Windows Task Scheduler.
+  - **Reutilização da Integração WhatsApp + Webhooks**: reutiliza integralmente `NotificationService` (Z-API, Cloud API, Weni, Twilio), extrai `messageId`/`zaapId` na Z-API e adiciona endpoint `POST /api/whatsapp/webhook/{provider}` para confirmação assíncrona de entrega (`delivered`) e leitura (`read`).
+  - **Controle de Consentimento LGPD (Opt-in/Opt-out)**: campos `whatsapp_opt_in`, `whatsapp_opt_in_at`, `whatsapp_opt_out_at` e `whatsapp_opt_in_source` em `tutors` + controle no `TutorForm` e na Central; mensagens automáticas só são enviadas mediante autorização expressa.
+  - **Conclusão e Cancelamento Automáticos**: ao registrar nova vacinação aplicada ou alterar `next_date`, o sistema conclui a pendência anterior e cancela automaticamente lembretes futuros relacionados.
 ## [v1.9.0] — 2026-11-19
 
 ### Adicionado

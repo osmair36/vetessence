@@ -451,6 +451,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('vaccination-reminders/{vaccinationReminder}/send', 'App\Http\Controllers\VaccinationReminderController@send')
         ->name('vaccination-reminders.send');
 
+    // Central Automatizada de Lembretes e Notificações de Vacinação
+    Route::prefix('central-vacinas')->name('vaccination-center.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\VaccinationCenterController::class, 'index'])->name('index');
+        Route::get('preview/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'preview'])->name('preview');
+        Route::post('send-manual/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'sendManual'])->name('send-manual');
+        Route::post('register-contact/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'registerContact'])->name('register-contact');
+        Route::post('cancel-pending/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'cancelPending'])->name('cancel-pending');
+        Route::post('reminders/{vaccinationReminder}/reprocess', [\App\Http\Controllers\VaccinationCenterController::class, 'reprocess'])->name('reprocess');
+        Route::post('tutors/{tutor}/opt-in', [\App\Http\Controllers\VaccinationCenterController::class, 'updateTutorOptIn'])->name('tutor-opt-in');
+        Route::put('settings', [\App\Http\Controllers\VaccinationCenterController::class, 'updateSettings'])->name('settings.update');
+        Route::post('run-now', [\App\Http\Controllers\VaccinationCenterController::class, 'runNow'])->name('run-now');
+    });
+
     // Notification Logs
     Route::get('notification-logs', 'App\Http\Controllers\NotificationLogController@index')->name('notification-logs.index');
     Route::get('notification-logs/{notificationLog}', 'App\Http\Controllers\NotificationLogController@show')->name('notification-logs.show');
@@ -1070,4 +1083,10 @@ Route::post('api/insurance/webhook/{provider}', [\App\Http\Controllers\Insurance
     ->name('insurance.webhook')
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
     ->middleware('throttle:60,1');
+
+// WhatsApp status webhook (delivery/read confirmations from Z-API, Cloud API, Twilio)
+Route::post('api/whatsapp/webhook/{provider}', [\App\Http\Controllers\WhatsAppWebhookController::class, 'handle'])
+    ->name('whatsapp.webhook')
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->middleware('throttle:120,1');
 

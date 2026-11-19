@@ -5,6 +5,15 @@
     <div class="col-md-7">
         <form action="{{ route('vaccinations.store') }}" method="POST">
             @csrf
+            @if(!empty($completingVaccination))
+                <input type="hidden" name="complete_vaccination_id" value="{{ $completingVaccination->id }}">
+                <div class="alert alert-info">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    Registrando aplicação para concluir a pendência de <strong>{{ $completingVaccination->vaccine }}</strong>
+                    (prevista para {{ $completingVaccination->next_date ? $completingVaccination->next_date->format('d/m/Y') : '-' }}).
+                    Os lembretes futuros dessa pendência serão cancelados automaticamente ao salvar.
+                </div>
+            @endif
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -20,7 +29,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Vacina *</label>
-                                <input type="text" name="vaccine" value="{{ old('vaccine') }}" required class="form-control @error('vaccine') is-invalid @enderror" placeholder="Ex: V10 Filhote, Antirrábica, Giardia">
+                                <input type="text" name="vaccine" value="{{ old('vaccine', $completingVaccination->vaccine ?? '') }}" required class="form-control @error('vaccine') is-invalid @enderror" placeholder="Ex: V10 Filhote, Antirrábica, Giardia">
                                 @error('vaccine')<span class="invalid-feedback">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -63,7 +72,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Laboratório</label>
-                                <input type="text" name="laboratory" list="laboratories-list" value="{{ old('laboratory', old('manufacturer')) }}" class="form-control @error('laboratory') is-invalid @enderror" placeholder="Ex: ZOETIS, VIRBAC, PFIZER, MSD">
+                                <input type="text" name="laboratory" list="laboratories-list" value="{{ old('laboratory', old('manufacturer', $completingVaccination->laboratory ?? '')) }}" class="form-control @error('laboratory') is-invalid @enderror" placeholder="Ex: ZOETIS, VIRBAC, PFIZER, MSD">
                                 <datalist id="laboratories-list">
                                     @foreach(($laboratories ?? []) as $lab)
                                     <option value="{{ $lab }}">

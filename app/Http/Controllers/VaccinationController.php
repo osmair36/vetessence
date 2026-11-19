@@ -55,11 +55,15 @@ class VaccinationController extends Controller
     {
         $pets = Pet::where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
-        $selectedPet = $request->pet_id ? Pet::find($request->pet_id) : null;
+        $completingVaccination = $request->complete_vaccination_id
+            ? Vaccination::with('pet')->find($request->complete_vaccination_id)
+            : null;
+        $selectedPet = $completingVaccination?->pet
+            ?? ($request->pet_id ? Pet::find($request->pet_id) : null);
         $products = \App\Models\Product::where('is_active', true)->where('stock', '>', 0)->orderBy('name')->get();
         $laboratories = $this->getKnownLaboratories();
 
-        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories'));
+        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories', 'completingVaccination'));
     }
 
     public function store(Request $request)
@@ -77,7 +81,11 @@ class VaccinationController extends Controller
             'vet_id' => 'required|exists:users,id',
             'product_id' => 'nullable|exists:products,id',
             'notes' => 'nullable|string',
+            'complete_vaccination_id' => 'nullable|exists:vaccinations,id',
         ]);
+
+        $explicitPendingId = $validated['complete_vaccination_id'] ?? null;
+        unset($validated['complete_vaccination_id']);
 
         $lab = $validated['laboratory'] ?? $validated['manufacturer'] ?? null;
         $validated['laboratory'] = $lab;
@@ -90,9 +98,14 @@ class VaccinationController extends Controller
         }
 
         $vaccination = Vaccination::create($validated);
+
+        // Conclui automaticamente a pendencia anterior correspondente e cancela lembretes futuros
+        app(\App\Services\Vaccination\VaccinationNotificationCenterService::class)
+            ->autoCompletePreviousForNewVaccination($vaccination, $explicitPendingId ? (int) $explicitPendingId : null);
+
         event(new ProcedurePerformed($vaccination));
 
-        return redirect()->route('vaccinations.index')->with('success', 'Vacina registrada!');
+        return redirect()->route('vaccinations.index')->with('success', 'Vacina registrada e pendências anteriores atualizadas!');
     }
 
     public function show(Vaccination $vaccination)

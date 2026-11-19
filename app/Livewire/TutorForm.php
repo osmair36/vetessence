@@ -24,6 +24,7 @@ class TutorForm extends Component
     public $zipcode = '';
     public $state_id = '';
     public $city_id = '';
+    public $whatsapp_opt_in = '';
     public $states = [];
     public $cities = [];
 
@@ -64,6 +65,7 @@ class TutorForm extends Component
         $this->zipcode = $tutor->zipcode ?? '';
         $this->state_id = (string) ($tutor->state_id ?? '');
         $this->city_id = (string) ($tutor->city_id ?? '');
+        $this->whatsapp_opt_in = $tutor->whatsapp_opt_in === null ? '' : ($tutor->whatsapp_opt_in ? '1' : '0');
         $this->loadCities();
     }
 
@@ -83,6 +85,7 @@ class TutorForm extends Component
         $this->zipcode = '';
         $this->state_id = '';
         $this->city_id = '';
+        $this->whatsapp_opt_in = '';
         $this->cities = [];
         $this->resetValidation();
     }
@@ -169,9 +172,22 @@ class TutorForm extends Component
             'state_id' => $this->state_id,
             'city_id' => $this->city_id,
             'notify_sms' => true,
-            'notify_whatsapp' => true,
+            'notify_whatsapp' => $this->whatsapp_opt_in === '1',
             'notify_email' => true,
         ];
+
+        if ($this->whatsapp_opt_in === '1') {
+            $data['whatsapp_opt_in'] = true;
+            $data['whatsapp_opt_in_at'] = now();
+            $data['whatsapp_opt_out_at'] = null;
+            $data['whatsapp_opt_in_source'] = 'tutor_form';
+        } elseif ($this->whatsapp_opt_in === '0') {
+            $data['whatsapp_opt_in'] = false;
+            $data['whatsapp_opt_out_at'] = now();
+            $data['whatsapp_opt_in_source'] = 'tutor_form_optout';
+        } else {
+            $data['whatsapp_opt_in'] = null;
+        }
 
         try {
             if ($id) {

@@ -10,12 +10,15 @@ use App\Models\Pet;
 use App\Models\Product;
 use App\Models\VaccinationReminder;
 use App\Models\ParasiteControl;
+use App\Services\Vaccination\VaccinationNotificationCenterService;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(VaccinationNotificationCenterService $vaccineCenter)
     {
+        $vaccineStats = $vaccineCenter->getDashboardStats();
+        $todayVaccinations = $vaccineCenter->getTodayVaccinations(15);
         // Stats
         $stats = [
             'todayAppointments' => Appointment::where('date', today())
@@ -123,6 +126,8 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'stats',
+            'vaccineStats',
+            'todayVaccinations',
             'upcomingAppointments',
             'recentRecords',
             'lowStockProducts',

@@ -54,8 +54,9 @@ class ZapiProvider implements WhatsAppProvider
                 ]);
 
             if ($response->successful()) {
-                Log::info('Z-API WhatsApp sent', ['to' => $phone]);
-                return NotificationResult::success($this->getName());
+                $messageId = $response->json('zaapId') ?? $response->json('messageId') ?? $response->json('id');
+                Log::info('Z-API WhatsApp sent', ['to' => $phone, 'messageId' => $messageId]);
+                return NotificationResult::success($this->getName(), is_string($messageId) ? $messageId : null);
             }
 
             $body = $response->body();

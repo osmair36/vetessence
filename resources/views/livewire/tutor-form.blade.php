@@ -99,6 +99,16 @@
             </div>
         </div>
 
+        <div class="form-group mt-2 p-2 border rounded bg-light">
+            <label class="mb-1"><i class="fab fa-whatsapp text-success mr-1"></i> Autorização para Mensagens e Lembretes via WhatsApp (LGPD)</label>
+            <select wire:model="whatsapp_opt_in" class="form-control">
+                <option value="">Não confirmado (não enviar mensagens automáticas)</option>
+                <option value="1">Autorizado pelo tutor (receber lembretes de vacinas e avisos)</option>
+                <option value="0">Recusado / Não deseja receber mensagens pelo WhatsApp</option>
+            </select>
+            <small class="text-muted">Mensagens automáticas só são enviadas quando houver autorização expressa registrada.</small>
+        </div>
+
         <div class="text-right">
             <button type="button" class="btn btn-secondary" wire:click="$dispatch('close-modal')">Cancelar</button>
             <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Salvar</button>
