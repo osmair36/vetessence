@@ -2,6 +2,15 @@
 
 ## [Não versionado] — 2026-11-19
 
+## [v1.11.0] — 2026-11-19
+
+### Melhorado
+- **Melhoria Global nos Campos de Pesquisa / Autocomplete (`public/js/global-autocomplete.js`)**:
+  - Centralizada a inicialização global dos **110+ campos** `<x-tom-select>` (em 59 telas) e campos `.select2` em `public/js/global-autocomplete.js`, removendo `openOnFocus: false` de `layouts/adminlte.blade.php`.
+  - Todos os campos de pesquisa com autocomplete agora **abrem imediatamente a lista de opções ao clicar ou receber foco**, mantendo a filtragem por digitação, fechamento automático após seleção sem reabertura em loop, `z-index` compatível com modais Bootstrap e limite seguro de 80 opções renderizadas no DOM (evitando lentidão em listas com milhares de pets/tutores).
+  - Adicionado suporte nativo centralizado para carregamento via AJAX (`data-ajax-url`) com `preload: 'focus'` e cache em memória (TTL 60s), compatibilidade com DOM dinâmico (`MutationObserver` + Livewire `morph.updated` + modais Bootstrap) e fallback seguro para campos `.select2` (ex.: `invoices/create.blade.php`).
+- **Novo Instalador Windows `AmigoBicho-Instalador-v1.11.0.exe`**:
+  - Compilado com todas as melhorias acumuladas (`v1.9.0` Vacinações/Laboratório + `v1.10.0` Central Automatizada de Vacinas WhatsApp + `v1.11.0` Autocomplete Global), seguindo integralmente as políticas blindadas de CRLF/ASCII, `bootstrap.php`, `APP_KEY` automática e permissões de pasta.
 ## [v1.10.0] — 2026-11-19
 
 ### Adicionado

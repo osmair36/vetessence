@@ -16,8 +16,9 @@
     <style>
         .btn-action { padding: 0.25rem 0.5rem; }
         .btn-action i { margin: 0; }
-        .ts-wrapper .ts-control { min-height: 38px; }
-        .ts-dropdown { background: #fff !important; }
+        .ts-wrapper .ts-control { min-height: 38px; cursor: pointer; }
+        .ts-dropdown { background: #fff !important; z-index: 1060 !important; }
+        .ts-dropdown .ts-dropdown-content { max-height: 280px; overflow-y: auto; }
         .ts-dropdown .option { background: #fff !important; }
         .ts-dropdown .option.active { background: #e9ecef !important; }
         .ts-dropdown .option:hover { background: #dee2e6 !important; }
@@ -924,6 +925,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="{{ asset('js/global-autocomplete.js') }}?v={{ filemtime(public_path('js/global-autocomplete.js')) }}"></script>
     <script>
         // Legacy n() function for views that still call it
         window.n = function() { return true; };
@@ -978,48 +980,7 @@
             });
         });
 
-        function initTomSelects(container) {
-            container = container || document;
-            container.querySelectorAll('select.tom-select').forEach(function(el) {
-                if (el.dataset.tsReady) return;
-                if (el.closest('.ts-wrapper')) return;
-
-                var wrapper = el.closest('.tom-select-wrapper');
-                var initialValue = wrapper ? wrapper.dataset.value : '';
-                if (initialValue) el.value = initialValue;
-
-                el.dataset.tsReady = '1';
-                try {
-                    new TomSelect(el, {
-                        maxOptions: 200,
-                        openOnFocus: false,
-                        onChange: function(value) {
-                            var wireModel = el.dataset.wire;
-                            if (wireModel && window.Livewire) {
-                                var componentEl = el.closest('[wire\\:id]');
-                                if (componentEl) {
-                                    var component = Livewire.find(componentEl.getAttribute('wire:id'));
-                                    if (component) component.set(wireModel, value);
-                                }
-                            }
-                        }
-                    });
-                } catch (e) {
-                    if (e.message !== 'Tom Select already initialized on this element') throw e;
-                }
-            });
-        }
-
-        function destroyTomSelects(container) {
-            container = container || document;
-            container.querySelectorAll('.ts-wrapper').forEach(function(wrapper) {
-                try { if (wrapper.tomselect) wrapper.tomselect.destroy(); } catch (e) {}
-                wrapper.remove();
-            });
-            container.querySelectorAll('select.tom-select[data-ts-ready]').forEach(function(el) {
-                delete el.dataset.tsReady;
-            });
-        }
+        // initTomSelects e destroyTomSelects centralizados em public/js/global-autocomplete.js
 
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(f) {
