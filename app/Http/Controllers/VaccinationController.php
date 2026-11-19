@@ -28,9 +28,13 @@ class VaccinationController extends Controller
         }
 
         if ($request->search) {
-            $query->where(function($q) use ($request) {
-                $q->where('vaccine', 'like', "%{$request->search}%")
-                  ->orWhereHas('pet', fn($pq) => $pq->where('name', 'like', "%{$request->search}%"));
+            $term = $request->search;
+            $query->where(function ($q) use ($term) {
+                $q->where('vaccine', 'like', "%{$term}%")
+                  ->orWhere('laboratory', 'like', "%{$term}%")
+                  ->orWhere('manufacturer', 'like', "%{$term}%")
+                  ->orWhere('batch', 'like', "%{$term}%")
+                  ->orWhereHas('pet', fn($pq) => $pq->where('name', 'like', "%{$term}%"));
             });
         }
 
@@ -42,7 +46,7 @@ class VaccinationController extends Controller
             $query->whereDate('date', '<=', $request->date_to);
         }
 
-        $vaccinations = $query->orderBy('date', 'desc')->paginate(20);
+        $vaccinations = $query->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate(20);
 
         return view('vaccinations.index', compact('vaccinations'));
     }
@@ -53,8 +57,9 @@ class VaccinationController extends Controller
         $veterinarians = $this->getVeterinarians();
         $selectedPet = $request->pet_id ? Pet::find($request->pet_id) : null;
         $products = \App\Models\Product::where('is_active', true)->where('stock', '>', 0)->orderBy('name')->get();
+        $laboratories = $this->getKnownLaboratories();
 
-        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products'));
+        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories'));
     }
 
     public function store(Request $request)
@@ -66,11 +71,23 @@ class VaccinationController extends Controller
             'next_date' => 'nullable|date|after:date',
             'batch' => 'nullable|string|max:50',
             'lot' => 'nullable|string|max:50',
+            'laboratory' => 'nullable|string|max:100',
             'manufacturer' => 'nullable|string|max:100',
+            'dose' => 'nullable|string|max:50',
             'vet_id' => 'required|exists:users,id',
             'product_id' => 'nullable|exists:products,id',
             'notes' => 'nullable|string',
         ]);
+
+        $lab = $validated['laboratory'] ?? $validated['manufacturer'] ?? null;
+        $validated['laboratory'] = $lab;
+        $validated['manufacturer'] = $lab;
+
+        if (!empty($validated['batch']) && empty($validated['lot'])) {
+            $validated['lot'] = $validated['batch'];
+        } elseif (!empty($validated['lot']) && empty($validated['batch'])) {
+            $validated['batch'] = $validated['lot'];
+        }
 
         $vaccination = Vaccination::create($validated);
         event(new ProcedurePerformed($vaccination));
@@ -89,8 +106,9 @@ class VaccinationController extends Controller
         $pets = Pet::where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
         $products = \App\Models\Product::where('is_active', true)->where('stock', '>', 0)->orderBy('name')->get();
+        $laboratories = $this->getKnownLaboratories();
 
-        return view('vaccinations.edit', compact('vaccination', 'pets', 'veterinarians', 'products'));
+        return view('vaccinations.edit', compact('vaccination', 'pets', 'veterinarians', 'products', 'laboratories'));
     }
 
     public function update(Request $request, Vaccination $vaccination)
@@ -98,12 +116,26 @@ class VaccinationController extends Controller
         $validated = $request->validate([
             'vaccine' => 'required|string|max:100',
             'date' => 'required|date',
-            'next_date' => 'nullable|date|after:date',
+            'next_date' => 'nullable|date|after_or_equal:date',
             'batch' => 'nullable|string|max:50',
+            'lot' => 'nullable|string|max:50',
+            'laboratory' => 'nullable|string|max:100',
+            'manufacturer' => 'nullable|string|max:100',
+            'dose' => 'nullable|string|max:50',
             'vet_id' => 'required|exists:users,id',
             'product_id' => 'nullable|exists:products,id',
             'notes' => 'nullable|string',
         ]);
+
+        if (array_key_exists('laboratory', $validated) || array_key_exists('manufacturer', $validated)) {
+            $lab = $validated['laboratory'] ?? $validated['manufacturer'] ?? null;
+            $validated['laboratory'] = $lab;
+            $validated['manufacturer'] = $lab;
+        }
+
+        if (array_key_exists('batch', $validated)) {
+            $validated['lot'] = $validated['batch'];
+        }
 
         $vaccination->update($validated);
 
@@ -246,5 +278,28 @@ class VaccinationController extends Controller
             ->where(fn($q) => $q->whereHas('role', fn($q) => $q->where('slug', 'veterinario'))->orWhere('is_veterinarian', true))
             ->orderBy('name')
             ->get();
+    }
+
+    protected function getKnownLaboratories(): array
+    {
+        return [
+            'ZOETIS',
+            'VIRBAC',
+            'PFIZER',
+            'OURO FINO',
+            'BAYER',
+            'ELANCO',
+            'MSD',
+            'MERIAL',
+            'CEVA',
+            'VETNIL',
+            'KONIG',
+            'SYNTEC',
+            'FORT DODGE',
+            'BIOVET',
+            'VANSIL',
+            'BOEHRINGER INGELHEIM',
+            'HERTAPE',
+        ];
     }
 }

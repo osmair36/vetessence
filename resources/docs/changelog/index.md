@@ -1,7 +1,20 @@
 # Changelog
 
-## [Não versionado] — 2026-11-18
+## [Não versionado] — 2026-11-19
 
+## [v1.9.0] — 2026-11-19
+
+### Adicionado
+- **Campo Laboratório no Módulo de Vacinação**:
+  - Nova migration (`2026_11_19_100000_add_laboratory_and_sisvetw_tracking_to_vaccinations`) adicionando a coluna `laboratory` (sincronizada com `manufacturer`), `status`, e campos de rastreabilidade (`sisvetw_recno`, `sisvetw_ficha`, `sisvetw_cod_vac`) na tabela `vaccinations`, além da tabela de mapeamento permanente `sisvetw_pet_maps`.
+  - Campo **Laboratório** (com autocomplete de laboratórios veterinários + texto livre) e **Lote / Partida** e **Dose** disponibilizados no cadastro, edição, visualização, listagem geral (com busca por laboratório/lote), previsão de vacinas, ficha clínica do animal, portal do tutor, carteira de vacinação, certificado PDF e relatório impresso.
+- **Reimportação Controlada e Exclusiva de Vacinações do SISVETW (`php artisan sisvetw:reimport-vaccinations`)**:
+  - Serviço `SisvetwVaccinationReimportService` com suporte a `--dry-run`, `--rollback=<ndjson>`, preservação automática de lançamentos manuais feitos na Vetessense e mapeamento seguro 1-para-1 de animais (`sisvetw_pet_maps`).
+
+### Corrigido
+- **Datas Originais de Aplicação e Próxima Dose das Vacinas (SISVETW → Vetessense)**:
+  - Eliminado o cálculo artificial `+1 ano` que distorcia todos os 61.429 registros importados anteriormente; agora `date` e `next_date` refletem exatamente as datas reais registradas em `DDFI_V01.DBF` (49.692 vacinas com próxima dose real vinculada e 8.958 sem próxima dose definida como `NULL`), consolidando 2.402 agendamentos futuros sem criar registros falsos de aplicação no futuro.
+  - Corrigida exibição do nome da vacina na Carteira de Vacinação (`card-print.blade.php`) e da próxima dose no Certificado PDF (`certificate-pdf.blade.php`).
 ## [v1.8.5] — 2026-11-18
 
 ### Corrigido

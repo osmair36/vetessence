@@ -34,7 +34,7 @@
                     <th style="width: 22%;">Vacina / Imunizante</th>
                     <th style="width: 14%;">Data Aplicação</th>
                     <th style="width: 14%;">Próxima Dose</th>
-                    <th style="width: 15%;">Lote / Fabricante</th>
+                    <th style="width: 15%;">Lote / Laboratório</th>
                     <th style="width: 20%;">Veterinário Responsável</th>
                     <th style="width: 15%;">Rubrica / Visto</th>
                 </tr>
@@ -42,15 +42,15 @@
             <tbody>
                 @forelse($vaccinations as $vax)
                 <tr>
-                    <td><strong>{{ $vax->name ?? $vax->vaccine_name }}</strong></td>
+                    <td><strong>{{ $vax->vaccine ?? $vax->name ?? $vax->vaccine_name ?? '-' }}</strong></td>
                     <td>{{ $vax->applied_at ? \Carbon\Carbon::parse($vax->applied_at)->format('d/m/Y') : ($vax->date ? \Carbon\Carbon::parse($vax->date)->format('d/m/Y') : '-') }}</td>
                     <td>
                         @php
-                            $next = $vax->next_due_date ?? $vax->next_date ?? $vax->revaccination_at;
+                            $next = $vax->next_date ?? $vax->next_due_date ?? $vax->revaccination_at;
                         @endphp
                         <strong>{{ $next ? \Carbon\Carbon::parse($next)->format('d/m/Y') : '-' }}</strong>
                     </td>
-                    <td>{{ $vax->batch ?? $vax->lot ?? '-' }} @if($vax->manufacturer)<br><small>{{ $vax->manufacturer }}</small>@endif</td>
+                    <td>{{ $vax->batch ?? $vax->lot ?? '-' }} @if($vax->laboratory ?? $vax->manufacturer)<br><small>{{ $vax->laboratory ?? $vax->manufacturer }}</small>@endif</td>
                     <td>{{ $vax->veterinarian->name ?? $vax->vet->name ?? 'Dra. Joelma Scarabelli Neves' }}</td>
                     <td class="text-center" style="font-size: 9px; color: #888;">[ Assinado ]</td>
                 </tr>

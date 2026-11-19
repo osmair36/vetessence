@@ -48,7 +48,7 @@
                         <th>Vacina</th>
                         <th>Data</th>
                         <th>Lote</th>
-                        <th>Fabricante</th>
+                        <th>Laboratório</th>
                         <th>Próx. Dose</th>
                         <th>Veterinário</th>
                     </tr>
@@ -59,8 +59,11 @@
                         <td>{{ $vac->vaccine }}</td>
                         <td>{{ $vac->date instanceof \Carbon\Carbon ? $vac->date->format('d/m/Y') : $vac->date }}</td>
                         <td>{{ $vac->batch ?? $vac->lot ?? '-' }}</td>
-                        <td>{{ $vac->manufacturer ?? '-' }}</td>
-                        <td>{{ $vac->next_due_date ? ($vac->next_due_date instanceof \Carbon\Carbon ? $vac->next_due_date->format('d/m/Y') : $vac->next_due_date) : '-' }}</td>
+                        <td>{{ $vac->laboratory ?? $vac->manufacturer ?? '-' }}</td>
+                        <td>
+                            @php $next = $vac->next_date ?? $vac->next_due_date; @endphp
+                            {{ $next ? ($next instanceof \Carbon\Carbon ? $next->format('d/m/Y') : \Carbon\Carbon::parse($next)->format('d/m/Y')) : '-' }}
+                        </td>
                         <td>{{ $vac->vet->name ?? '-' }} {{ $vac->vet->crmv ? 'CRMV/'.$vac->vet->crmv : '' }}</td>
                     </tr>
                     @endforeach

@@ -26,18 +26,20 @@
     <div class="card">
         <div class="card-body table-responsive p-0">
             <table class="table table-hover">
-                <thead><tr><th>Pet</th><th>Vacina</th><th>Próxima Dose</th><th>Veterinário</th><th></th></tr></thead>
+                <thead><tr><th>Pet</th><th>Vacina</th><th>Laboratório</th><th>Última Aplicação</th><th>Próxima Dose</th><th>Veterinário</th><th></th></tr></thead>
                 <tbody>
                     @forelse($vaccinations as $v)
                         <tr>
                             <td><a href="{{ route('pets.show', $v->pet_id) }}">{{ $v->pet->name ?? '-' }}</a></td>
                             <td>{{ $v->vaccine }}</td>
-                            <td>{{ $v->next_date->format('d/m/Y') }}</td>
+                            <td>{{ $v->laboratory ?? '-' }}</td>
+                            <td>{{ $v->date ? $v->date->format('d/m/Y') : '-' }}</td>
+                            <td><strong>{{ $v->next_date->format('d/m/Y') }}</strong></td>
                             <td>{{ $v->vet->name ?? '-' }}</td>
                             <td><a href="{{ route('vaccinations.show', $v) }}" class="btn btn-sm btn-outline-info">Ver</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center text-muted">Nenhuma vacina prevista para este período.</td></tr>
+                        <tr><td colspan="7" class="text-center text-muted">Nenhuma vacina prevista para este período.</td></tr>
                     @endforelse
                 </tbody>
             </table>

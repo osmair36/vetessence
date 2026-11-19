@@ -20,7 +20,7 @@
         <form method="GET" action="{{ route('vaccinations.index') }}" class="mb-3">
             <div class="row">
                 <div class="col-md-5 mb-2">
-                    <input type="text" name="search" class="form-control" placeholder="Buscar por vacina ou nome do pet..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por vacina, laboratório, lote ou nome do pet..." value="{{ request('search') }}">
                 </div>
                 <div class="col-md-3 mb-2">
                     <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}" placeholder="Data Inicial">
@@ -41,18 +41,33 @@
                 <tr>
                     <th>Pet</th>
                     <th>Vacina</th>
-                    <th>Data</th>
-                    <th>Próxima</th>
+                    <th>Laboratório</th>
+                    <th>Lote</th>
+                    <th>Data Aplicação</th>
+                    <th>Próxima Dose</th>
                     <th>Veterinário</th>
-                    <th style="width: 120px;">Ações</th>
+                    <th style="width: 140px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($vaccinations as $vac)
                 <tr>
-                    <td><strong>{{ $vac->pet->name ?? '-' }}</strong></td>
-                    <td>{{ $vac->vaccine }}</td>
-                    <td data-order="{{ $vac->date->format('Y-m-d') }}">{{ $vac->date->format('d/m/Y') }}</td>
+                    <td>
+                        @if($vac->pet)
+                            <a href="{{ route('pets.show', $vac->pet) }}"><strong>{{ $vac->pet->name }}</strong></a>
+                        @else
+                            <strong>-</strong>
+                        @endif
+                    </td>
+                    <td>
+                        {{ $vac->vaccine }}
+                        @if($vac->dose)
+                            <br><small class="text-muted">{{ $vac->dose }}</small>
+                        @endif
+                    </td>
+                    <td>{{ $vac->laboratory ?? '-' }}</td>
+                    <td>{{ $vac->batch ?? $vac->lot ?? '-' }}</td>
+                    <td data-order="{{ $vac->date ? $vac->date->format('Y-m-d') : '' }}">{{ $vac->date ? $vac->date->format('d/m/Y') : '-' }}</td>
                     <td data-order="{{ $vac->next_date ? $vac->next_date->format('Y-m-d') : '' }}">{{ $vac->next_date ? $vac->next_date->format('d/m/Y') : '-' }}</td>
                     <td>{{ $vac->vet->name ?? '-' }}</td>
                     <td>

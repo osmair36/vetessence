@@ -89,6 +89,9 @@
             @foreach($vaccinations as $vac)
             <div class="p-4 bg-gray-50 rounded-xl">
                 <p class="font-semibold text-gray-800 text-base">{{ $vac->vaccine ?? 'Vacina' }}</p>
+                @if($vac->laboratory)
+                <p class="text-sm text-gray-600">Laboratório: {{ $vac->laboratory }}</p>
+                @endif
                 <p class="text-base text-gray-500">Aplicada em {{ $vac->date ? $vac->date->format('d/m/Y') : '-' }}</p>
                 @if($vac->next_date)
                 <p class="text-sm text-blue-600 mt-1">Próxima dose: {{ $vac->next_date->format('d/m/Y') }}</p>

@@ -224,16 +224,30 @@
                     <thead>
                         <tr>
                             <th>Vacina</th>
-                            <th>Data</th>
-                            <th>Próxima</th>
+                            <th>Laboratório</th>
+                            <th>Lote</th>
+                            <th>Data Aplicação</th>
+                            <th>Próxima Dose</th>
+                            <th style="width: 90px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pet->vaccinations as $vaccination)
+                        @foreach($pet->vaccinations->sortByDesc('date') as $vaccination)
                         <tr>
-                            <td>{{ $vaccination->vaccine }}</td>
-                            <td data-order="{{ $vaccination->date->format('Y-m-d') }}">{{ $vaccination->date->format('d/m/Y') }}</td>
+                            <td>
+                                <strong>{{ $vaccination->vaccine }}</strong>
+                                @if($vaccination->dose)
+                                    <br><small class="text-muted">{{ $vaccination->dose }}</small>
+                                @endif
+                            </td>
+                            <td>{{ $vaccination->laboratory ?? '-' }}</td>
+                            <td>{{ $vaccination->batch ?? $vaccination->lot ?? '-' }}</td>
+                            <td data-order="{{ $vaccination->date ? $vaccination->date->format('Y-m-d') : '' }}">{{ $vaccination->date ? $vaccination->date->format('d/m/Y') : '-' }}</td>
                             <td data-order="{{ $vaccination->next_date ? $vaccination->next_date->format('Y-m-d') : '' }}">{{ $vaccination->next_date ? $vaccination->next_date->format('d/m/Y') : '-' }}</td>
+                            <td>
+                                <a href="{{ route('vaccinations.show', $vaccination) }}" class="btn btn-action btn-info" title="Visualizar"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('vaccinations.edit', $vaccination) }}" class="btn btn-action btn-primary" title="Editar"><i class="fas fa-edit"></i></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -422,63 +422,13 @@ class SisvetwImportService
     }
 
     /**
-     * Importa Vacinações (DDFI_V01.DBF)
+     * Importa Vacinações (DDFI_V01.DBF) utilizando a lógica corrigida com datas reais e Laboratório
      */
     public function importVaccinations(): int
     {
-        $dbf = $this->basePath . DIRECTORY_SEPARATOR . 'DDFI_V01.DBF';
-        if (!file_exists($dbf)) return 0;
-
-        $rows = $this->streamDbf($dbf);
-        $count = 0;
-        $batch = [];
-
-        foreach ($rows as $r) {
-            $legacyFicha = trim($r['BF_FICHA'] ?? '');
-            if (!$legacyFicha || !isset($this->petMap[$legacyFicha])) {
-                continue;
-            }
-
-            $petId = $this->petMap[$legacyFicha];
-            $dtVac = $this->parseDate(trim($r['BF_DATA'] ?? ''));
-            if (!$dtVac) continue;
-
-            $codVac = trim($r['BF_COD_VAC'] ?? '');
-            $vaccineName = $this->vaccineMap[$codVac] ?? ($codVac ? "Vacina Cód. {$codVac}" : 'Vacina Geral');
-
-            $lab = trim($r['BF_LABORAT'] ?? '') ?: null;
-            $lote = trim($r['BF_PARTIDA'] ?? '') ?: null;
-
-            $batch[] = [
-                'pet_id' => $petId,
-                'vet_id' => $this->defaultVetId,
-                'vaccine' => $vaccineName,
-                'manufacturer' => $lab,
-                'batch' => $lote,
-                'lot' => $lote,
-                'date' => $dtVac,
-                'next_date' => Carbon::parse($dtVac)->addYear()->toDateString(),
-                'branch_id' => $this->branchId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-
-            $count++;
-
-            if (count($batch) >= 1000) {
-                DB::table('vaccinations')->insert($batch);
-                $batch = [];
-                unset($batch);
-                $batch = [];
-            }
-        }
-
-        if (!empty($batch)) {
-            DB::table('vaccinations')->insert($batch);
-            unset($batch);
-        }
-
-        return $count;
+        $reimporter = new SisvetwVaccinationReimportService($this->basePath);
+        $result = $reimporter->execute(false);
+        return (int) ($result['stats']['applied_records_to_import'] ?? 0);
     }
 
     /**

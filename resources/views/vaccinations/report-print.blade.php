@@ -23,7 +23,7 @@
                     <th style="width: 10%;">Data</th>
                     <th style="width: 20%;">Paciente</th>
                     <th style="width: 20%;">Tutor / Contato</th>
-                    <th style="width: 20%;">Vacina / Fabricante</th>
+                    <th style="width: 20%;">Vacina / Laboratório</th>
                     <th style="width: 10%;">Lote</th>
                     <th style="width: 10%;">Próx. Dose</th>
                     <th style="width: 10%;">Veterinário</th>
@@ -35,7 +35,7 @@
                     <td>{{ $vax->date ? $vax->date->format('d/m/Y') : ($vax->applied_at ? \Carbon\Carbon::parse($vax->applied_at)->format('d/m/Y') : '-') }}</td>
                     <td><strong>{{ $vax->pet->name ?? '-' }}</strong> <small>({{ $vax->pet->breed ?? 'SRD' }})</small></td>
                     <td>{{ $vax->pet->tutors->pluck('name')->join(', ') ?: '-' }}</td>
-                    <td><strong>{{ $vax->name ?? $vax->vaccine ?? '-' }}</strong> @if($vax->manufacturer)<br><small>{{ $vax->manufacturer }}</small>@endif</td>
+                    <td><strong>{{ $vax->vaccine ?? $vax->name ?? '-' }}</strong> @if($vax->laboratory ?? $vax->manufacturer)<br><small>{{ $vax->laboratory ?? $vax->manufacturer }}</small>@endif</td>
                     <td>{{ $vax->batch ?? $vax->lot ?? '-' }}</td>
                     <td>
                         @php
