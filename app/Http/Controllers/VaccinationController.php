@@ -46,7 +46,12 @@ class VaccinationController extends Controller
             $query->whereDate('date', '<=', $request->date_to);
         }
 
-        $vaccinations = $query->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate(20);
+        $vaccinations = $query
+            ->orderByRaw('CASE WHEN date IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderBy('date', 'desc')
+            ->orderBy('next_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
         return view('vaccinations.index', compact('vaccinations'));
     }
@@ -163,7 +168,12 @@ class VaccinationController extends Controller
 
     public function certificate(Pet $pet)
     {
-        $vaccinations = $pet->vaccinations()->with('vet')->orderBy('date', 'desc')->get();
+        $vaccinations = $pet->vaccinations()
+            ->with('vet')
+            ->where('status', 'applied')
+            ->whereNotNull('date')
+            ->orderBy('date', 'desc')
+            ->get();
         $pet->load('tutors');
 
         $pdf = Pdf::loadView('vaccinations.certificate-pdf', compact('pet', 'vaccinations'));
@@ -271,7 +281,7 @@ class VaccinationController extends Controller
         $species = $request->get('species');
 
         $query = \App\Models\Vaccination::with(['pet', 'vet'])
-            ->whereNotNull('next_date')
+            ->openPending()
             ->whereBetween('next_date', [Carbon::today(), Carbon::today()->addDays($days)]);
 
         if ($species) {

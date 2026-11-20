@@ -1,7 +1,17 @@
 # Changelog
 
-## [Não versionado] — 2026-11-19
+## [Não versionado] — 2026-11-20
 
+## [v1.11.1] — 2026-11-20
+
+### Corrigido
+- **Auditoria e Espelhamento Rigoroso das Datas de Vacinação (`Data Aplicação` e `Próxima Dose`) com o SISVETW (`DDFI_V01.DBF`)**:
+  - Classificação rigorosa de todos os 61.452 registros ativos do `DDFI_V01.DBF` separando **aplicações reais** (30.641 registros) de **anotações/avisos não aplicados** (28.009 linhas como `AVISADO VIA WHATS / X`, `X / X`, `NÃO FEZ`, `TELEFONE NÃO ATENDE`, `RECOMENDO TUTORA`, `DEIXOU A VACINA PAGA`, etc.) que anteriormente eram importados erroneamente como vacinas aplicadas — eliminando datas de aplicação falsas (inclusive futuras em 2026–2028) e atrasos reais que estavam ocultos/empurrados 1 ano adiante.
+  - Preservação de 11.824 anotações de contato do SISVETW no campo `last_contact_notes`/`last_contact_at` da vacina real correspondente (sem gerar vacinas falsas).
+  - Regra de prioridade em 3 níveis baseada no bloco físico `recno + 1` do `DDFI_V01.DBF` para vincular `next_date`, corrigindo colisões entre códigos distintos (ex.: Ficha `5034` V10 Adulto `26/09/2026` → `26/09/2027`) e notas antigas remanescentes (ex.: Ficha `4629`).
+  - Nova migration (`2026_11_20_110000_make_date_nullable_on_vaccinations_table`) permitindo importar fielmente os 75 agendamentos puros do SISVETW sem dose aplicada anterior (`status = 'scheduled'`, `date = NULL`, `next_date = <data exata do SISVETW>`), recuperando 13+ agendamentos futuros de filhotes e exames (ex.: Fichas `5079`, `5080`, `5081`, `4104`, `5074`, `5078`, `5087`, `5001`).
+  - Atualizados `VaccinationController` (`index`, `certificate`, `forecast`), `VaccinationNotificationCenterService` (conclusão automática de agendamentos com `date = NULL` + famílias vacinais `111`, `019/50`, `30/033`) e badge `Agendada` em `vaccinations/index.blade.php`.
+  - Verificação integral pós-reimportação: **0 divergências** entre `date`/`next_date` e `DDFI_V01.DBF` nos 30.716 registros finais e **100% dos demais módulos preservados intactos**.
 ## [v1.11.0] — 2026-11-19
 
 ### Melhorado

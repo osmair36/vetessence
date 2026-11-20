@@ -30,7 +30,9 @@ class VaccinationNotificationCenterService
         '009' => 'FELOCEL_V4', '010' => 'FELOCEL_V4',
         '035' => 'QUINTUPLA_FELINA', '037' => 'QUINTUPLA_FELINA',
         '013' => 'FELOCELL_FELV', '014' => 'FELOCELL_FELV',
-        '011' => 'VERMIFUGO', '032' => 'VERMIFUGO', '33' => 'VERMIFUGO',
+        '011' => 'VERMIFUGO', '032' => 'VERMIFUGO', '33' => 'VERMIFUGO', '111' => 'VERMIFUGO',
+        '019' => 'ADVOCATE', '50' => 'ADVOCATE',
+        '30' => 'REVOLUTION', '033' => 'REVOLUTION',
     ];
 
     public function __construct(
@@ -778,7 +780,10 @@ class VaccinationNotificationCenterService
         $openCandidates = Vaccination::where('pet_id', $newVaccination->pet_id)
             ->where('id', '!=', $newVaccination->id)
             ->where('followup_status', Vaccination::FOLLOWUP_PENDING)
-            ->whereDate('date', '<=', $newVaccination->date)
+            ->where(function ($q) use ($newVaccination) {
+                $q->whereNull('date')
+                  ->orWhereDate('date', '<=', $newVaccination->date);
+            })
             ->get();
 
         foreach ($openCandidates as $cand) {

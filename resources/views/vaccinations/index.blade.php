@@ -61,6 +61,9 @@
                     </td>
                     <td>
                         {{ $vac->vaccine }}
+                        @if($vac->status === 'scheduled')
+                            <span class="badge badge-info ml-1">Agendada</span>
+                        @endif
                         @if($vac->dose)
                             <br><small class="text-muted">{{ $vac->dose }}</small>
                         @endif
