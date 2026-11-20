@@ -2,6 +2,11 @@
 
 ## [Não versionado] — 2026-11-20
 
+## [v1.11.2] — 2026-11-20
+
+### Melhorado
+- **Novo Instalador Windows `AmigoBicho-Instalador-v1.11.2.exe`**:
+  - Atualizado `installer/setup.iss` para `1.11.2` e compilado instalador completo com a base `database/database.sqlite` compactada (`VACUUM`, `integrity_check=ok`) já contendo os **30.716 registros de vacinação espelhados com 100% de fidelidade ao SISVETW** (`v1.11.1`), a Central Automatizada de Vacinas (`v1.10.0`) e a Melhoria Global de Autocomplete (`v1.11.0`), seguindo integralmente as políticas blindadas da `v1.8.5`.
 ## [v1.11.1] — 2026-11-20
 
 ### Corrigido
