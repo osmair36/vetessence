@@ -5,7 +5,7 @@
 ; ============================================================
 
 #define AppName "Amigo Bicho"
-#define AppVersion "1.11.2"
+#define AppVersion "1.11.3"
 #define AppPublisher "Amigo Bicho - Clínica Veterinária"
 #define AppURL "https://github.com/osmair36/vetessence"
 #define AppExeName "iniciar.bat"
@@ -27,8 +27,8 @@ OutputBaseFilename=AmigoBicho-Instalador-v{#AppVersion}
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-SetupIconFile=..\public\favicon.ico
-UninstallDisplayIcon={app}\public\favicon.ico
+SetupIconFile=..\public\amigo-bicho.ico
+UninstallDisplayIcon={app}\public\amigo-bicho.ico
 MinVersion=10.0
 
 [Languages]
@@ -67,10 +67,10 @@ Name: "{app}\database"; Permissions: users-modify
 
 [Icons]
 ; Atalhos no Menu Iniciar e Desktop
-Name: "{group}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"
-Name: "{group}\Conectar Terminal em Rede"; Filename: "{app}\Conectar ao Amigo Bicho (Terminal).bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"
+Name: "{group}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\amigo-bicho.ico"
+Name: "{group}\Conectar Terminal em Rede"; Filename: "{app}\Conectar ao Amigo Bicho (Terminal).bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\amigo-bicho.ico"
 Name: "{group}\Desinstalar {#AppName}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\favicon.ico"; Tasks: desktopicon
+Name: "{commondesktop}\{#AppName} (Servidor)"; Filename: "{app}\iniciar.bat"; WorkingDir: "{app}"; IconFilename: "{app}\public\amigo-bicho.ico"; Tasks: desktopicon
 
 [Run]
 ; Configura o banco, permissões, firewall e ambiente pós-cópia

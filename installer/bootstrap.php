@@ -247,7 +247,7 @@ $serverInfo = implode("\r\n", [
 ]);
 @file_put_contents($baseDir . DIRECTORY_SEPARATOR . 'server_info.txt', $serverInfo);
 
-$faviconPath = $baseDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'favicon.ico';
+$faviconPath = $baseDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'amigo-bicho.ico';
 $urlShortcut = implode("\r\n", [
     '[InternetShortcut]',
     "URL=http://{$serverIp}:{$port}",

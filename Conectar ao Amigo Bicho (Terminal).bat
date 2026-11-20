@@ -53,7 +53,7 @@ if not exist "%DESKTOP_PATH%" goto :fim
 >"%DESKTOP_PATH%\Amigo Bicho.url" echo [InternetShortcut]
 >>"%DESKTOP_PATH%\Amigo Bicho.url" echo URL=%APP_URL%
 >>"%DESKTOP_PATH%\Amigo Bicho.url" echo IconIndex=0
-if exist "%SCRIPT_DIR%public\favicon.ico" >>"%DESKTOP_PATH%\Amigo Bicho.url" echo IconFile=%SCRIPT_DIR%public\favicon.ico
+if exist "%SCRIPT_DIR%public\amigo-bicho.ico" >>"%DESKTOP_PATH%\Amigo Bicho.url" echo IconFile=%SCRIPT_DIR%public\amigo-bicho.ico
 
 echo.
 echo [SUCESSO] Atalho criado na sua Area de Trabalho!

@@ -2,6 +2,13 @@
 
 ## [Não versionado] — 2026-11-20
 
+## [v1.11.3] — 2026-11-20
+
+### Melhorado
+- **Novo ícone da aplicação com o logotipo Amigo Bicho**:
+  - Criado `public/amigo-bicho.ico` multi-resolução (256, 128, 64, 48, 32, 24 e 16 px) gerado por `installer/tools/build-icon.php` a partir de `installer/assets/logo-amigo-bicho.jpg` — logotipo completo nos tamanhos grandes (Área de Trabalho) e cabeças do gato e do cachorro nos tamanhos pequenos (barra de tarefas/listas).
+  - Aplicado ao executável do instalador, ao desinstalador, aos atalhos da Área de Trabalho e do Menu Iniciar (`installer/setup.iss`) e aos atalhos de Terminal em rede (`Conectar ao Amigo Bicho (Terminal).bat`, `Criar Atalho no Desktop do Terminal.bat` e `installer/bootstrap.php`).
+  - Novo instalador `AmigoBicho-Instalador-v1.11.3.exe`.
 ## [v1.11.2] — 2026-11-20
 
 ### Melhorado
