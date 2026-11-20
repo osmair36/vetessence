@@ -65,50 +65,6 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Charts Data
-        // Revenue by month (last 6 months) - SQLite/MySQL compatible
-        $isSqlite = DB::getDriverName() === 'sqlite';
-        $monthExpr = $isSqlite
-            ? "strftime('%Y-%m', paid_at) as month"
-            : "DATE_FORMAT(paid_at, '%Y-%m') as month";
-        $monthGroup = $isSqlite
-            ? "strftime('%Y-%m', paid_at)"
-            : "DATE_FORMAT(paid_at, '%Y-%m')";
-
-        $revenueByMonth = Invoice::select(
-                DB::raw($monthExpr),
-                DB::raw('SUM(total) as total')
-            )
-            ->where('status', 'paid')
-            ->where('paid_at', '>=', now()->subMonths(6))
-            ->groupByRaw($monthGroup)
-            ->orderByRaw($monthGroup)
-            ->get();
-
-        // Appointments by type (current month)
-        $appointmentsByType = MedicalRecord::select('type', DB::raw('COUNT(*) as count'))
-            ->whereMonth('date', now()->month)
-            ->whereYear('date', now()->year)
-            ->groupBy('type')
-            ->get();
-
-        // Species distribution
-        $speciesDistribution = Pet::select('species', DB::raw('COUNT(*) as count'))
-            ->where('is_active', true)
-            ->groupBy('species')
-            ->get()
-            ->map(function ($item) {
-                $labels = [
-                    'canine' => 'Caninos',
-                    'feline' => 'Felinos',
-                    'avian' => 'Aves',
-                    'exotic' => 'Exóticos',
-                    'reptile' => 'Répteis',
-                    'small_mammal' => 'Pequenos Mamíferos'
-                ];
-                return ['name' => $labels[$item->species] ?? $item->species, 'count' => $item->count];
-            });
-
         // Overdue reminders list
         $overdueReminders = VaccinationReminder::with(['pet', 'vaccination'])
             ->where('status', 'pending')
@@ -131,9 +87,6 @@ class DashboardController extends Controller
             'upcomingAppointments',
             'recentRecords',
             'lowStockProducts',
-            'revenueByMonth',
-            'appointmentsByType',
-            'speciesDistribution',
             'overdueReminders',
             'overdueParasiteList'
         ));

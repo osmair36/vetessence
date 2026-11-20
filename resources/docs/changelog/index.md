@@ -2,6 +2,14 @@
 
 ## [Não versionado] — 2026-11-20
 
+## [v1.11.4] — 2026-11-20
+
+### Removido
+- **Remoção dos gráficos do Dashboard (`/dashboard`)**:
+  - Removidos os 3 cards visuais de gráficos: **Receita Mensal**, **Atendimentos por tipo** e **Distribuição por Espécie** em `resources/views/dashboard.blade.php`.
+  - Removido o carregamento do bundle externo `chart.umd.min.js` e as rotinas de renderização Chart.js, reduzindo o tempo de carregamento da página.
+  - Otimizado `app/Http/Controllers/DashboardController.php`, eliminando 3 consultas agregadas ao banco de dados (`revenueByMonth`, `appointmentsByType` e `speciesDistribution`) que eram executadas exclusivamente para esses gráficos.
+  - Conforme solicitado, geração do novo instalador mantida pendente para o próximo lote de alterações.
 ## [v1.11.3] — 2026-11-20
 
 ### Melhorado
