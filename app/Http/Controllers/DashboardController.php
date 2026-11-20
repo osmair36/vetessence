@@ -46,49 +46,10 @@ class DashboardController extends Controller
                 ->count(),
         ];
 
-        // Lists
-        $upcomingAppointments = Appointment::with('pet.tutors')
-            ->where('date', '>=', today())
-            ->whereIn('status', ['scheduled', 'confirmed'])
-            ->orderBy('date')
-            ->orderBy('time')
-            ->limit(5)
-            ->get();
-
-        $recentRecords = MedicalRecord::with(['pet', 'vet'])
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
-
-        $lowStockProducts = Product::whereColumn('stock', '<=', 'min_stock')
-            ->where('is_active', true)
-            ->limit(5)
-            ->get();
-
-        // Overdue reminders list
-        $overdueReminders = VaccinationReminder::with(['pet', 'vaccination'])
-            ->where('status', 'pending')
-            ->where('scheduled_date', '<=', today())
-            ->orderBy('scheduled_date')
-            ->limit(5)
-            ->get();
-
-        $overdueParasiteList = ParasiteControl::with('pet')
-            ->whereNotNull('next_due_date')
-            ->where('next_due_date', '<', today())
-            ->orderBy('next_due_date')
-            ->limit(5)
-            ->get();
-
         return view('dashboard', compact(
             'stats',
             'vaccineStats',
-            'todayVaccinations',
-            'upcomingAppointments',
-            'recentRecords',
-            'lowStockProducts',
-            'overdueReminders',
-            'overdueParasiteList'
+            'todayVaccinations'
         ));
     }
 

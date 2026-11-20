@@ -2,6 +2,13 @@
 
 ## [Não versionado] — 2026-11-20
 
+## [v1.11.6] — 2026-11-20
+
+### Removido
+- **Remoção dos quadros informativos finais do Dashboard (`/dashboard`)**:
+  - Removidos os quadros finais **Próximas Consultas**, **Últimos Atendimentos**, **Lembretes Atrasados** e **Parasitários Atrasados** em `resources/views/dashboard.blade.php`.
+  - O painel **"Vacinações Previstas para Hoje"** (Central Automatizada de Vacinas WhatsApp) passa a ser o último elemento informativo do Dashboard.
+  - Eliminadas do `app/Http/Controllers/DashboardController.php` as consultas desnecessárias ao banco de dados que alimentavam essas listagens (`$upcomingAppointments`, `$recentRecords`, `$lowStockProducts`, `$overdueReminders` e `$overdueParasiteList`), otimizando ainda mais o carregamento do Dashboard.
 ## [v1.11.5] — 2026-11-20
 
 ### Corrigido
