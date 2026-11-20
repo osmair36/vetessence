@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Pagination\Paginator;
 use App\Rules\Cpf;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         @ini_set('memory_limit', '512M');
+
+        Paginator::useBootstrapFour();
+        Paginator::defaultView('vendor.pagination.default');
+        Paginator::defaultSimpleView('vendor.pagination.simple-default');
 
         Validator::extend('cpf', function ($attribute, $value, $parameters, $validator) {
             return (new Cpf)->passes($attribute, $value);

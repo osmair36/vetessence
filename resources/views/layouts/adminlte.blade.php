@@ -115,6 +115,54 @@
         a {
             color: var(--brand-primary, #455e36);
         }
+
+        /* Proteção global de tamanho para SVGs em paginação e chevrons */
+        nav[role="navigation"] svg,
+        .pagination svg,
+        .page-link svg,
+        svg.w-5,
+        svg.h-5 {
+            width: 1.15rem !important;
+            height: 1.15rem !important;
+            max-width: 1.15rem !important;
+            max-height: 1.15rem !important;
+            display: inline-block !important;
+            vertical-align: -0.15em !important;
+        }
+
+        /* Paginação Global - Layout e Espaçamento */
+        .card-footer nav[role="navigation"],
+        nav[role="navigation"] {
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+            width: 100%;
+        }
+        .pagination-info {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .pagination {
+            margin-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .pagination .page-item .page-link {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.875rem;
+            line-height: 1.35;
+        }
+        /* DataTables info and pagination spacing */
+        .dataTables_wrapper .dataTables_info {
+            padding-top: 0.75rem !important;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 0.5rem !important;
+        }
+        .dataTables_wrapper .dataTables_paginate ul.pagination {
+            justify-content: flex-end;
+            margin: 0;
+        }
     </style>
     @stack('styles')
 </head>

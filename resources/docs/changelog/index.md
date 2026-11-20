@@ -2,6 +2,17 @@
 
 ## [Não versionado] — 2026-11-20
 
+## [v1.11.5] — 2026-11-20
+
+### Corrigido
+- **Correção Global de Paginação e Setas Desfiguradas**:
+  - Implementado conjunto completo de views de paginação Bootstrap 4 / AdminLTE nativas em `resources/views/vendor/pagination/` (`default.blade.php`, `bootstrap-4.blade.php`, `bootstrap-5.blade.php`, `tailwind.blade.php` e versões simples).
+  - Eliminado o problema das setas SVG gigantes (Tailwind chevrons sem dimensões explícitas) que preenchiam toda a tela.
+  - Traduzido o texto descritivo para Português do Brasil ("Mostrando de X até Y de Z registros") e adicionadas chaves de tradução em `lang/pt_BR.json`, `resources/lang/pt_BR.json` e arquivos de paginação.
+  - Criado espaçamento e alinhamento responsivo entre os botões de navegação ("Anterior", "Próximo", números de página) e o texto descritivo (`justify-content-between`, margens verticais `mb-2 mb-md-0`), evitando que fiquem colados.
+  - Registrado `Paginator::useBootstrapFour()` e `Paginator::defaultView('vendor.pagination.default')` em `AppServiceProvider.php`.
+  - Adicionadas regras de CSS global em `resources/views/layouts/adminlte.blade.php` com trava de dimensão máxima para qualquer SVG de navegação (`max-width: 1.15rem; max-height: 1.15rem;`).
+  - Atualizado `installer/setup.iss` para a versão `1.11.5` e gerado novo instalador Windows `AmigoBicho-Instalador-v1.11.5.exe`.
 ## [v1.11.4] — 2026-11-20
 
 ### Removido
