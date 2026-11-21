@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação WhatsApp - Notificações de Vacinas - Amigo Bicho</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0b141a;
+            color: #e9edef;
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-box {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #25d366;
+            margin: 0 0 8px 0;
+            font-size: 24px;
+        }
+
+        p.sub {
+            color: #8696a0;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #202c33;
+            border: 1px solid #00a884;
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: #00a884;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1250px;
+            width: 100%;
+        }
+
+        .phone-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 370px;
+        }
+
+        .scenario-tag {
+            background-color: #202c33;
+            border: 1px solid #00a884;
+            color: #00a884;
+            font-weight: bold;
+            font-size: 12.5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Moldura de Smartphone */
+        .phone {
+            width: 370px;
+            min-height: 660px;
+            background-color: #0c1317;
+            border: 10px solid #2a3942;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 14px 35px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Barra de Status */
+        .status-bar {
+            background-color: #202c33;
+            color: #e9edef;
+            padding: 8px 20px 4px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Topo do WhatsApp */
+        .wa-top {
+            background-color: #202c33;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #111b21;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .contact-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .name {
+            font-weight: 600;
+            font-size: 14.5px;
+            color: #e9edef;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .verified-badge {
+            background-color: #00a884;
+            color: #ffffff;
+            font-size: 9px;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 11.5px;
+            color: #00a884;
+            margin: 2px 0 0 0;
+        }
+
+        /* Área de Mensagens */
+        .chat-area {
+            flex-grow: 1;
+            background-color: #0b141a;
+            background-image: radial-gradient(#202c33 1px, transparent 1px);
+            background-size: 16px 16px;
+            padding: 14px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-pill {
+            align-self: center;
+            background-color: #182229;
+            color: #8696a0;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+        }
+
+        /* Balão de Mensagem */
+        .bubble {
+            align-self: flex-start;
+            background-color: #202c33;
+            color: #e9edef;
+            padding: 10px 12px 8px 12px;
+            border-radius: 0 10px 10px 10px;
+            max-width: 92%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-size: 13.5px;
+            line-height: 1.45;
+            position: relative;
+        }
+
+        /* Card Institucional no topo da Mensagem */
+        .clinic-brand-card {
+            background-color: #182229;
+            border: 1px solid #2a3942;
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clinic-brand-card img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #ffffff;
+            padding: 2px;
+        }
+
+        .clinic-brand-text .title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #d6c38d;
+            letter-spacing: 0.3px;
+        }
+
+        .clinic-brand-text .subtitle {
+            font-size: 9.5px;
+            color: #8696a0;
+        }
+
+        .bubble-content {
+            white-space: pre-line;
+        }
+
+        .bubble-time {
+            text-align: right;
+            font-size: 10.5px;
+            color: #8696a0;
+            margin-top: 6px;
+        }
+
+        /* Rodapé do Celular */
+        .input-bar {
+            background-color: #202c33;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-box {
+            flex-grow: 1;
+            background-color: #2a3942;
+            border-radius: 20px;
+            padding: 8px 14px;
+            color: #8696a0;
+            font-size: 13px;
+        }
+
+        .emoji-img {
+            width: 17px;
+            height: 17px;
+            vertical-align: -2px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-box">
+        <h1>Simulação Visual de Notificações WhatsApp</h1>
+        <p class="sub">Clínica Veterinária Amigo Bicho &bull; Pré-visualização autêntica de como os tutores recebem as mensagens no celular</p>
+        <div class="brand-badge">
+            Identificação Institucional: Foto de Perfil &bull; Logotipo da Clínica &bull; Emojis Nativos
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <!-- CENÁRIO 1 -->
+        <div class="phone-column">
+            <div class="scenario-tag">1. Aviso 7 Dias Antes</div>
+            <div class="phone">
+                <div class="status-bar">
+                    <span>09:02</span>
+                    <span>5G &bull; 98% [===]</span>
+                </div>
+                <div class="wa-top">
+                    <div class="avatar">
+                        <img src="public/img/logo-amigobicho.png" alt="Logo Amigo Bicho">
+                    </div>
+                    <div class="contact-info">
+                        <div class="name">Clínica Amigo Bicho <span class="verified-badge">✓</span></div>
+                        <div class="status">Conta comercial oficial</div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="date-pill">Hoje</div>
+                    <div class="bubble">
+                        <div class="clinic-brand-card">
+                            <img src="public/img/logo-amigobicho.png" alt="Logo">
+                            <div class="clinic-brand-text">
+                                <div class="title">CLÍNICA VETERINÁRIA AMIGO BICHO</div>
+                                <div class="subtitle">Medicina Veterinária &bull; Lembretes Sanitários</div>
+                            </div>
+                        </div>
+                        <div class="bubble-content">Olá, Mariana Souza! Tudo bem? <img src="public/img/emojis/paw.png" class="emoji-img" alt="🐾">
+
+Estamos passando para lembrar que a vacinação do seu pet <b>Thor</b> está prevista para daqui a 7 dias.
+
+<img src="public/img/emojis/syringe.png" class="emoji-img" alt="💉"> <b style="color: #25d366;">Vacina: Vacina Polivalente V10</b>
+<img src="public/img/emojis/calendar.png" class="emoji-img" alt="📅"> <b style="color: #25d366;">Data prevista: 28/11/2026</b>
+
+É importante manter o acompanhamento da vacinação do seu companheiro em dia.
+
+Entre em contato conosco para agendar a aplicação!
+
+Será um prazer receber vocês! <img src="public/img/emojis/heart.png" class="emoji-img" alt="❤️"></div>
+                        <div class="bubble-time">09:00</div>
+                    </div>
+                </div>
+                <div class="input-bar">
+                    <div class="input-box">Mensagem...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENÁRIO 2 -->
+        <div class="phone-column">
+            <div class="scenario-tag">2. No Dia da Vacina</div>
+            <div class="phone">
+                <div class="status-bar">
+                    <span>09:02</span>
+                    <span>Wi-Fi &bull; 95% [===]</span>
+                </div>
+                <div class="wa-top">
+                    <div class="avatar">
+                        <img src="public/img/logo-amigobicho.png" alt="Logo Amigo Bicho">
+                    </div>
+                    <div class="contact-info">
+                        <div class="name">Clínica Amigo Bicho <span class="verified-badge">✓</span></div>
+                        <div class="status">Conta comercial oficial</div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="date-pill">Hoje</div>
+                    <div class="bubble">
+                        <div class="clinic-brand-card">
+                            <img src="public/img/logo-amigobicho.png" alt="Logo">
+                            <div class="clinic-brand-text">
+                                <div class="title">CLÍNICA VETERINÁRIA AMIGO BICHO</div>
+                                <div class="subtitle">Medicina Veterinária &bull; Lembretes Sanitários</div>
+                            </div>
+                        </div>
+                        <div class="bubble-content">Olá, Carlos Eduardo! Tudo bem? <img src="public/img/emojis/paw.png" class="emoji-img" alt="🐾">
+
+Hoje está prevista a vacinação do seu pet <b>Mel</b>.
+
+<img src="public/img/emojis/syringe.png" class="emoji-img" alt="💉"> <b style="color: #25d366;">Vacina: Vacina Antirrábica</b>
+<img src="public/img/emojis/calendar.png" class="emoji-img" alt="📅"> <b style="color: #25d366;">Data prevista: 21/11/2026</b>
+
+Estamos à disposição para agendar a aplicação e manter a saúde do seu companheiro em dia.
+
+Entre em contato conosco!</div>
+                        <div class="bubble-time">09:00</div>
+                    </div>
+                </div>
+                <div class="input-bar">
+                    <div class="input-box">Mensagem...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENÁRIO 3 -->
+        <div class="phone-column">
+            <div class="scenario-tag">3. Vacina em Atraso</div>
+            <div class="phone">
+                <div class="status-bar">
+                    <span>09:02</span>
+                    <span>5G &bull; 100% [===]</span>
+                </div>
+                <div class="wa-top">
+                    <div class="avatar">
+                        <img src="public/img/logo-amigobicho.png" alt="Logo Amigo Bicho">
+                    </div>
+                    <div class="contact-info">
+                        <div class="name">Clínica Amigo Bicho <span class="verified-badge">✓</span></div>
+                        <div class="status">Conta comercial oficial</div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="date-pill">Hoje</div>
+                    <div class="bubble">
+                        <div class="clinic-brand-card">
+                            <img src="public/img/logo-amigobicho.png" alt="Logo">
+                            <div class="clinic-brand-text">
+                                <div class="title">CLÍNICA VETERINÁRIA AMIGO BICHO</div>
+                                <div class="subtitle">Medicina Veterinária &bull; Lembretes Sanitários</div>
+                            </div>
+                        </div>
+                        <div class="bubble-content">Olá, Juliana Costa! Tudo bem? <img src="public/img/emojis/paw.png" class="emoji-img" alt="🐾">
+
+Identificamos que a vacinação do seu pet <b>Bob</b> ainda consta como pendente em nosso sistema.
+
+<img src="public/img/emojis/syringe.png" class="emoji-img" alt="💉"> <b style="color: #25d366;">Vacina: Gripe Canina (Pneumodog)</b>
+<img src="public/img/emojis/calendar.png" class="emoji-img" alt="📅"> <b style="color: #25d366;">Data prevista: 14/11/2026</b>
+
+Gostaríamos de lembrar que é importante manter o calendário de vacinação atualizado.
+
+Entre em contato conosco para verificar a situação e agendar o atendimento.
+
+Aguardamos vocês! <img src="public/img/emojis/heart.png" class="emoji-img" alt="❤️"></div>
+                        <div class="bubble-time">09:00</div>
+                    </div>
+                </div>
+                <div class="input-bar">
+                    <div class="input-box">Mensagem...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

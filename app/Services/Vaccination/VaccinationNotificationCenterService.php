@@ -265,6 +265,8 @@ class VaccinationNotificationCenterService
             };
         }
 
+        $clinicName = function_exists('branding') ? (branding('clinic_name') ?: 'Clínica Veterinária Amigo Bicho') : 'Clínica Veterinária Amigo Bicho';
+
         $replacements = [
             '{NOME_TUTOR}' => $tutorName,
             '{NOME_ANIMAL}' => $petName,
@@ -272,6 +274,8 @@ class VaccinationNotificationCenterService
             '{DATA_VACINACAO}' => $nextDate->format('d/m/Y'),
             '{LABORATORIO}' => trim((string) ($vaccination->laboratory ?? '')),
             '{DATA_APLICACAO}' => $vaccination->date ? $vaccination->date->format('d/m/Y') : '',
+            '{CLINICA}' => $clinicName,
+            '{NOME_CLINICA}' => $clinicName,
         ];
 
         $rendered = trim(str_replace(array_keys($replacements), array_values($replacements), $template));

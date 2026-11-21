@@ -38,9 +38,49 @@
                             <strong>Atenção (LGPD):</strong> <span id="waOptInWarningText"></span>
                         </div>
 
-                        <div class="form-group mb-0">
-                            <label>Pré-visualização da Mensagem <small class="text-muted">(você pode ajustar antes de confirmar o envio)</small></label>
-                            <textarea name="message_body" id="waMessageBody" rows="10" class="form-control" required></textarea>
+                        <ul class="nav nav-pills mb-3" id="waModalTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active py-1 px-3" id="wa-tab-visual" data-toggle="pill" href="#wa-pane-visual" role="tab">
+                                    <i class="fab fa-whatsapp text-success mr-1"></i> Visual no Celular (WhatsApp)
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-1 px-3" id="wa-tab-edit" data-toggle="pill" href="#wa-pane-edit" role="tab">
+                                    <i class="fas fa-edit mr-1"></i> Editar Texto
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- Visual no Celular -->
+                            <div class="tab-pane fade show active" id="wa-pane-visual" role="tabpanel">
+                                <div style="background-color: #efeae2; border: 1px solid #d1d7db; border-radius: 12px; padding: 12px; max-width: 520px; margin: 0 auto; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                                    <!-- Topo com Logo da Clínica -->
+                                    <div style="background-color: #008069; color: white; border-radius: 8px 8px 0 0; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin: -12px -12px 10px -12px;">
+                                        <img src="{{ asset('img/logo-amigobicho.png') }}" style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; padding: 2px; object-fit: contain;">
+                                        <div>
+                                            <div style="font-weight: bold; font-size: 13px; line-height: 1.2;">Clínica Veterinária Amigo Bicho <i class="fas fa-check-circle text-warning ml-1" style="font-size: 11px;"></i></div>
+                                            <div style="font-size: 10px; opacity: 0.9;">Conta comercial oficial • Online</div>
+                                        </div>
+                                    </div>
+                                    <!-- Balão de Mensagem -->
+                                    <div style="background-color: #ffffff; border-radius: 0 8px 8px 8px; padding: 12px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.12); font-size: 13.5px; line-height: 1.5; color: #111b21;">
+                                        <div id="waVisualBalloon" style="white-space: pre-line;"></div>
+                                        <div style="text-align: right; font-size: 10px; color: #667781; margin-top: 6px;">09:00 <i class="fas fa-check-double text-primary ml-1" style="font-size: 9px;"></i></div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <small class="text-muted"><i class="fas fa-info-circle mr-1"></i>Para alterar qualquer palavra da mensagem, clique na aba <strong>Editar Texto</strong> acima.</small>
+                                </div>
+                            </div>
+
+                            <!-- Edição de Texto -->
+                            <div class="tab-pane fade" id="wa-pane-edit" role="tabpanel">
+                                <div class="form-group mb-0">
+                                    <label>Texto da Mensagem <small class="text-muted">(ajuste livremente antes de enviar)</small></label>
+                                    <textarea name="message_body" id="waMessageBody" rows="9" class="form-control" required></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -125,6 +165,7 @@
                 $('#waNextDate').text(data.next_date || '-');
                 $('#waReminderType').val(data.reminder_type || 'manual');
                 $('#waMessageBody').val(data.message || '');
+                $('#waVisualBalloon').text(data.message || '');
 
                 const sel = $('#waTutorSelect').empty();
                 (data.tutors || []).forEach(t => {
@@ -165,6 +206,10 @@
         if (currentVaccinationId) {
             window.openWhatsAppPreviewModal(currentVaccinationId, $(this).val());
         }
+    });
+
+    $(document).on('input', '#waMessageBody', function() {
+        $('#waVisualBalloon').text($(this).val());
     });
 
     window.openRegisterContactModal = function(vaccinationId, label, currentNotes) {

@@ -512,7 +512,7 @@
                             <div class="card-body">
                                 <p class="small text-muted mb-2">
                                     Variáveis disponíveis:
-                                    <code>{NOME_TUTOR}</code> <code>{NOME_ANIMAL}</code> <code>{NOME_VACINA}</code> <code>{DATA_VACINACAO}</code> <code>{LABORATORIO}</code> <code>{DATA_APLICACAO}</code>
+                                    <code>{NOME_TUTOR}</code> <code>{NOME_ANIMAL}</code> <code>{NOME_VACINA}</code> <code>{DATA_VACINACAO}</code> <code>{CLINICA}</code> <code>{LABORATORIO}</code> <code>{DATA_APLICACAO}</code>
                                 </p>
                                 <div class="form-group">
                                     <label>1. Modelo — 7 Dias Antes</label>
