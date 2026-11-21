@@ -6,6 +6,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? branding('clinic_name', 'Amigo Bicho') }} - {{ branding('clinic_name', 'Amigo Bicho') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ branding_favicon_url() }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.datatables.net">
+    <link rel="preconnect" href="https://code.jquery.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.datatables.net">
+    <link rel="dns-prefetch" href="https://code.jquery.com">
     <style>{!! branding_css_vars() !!}</style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1054,6 +1066,7 @@
                         "ordering": true,
                         "info": true,
                         "autoWidth": false,
+                        "deferRender": true,
                         "columns": Array.from({length: colCount}, function() { return {}; }),
                         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
                     };

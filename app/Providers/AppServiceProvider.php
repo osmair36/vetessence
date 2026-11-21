@@ -18,6 +18,16 @@ class AppServiceProvider extends ServiceProvider
     {
         @ini_set('memory_limit', '512M');
 
+        // Alta performance SQLite (WAL, cache 64MB, memory-mapped I/O)
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Database\Events\ConnectionEstablished::class, function ($event) {
+            if ($event->connection->getDriverName() === 'sqlite') {
+                $event->connection->statement('PRAGMA synchronous = NORMAL;');
+                $event->connection->statement('PRAGMA cache_size = -64000;');
+                $event->connection->statement('PRAGMA mmap_size = 268435456;');
+                $event->connection->statement('PRAGMA temp_store = MEMORY;');
+            }
+        });
+
         Paginator::useBootstrapFour();
         Paginator::defaultView('vendor.pagination.default');
         Paginator::defaultSimpleView('vendor.pagination.simple-default');

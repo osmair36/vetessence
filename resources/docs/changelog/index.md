@@ -2,6 +2,20 @@
 
 ## [Não versionado] — 2026-11-21
 
+## [v1.12.0] — 2026-11-21
+## [v1.12.0] — 2026-11-21
+
+### Desempenho
+- **Otimização global de performance do sistema**:
+  - **SQLite WAL + PRAGMAs**: banco agora opera em modo WAL (`journal_mode=WAL`, `synchronous=NORMAL`, `cache_size=-64000`, `mmap_size=268435456`, `temp_store=MEMORY`). Elimina travamentos de leitura/escrita simultânea e reduz drasticamente flushes de disco.
+  - **OPcache PHP ativado**: `zend_extension=opcache` habilitado em `installer/runtime/php/php.ini` com 128MB de cache, 10.000 arquivos acelerados e `validate_timestamps=1`. Elimina re-parse de mais de 2.000 arquivos PHP por requisição.
+  - **Servidor multi-worker**: `iniciar.bat` agora define `PHP_CLI_SERVER_WORKERS=8`, permitindo 8 requisições concorrentes sem bloqueio (assets, AJAX, páginas simultâneas).
+  - **Índices de performance nas tabelas principais** (migration `2026_11_21_090000`): adicionados 22 índices estratégicos em `medical_records` (pet_id, vet_id, date, pet+date), `pets` (name, species, is_active), `tutors` (name, cpf, phone), `pet_tutor` (pair, tutor_id), `appointments` (date+time, pet_id, vet_id, status), `invoices` (tutor_id, status, paid_at, status+due_date) e `products` (name, is_active, category_id, is_active+stock). Consultas que antes faziam full table scan agora usam índice B-tree.
+  - **Preconnect/DNS-prefetch para CDNs externos**: adicionados `<link rel="preconnect">` e `<link rel="dns-prefetch">` para todos os domínios externos (Google Fonts, FontAwesome, JSDelivr, DataTables, jQuery) em `resources/views/layouts/adminlte.blade.php`, reduzindo latência de DNS na primeira renderização.
+  - **DataTables com `deferRender: true`**: tabelas com muitas linhas agora renderizam DOM sob demanda em vez de inserir todos os `<tr>` de uma vez, reduzindo o tempo de resposta visual perceptível ao usuário.
+  - **PRAGMAs SQLite no `AppServiceProvider.php`**: listener no evento `ConnectionEstablished` garante PRAGMAs de alta performance aplicados automaticamente em toda nova conexão (web, fila, artisan).
+  - **Benchmarks verificados**: `MedicalRecord::count()` (2.466 registros) em 61ms; listagem com eager-load em 13ms; `Pet` com filtro em 1,5ms; `Appointment` do dia em 4,5ms; `Invoice` em 0,3ms.
+
 ## [v1.11.8] — 2026-11-21
 
 ### Removido

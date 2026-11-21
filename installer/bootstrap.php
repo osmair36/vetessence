@@ -70,6 +70,24 @@ $dirs = [
     'database',
 ];
 
+// Otimiza php.ini portatil garantindo OPcache ativo
+$loadedIni = php_ini_loaded_file();
+if ($loadedIni && is_file($loadedIni) && is_writable($loadedIni)) {
+    $iniContent = (string) @file_get_contents($loadedIni);
+    $iniModified = false;
+    if (strpos($iniContent, 'zend_extension=opcache') === false && strpos($iniContent, ';zend_extension=opcache') !== false) {
+        $iniContent = str_replace(';zend_extension=opcache', 'zend_extension=opcache', $iniContent);
+        $iniModified = true;
+    }
+    if (strpos($iniContent, ';opcache.enable=1') !== false) {
+        $iniContent = str_replace(';opcache.enable=1', "opcache.enable=1\nopcache.enable_cli=1", $iniContent);
+        $iniModified = true;
+    }
+    if ($iniModified) {
+        @file_put_contents($loadedIni, $iniContent);
+    }
+}
+
 foreach ($dirs as $rel) {
     $full = $baseDir . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $rel);
     if (!is_dir($full)) {
@@ -157,6 +175,12 @@ if (!is_file($dbFile) || filesize($dbFile) === 0) {
     try {
         $pdo = new PDO('sqlite:' . $dbFile);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Otimizacoes de alta performance SQLite (WAL, cache 64MB, memory-mapped I/O)
+        $pdo->exec('PRAGMA journal_mode = WAL;');
+        $pdo->exec('PRAGMA synchronous = NORMAL;');
+        $pdo->exec('PRAGMA cache_size = -64000;');
+        $pdo->exec('PRAGMA mmap_size = 268435456;');
+        $pdo->exec('PRAGMA temp_store = MEMORY;');
 
         $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
         $tableSet = array_flip($tables ?: []);

@@ -58,8 +58,11 @@ if not %errorlevel%==0 goto :prepare_error
 rem Agenda abertura do navegador assim que o servidor estiver pronto na porta 8181
 start /b "" "%PHP%" "%BASEDIR%installer\bootstrap.php" --open-browser --port=%PORT%
 
+rem Habilita multiplos workers concorrentes no servidor embutido do PHP (evita travamento com varias requisicoes/assets)
+set PHP_CLI_SERVER_WORKERS=8
+
 rem Inicia o servidor HTTP diretamente vinculado a todas as interfaces de rede
-echo [INFO] Servidor web iniciando na porta %PORT%...
+echo [INFO] Servidor web iniciando na porta %PORT% (com %PHP_CLI_SERVER_WORKERS% workers concorrentes)...
 echo.
 "%PHP%" -d memory_limit=512M -d upload_max_filesize=256M -d post_max_size=256M -d max_execution_time=120 -S 0.0.0.0:%PORT% -t "%BASEDIR%public" "%BASEDIR%server.php"
 
