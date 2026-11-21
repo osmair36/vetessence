@@ -37,10 +37,6 @@ class DashboardController extends Controller
                 ->sum('total'),
             'todayProcedures' => MedicalRecord::whereDate('created_at', today())->count(),
             'activeHospitalizations' => Hospitalization::where('status', 'admitted')->count(),
-            'noShowRate' => $this->computeNoShowRate(),
-            'pendingReminders' => VaccinationReminder::where('status', 'pending')
-                ->where('scheduled_date', '<=', today())
-                ->count(),
             'overdueParasiteControls' => ParasiteControl::whereNotNull('next_due_date')
                 ->where('next_due_date', '<', today())
                 ->count(),
@@ -51,18 +47,5 @@ class DashboardController extends Controller
             'vaccineStats',
             'todayVaccinations'
         ));
-    }
-
-    protected function computeNoShowRate(): float
-    {
-        $total = Appointment::whereMonth('date', now()->month)
-            ->whereYear('date', now()->year)
-            ->count();
-        if ($total === 0) return 0;
-        $noShow = Appointment::whereMonth('date', now()->month)
-            ->whereYear('date', now()->year)
-            ->where('status', 'no_show')
-            ->count();
-        return round(($noShow / $total) * 100, 1);
     }
 }

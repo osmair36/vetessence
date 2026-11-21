@@ -2,6 +2,13 @@
 
 ## [Não versionado] — 2026-11-21
 
+## [v1.11.8] — 2026-11-21
+
+### Removido
+- **Remoção dos botões Taxa de Ausência e Lembretes Pendentes no Dashboard (`/dashboard`)**:
+  - Removidos os cards estatísticos **Taxa de Ausência** e **Lembretes Pendentes** da grade superior de indicadores em `resources/views/dashboard.blade.php`.
+  - A grade superior agora exibe 8 indicadores perfeitamente balanceados em 2 linhas de 4 colunas.
+  - Otimizado `app/Http/Controllers/DashboardController.php`, eliminando o método `computeNoShowRate()` e a consulta `VaccinationReminder::where('status', 'pending')`, economizando 3 consultas ao banco de dados no carregamento do Dashboard.
 ## [v1.11.7] — 2026-11-21
 
 ### Corrigido

@@ -73,26 +73,6 @@
         </div>
     </div>
     <div class="col-lg-3 col-6">
-        <div class="small-box bg-pink">
-            <div class="inner">
-                <h3>{{ number_format($stats['noShowRate'] ?? 0, 1) }}%</h3>
-                <p>Taxa de Ausência</p>
-            </div>
-            <div class="icon"><i class="fas fa-user-slash"></i></div>
-            <a href="{{ route('appointments.index') }}" class="small-box-footer">Ver mais <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-orange">
-            <div class="inner">
-                <h3>{{ $stats['pendingReminders'] ?? 0 }}</h3>
-                <p>Lembretes Pendentes</p>
-            </div>
-            <div class="icon"><i class="fas fa-bell"></i></div>
-            <a href="{{ route('vaccination-reminders.index') }}" class="small-box-footer">Ver mais <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-6">
         <div class="small-box bg-maroon">
             <div class="inner">
                 <h3>{{ $stats['overdueParasiteControls'] ?? 0 }}</h3>
