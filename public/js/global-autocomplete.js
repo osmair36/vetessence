@@ -75,14 +75,18 @@
                     this.blur();
                 }
             },
+            onDropdownOpen: function () {
+                this._justOpenedTs = Date.now();
+            },
             onFocus: function () {
                 // Evita reabrir no mesmo ciclo imediato apos selecionar um item
-                if ((Date.now() - lastSelectTs) < 180) {
+                if ((Date.now() - lastSelectTs) < 250) {
                     this.close();
                     return;
                 }
                 if (!this.isOpen && !this.isDisabled) {
                     this.open();
+                    this._justOpenedTs = Date.now();
                 }
             },
             onChange: function (value) {
@@ -151,17 +155,29 @@
         try {
             var instance = new window.TomSelect(el, buildTomSelectConfig(el));
 
-            // Garante abertura imediata tambem ao clicar diretamente no controle quando ja focado
+            // Previne que o TomSelect feche o dropdown imediatamente no mesmo clique que o abriu
             if (instance && instance.control) {
-                instance.control.addEventListener('mousedown', function () {
-                    if (!instance.isOpen && !instance.isDisabled) {
-                        setTimeout(function () {
-                            if (!instance.isOpen && !instance.isDisabled) {
-                                instance.open();
-                            }
-                        }, 0);
+                instance.control.addEventListener('click', function (e) {
+                    // Ignora cliques no botao de remover item em selecao multipla
+                    if (e.target && e.target.closest && e.target.closest('.remove')) {
+                        return;
                     }
-                });
+
+                    // Se o dropdown acabou de ser aberto (pelo foco do clique ou acao recente),
+                    // impede que o TomSelect interprete este mesmo clique como acao de fechar (toggle)!
+                    var timeSinceOpen = Date.now() - (instance._justOpenedTs || 0);
+                    if (timeSinceOpen < 450) {
+                        e.stopImmediatePropagation();
+                        return;
+                    }
+
+                    // Se estiver fechado e o usuario clicar no controle, abre imediatamente
+                    if (!instance.isOpen && !instance.isDisabled) {
+                        instance.open();
+                        instance._justOpenedTs = Date.now();
+                        e.stopImmediatePropagation();
+                    }
+                }, true); // Fase de captura (useCapture = true) para executar antes do onClick interno do TomSelect
             }
         } catch (e) {
             if (!e || e.message !== 'Tom Select already initialized on this element') {

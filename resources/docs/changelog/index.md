@@ -1,7 +1,15 @@
 # Changelog
 
-## [Não versionado] — 2026-11-20
+## [Não versionado] — 2026-11-21
 
+## [v1.11.7] — 2026-11-21
+
+### Corrigido
+- **Correção Global de Abertura com Clique Único nos Campos de Autocomplete (`public/js/global-autocomplete.js`)**:
+  - Corrigida a condição de corrida no TomSelect onde o clique único abria o dropdown no `focus`/`mousedown` e o evento subsequente de `click` interpretava o controle como já focado e aberto, executando um toggle que fechava a janela imediatamente.
+  - Implementado interceptador no evento `click` na fase de captura (`useCapture = true`), bloqueando a propagação imediata do fechamento quando o dropdown acaba de ser aberto pela mesma ação de clique do usuário.
+  - Eliminado o listener assíncrono em `mousedown` que competia com o ciclo de eventos do navegador.
+  - O clique único agora abre e mantém a lista de opções aberta e acessível em todos os 110+ campos `<x-tom-select>` da aplicação (Agendamentos: Veterinários e Pets; Consultas; Prescrições; Vacinas; etc.), sem exigir que o usuário mantenha o botão do mouse pressionado.
 ## [v1.11.6] — 2026-11-20
 
 ### Removido
