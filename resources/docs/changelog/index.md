@@ -2,7 +2,15 @@
 
 ## [Não versionado] — 2026-11-21
 
-## [v1.12.0] — 2026-11-21
+## [v1.12.1] — 2026-11-21
+
+### Documentação e Automação
+- **Manual Completo em PDF para Integração WhatsApp Cloud API (Meta)**:
+  - Criado o manual executivo e técnico em PDF (`Manual_Integracao_WhatsApp_Meta_AmigoBicho.pdf` e `public/docs/Manual_Integracao_WhatsApp_Meta_AmigoBicho.pdf`) com 12 páginas, estruturação visual profissional e cabeçalhos/rodapés padronizados.
+  - Passo a passo completo cobrindo: Meta for Developers, Meta Business Suite, criação de App empresarial, vinculação do número oficial da clínica, localização do Phone Number ID e geração do Token Permanente de Usuário do Sistema (sem expiração).
+  - Guia de configuração no painel do Amigo Bicho (`/configuracoes/notificacoes`), parametrização da Central de Vacinas (`/vaccination-center`), modelos com placeholders e regras de consentimento LGPD.
+  - Criado o script autônomo `executar_rotina_vacinas.bat` e instruções detalhadas para agendamento no Agendador de Tarefas do Windows (Task Scheduler) para disparo automático diário às 09:00.
+  - Tabela de diagnóstico de erros (HTTP 401, 400, 403), consulta de logs e checklist final de homologação.
 ## [v1.12.0] — 2026-11-21
 
 ### Desempenho
