@@ -75,12 +75,144 @@
         .main-sidebar.sidebar-dark-primary {
             background: var(--sidebar-bg, #051c12) !important;
         }
+        /* ===== MELHORIA VISUAL DO MENU LATERAL (5 CAMADAS + CORES SUTIS POR GRUPO) ===== */
+        .main-sidebar .nav-sidebar {
+            padding-bottom: 1.5rem;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview {
+            --group-accent: var(--brand-accent, #d6c38d);
+            --group-header-bg: rgba(214, 195, 141, 0.16);
+            --group-tint: rgba(255, 255, 255, 0.06);
+            --group-border: rgba(214, 195, 141, 0.35);
+            margin-bottom: 3px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        /* Paleta sutil individual por grupo */
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-cadastros {
+            --group-accent: #6ec1e4;
+            --group-header-bg: rgba(110, 193, 228, 0.20);
+            --group-tint: rgba(110, 193, 228, 0.09);
+            --group-border: rgba(110, 193, 228, 0.45);
+        }
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-atendimento {
+            --group-accent: #52d1a0;
+            --group-header-bg: rgba(82, 209, 160, 0.20);
+            --group-tint: rgba(82, 209, 160, 0.09);
+            --group-border: rgba(82, 209, 160, 0.45);
+        }
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-agenda {
+            --group-accent: #66d9e8;
+            --group-header-bg: rgba(102, 217, 232, 0.20);
+            --group-tint: rgba(102, 217, 232, 0.09);
+            --group-border: rgba(102, 217, 232, 0.45);
+        }
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-financeiro {
+            --group-accent: #e5c678;
+            --group-header-bg: rgba(229, 198, 120, 0.20);
+            --group-tint: rgba(229, 198, 120, 0.09);
+            --group-border: rgba(229, 198, 120, 0.45);
+        }
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-estoque {
+            --group-accent: #f0b27a;
+            --group-header-bg: rgba(240, 178, 122, 0.20);
+            --group-tint: rgba(240, 178, 122, 0.09);
+            --group-border: rgba(240, 178, 122, 0.45);
+        }
+        .main-sidebar .nav-sidebar > .nav-item.nav-group-config {
+            --group-accent: #b8c6db;
+            --group-header-bg: rgba(184, 198, 219, 0.20);
+            --group-tint: rgba(184, 198, 219, 0.09);
+            --group-border: rgba(184, 198, 219, 0.45);
+        }
+
+        /* Ícone do grupo pai com toque sutil da cor do grupo mesmo fechado */
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-link > .nav-icon {
+            color: var(--group-accent);
+            opacity: 0.85;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-link:hover > .nav-icon,
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview.menu-open > .nav-link > .nav-icon {
+            opacity: 1;
+        }
+
+        /* Camada 1: Card/bloco destacado quando o grupo está aberto */
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview.menu-open {
+            background: var(--group-tint);
+            border: 1px solid var(--group-border);
+            border-radius: 8px;
+            margin: 5px 0 8px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+            overflow: hidden;
+        }
+
+        /* Camada 2: Cabeçalho do grupo expandido em destaque */
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview.menu-open > .nav-link {
+            background: var(--group-header-bg) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            border-radius: 7px 7px 0 0 !important;
+            border-bottom: 1px solid var(--group-border);
+            margin-bottom: 0 !important;
+        }
+
+        /* Camada 3: Bloco de subitens com linha-guia vertical e recuo */
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview {
+            background: rgba(0, 0, 0, 0.14);
+            padding: 5px 6px 6px 10px;
+            margin: 0;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview > .nav-item {
+            position: relative;
+            border-left: 2px solid var(--group-border);
+            padding-left: 6px;
+            margin-left: 6px;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview > .nav-item > .nav-link {
+            font-size: 0.89rem;
+            padding: 0.42rem 0.65rem;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.88);
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview > .nav-item > .nav-link > .nav-icon {
+            font-size: 0.82rem;
+            opacity: 0.85;
+            margin-right: 0.45rem;
+        }
+        .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview > .nav-item > .nav-link:hover {
+            background: rgba(255, 255, 255, 0.10) !important;
+            color: #ffffff !important;
+        }
+
+        /* Item ativo continua com destaque máximo dourado */
         .main-sidebar .nav-sidebar .nav-item .nav-link.active {
             background: var(--brand-accent, #d6c38d) !important;
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
         }
         .main-sidebar .nav-sidebar .nav-item .nav-link.active,
         .main-sidebar .nav-sidebar .nav-item .nav-link.active i {
             color: #1a1a1a !important;
+            opacity: 1 !important;
+        }
+
+        /* Ajustes limpos para sidebar recolhida (mini) */
+        body.sidebar-collapse:not(.sidebar-is-opening) .main-sidebar .nav-sidebar > .nav-item.has-treeview.menu-open {
+            border-color: transparent;
+            background: transparent;
+            box-shadow: none;
+            margin: 0;
+        }
+        body.sidebar-collapse:not(.sidebar-is-opening) .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview {
+            padding: 0;
+        }
+        body.sidebar-collapse:not(.sidebar-is-opening) .main-sidebar .nav-sidebar > .nav-item.has-treeview > .nav-treeview > .nav-item {
+            border-left: none;
+            padding-left: 0;
+            margin-left: 0;
         }
         .btn-secondary-custom { background: var(--brand-secondary, #9aaa7e); border-color: var(--brand-secondary, #9aaa7e); color: #fff; }
         .btn-secondary-custom:hover { filter: brightness(0.9); color: #fff; }
@@ -225,7 +357,7 @@
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                         <li class="nav-item">
                             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -235,7 +367,7 @@
 
                         <!-- CADASTROS -->
                         @if(Gate::allows('tutores') || Gate::allows('pets') || Gate::allows('convenios'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('tutors.*') || request()->routeIs('pets.*') || request()->routeIs('convenios.*') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-cadastros {{ request()->routeIs('tutors.*') || request()->routeIs('pets.*') || request()->routeIs('convenios.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-address-book"></i>
                                 <p>Cadastros <i class="right fas fa-angle-left"></i></p>
@@ -271,7 +403,7 @@
 
                         <!-- ATENDIMENTO -->
                         @if(Gate::allows('atendimentos') || Gate::allows('prontuarios') || Gate::allows('vacinas') || Gate::allows('exames') || Gate::allows('cirurgias') || Gate::allows('prescricoes') || Gate::allows('hospitalizacao') || Gate::allows('laboratorio') || Gate::allows('imagem') || Gate::allows('referral') || Gate::allows('lembrete-vacinas') || Gate::allows('protocolo-vacinas') || Gate::allows('parasitario') || Gate::allows('certificado-sanitario') || Gate::allows('modelo-laudo') || Gate::allows('interacao-medicamentosa') || Gate::allows('hospedagem') || Gate::allows('triage') || Gate::allows('pre-anesthetic') || Gate::allows('diet-plans') || Gate::allows('convenio-claims') || Gate::allows('plano-tratamento') || Gate::allows('odontologia') || Gate::allows('termo-consentimento') || Gate::allows('controle-peso'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('appointments.*') || request()->routeIs('grooming-board.*') || request()->routeIs('pet-transports.*') || request()->routeIs('medical-records.*') || request()->routeIs('vaccinations.*') || request()->routeIs('vaccination-reminders.*') || request()->routeIs('vaccination-center.*') || request()->routeIs('vaccine-protocols.*') || request()->routeIs('parasite-controls.*') || request()->routeIs('health-certificates.*') || request()->routeIs('clinical-report-templates.*') || request()->routeIs('drug-interactions.*') || request()->routeIs('boardings.*') || request()->routeIs('exams.*') || request()->routeIs('surgeries.*') || request()->routeIs('prescriptions.*') || request()->routeIs('hospitalizations.*') || request()->routeIs('hospitalization-daily-records.*') || request()->routeIs('anesthesia-monitorings.*') || request()->routeIs('dental-charts.*') || request()->routeIs('weight-records.*') || request()->routeIs('treatment-plans.*') || request()->routeIs('consent-forms.*') || request()->routeIs('laboratory-orders.*') || request()->routeIs('imaging-exams.*') || request()->routeIs('referrals.*') || request()->routeIs('triage.*') || request()->routeIs('pre-anesthetic-evaluations.*') || request()->routeIs('diet-plans.*') || request()->routeIs('convenio-claims.*') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-atendimento {{ request()->routeIs('appointments.*') || request()->routeIs('grooming-board.*') || request()->routeIs('pet-transports.*') || request()->routeIs('medical-records.*') || request()->routeIs('vaccinations.*') || request()->routeIs('vaccination-reminders.*') || request()->routeIs('vaccination-center.*') || request()->routeIs('vaccine-protocols.*') || request()->routeIs('parasite-controls.*') || request()->routeIs('health-certificates.*') || request()->routeIs('clinical-report-templates.*') || request()->routeIs('drug-interactions.*') || request()->routeIs('boardings.*') || request()->routeIs('exams.*') || request()->routeIs('surgeries.*') || request()->routeIs('prescriptions.*') || request()->routeIs('hospitalizations.*') || request()->routeIs('hospitalization-daily-records.*') || request()->routeIs('anesthesia-monitorings.*') || request()->routeIs('dental-charts.*') || request()->routeIs('weight-records.*') || request()->routeIs('treatment-plans.*') || request()->routeIs('consent-forms.*') || request()->routeIs('laboratory-orders.*') || request()->routeIs('imaging-exams.*') || request()->routeIs('referrals.*') || request()->routeIs('triage.*') || request()->routeIs('pre-anesthetic-evaluations.*') || request()->routeIs('diet-plans.*') || request()->routeIs('convenio-claims.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-stethoscope"></i>
                                 <p>Atendimento <i class="right fas fa-angle-left"></i></p>
@@ -507,7 +639,7 @@
 
                         <!-- AGENDA -->
                         @can('agenda-equipe')
-                        <li class="nav-item has-treeview {{ request()->routeIs('staff-schedules.*') || request()->routeIs('staff-time-off.*') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-agenda {{ request()->routeIs('staff-schedules.*') || request()->routeIs('staff-time-off.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-calendar-alt"></i>
                                 <p>Agenda <i class="right fas fa-angle-left"></i></p>
@@ -539,7 +671,7 @@
 
                         <!-- FINANCEIRO -->
                         @if(Gate::allows('financeiro') || Gate::allows('gateway-pagamento') || Gate::allows('nfse.view') || Gate::allows('nfe.view'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('invoices.*') || request()->routeIs('pdv.*') || request()->routeIs('reports.*') || request()->routeIs('payment-gateways.*') || request()->routeIs('nfse.*') || request()->routeIs('nfce.*') || request()->routeIs('nfe.*') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-financeiro {{ request()->routeIs('invoices.*') || request()->routeIs('pdv.*') || request()->routeIs('reports.*') || request()->routeIs('payment-gateways.*') || request()->routeIs('nfse.*') || request()->routeIs('nfce.*') || request()->routeIs('nfe.*') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-dollar-sign"></i>
                                 <p>Financeiro <i class="right fas fa-angle-left"></i></p>
@@ -607,7 +739,7 @@
 
                         <!-- ESTOQUE -->
                         @can('estoque')
-                        <li class="nav-item has-treeview {{ request()->routeIs('products.*') || request()->routeIs('stock.*') || request()->routeIs('suppliers.*') || request()->routeIs('controlled-substances.*') || request()->routeIs('lab-equipment-integrations.*') || request()->routeIs('pet-shop-packages.*') || request()->routeIs('pet-shop-subscriptions.*') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-estoque {{ request()->routeIs('products.*') || request()->routeIs('stock.*') || request()->routeIs('suppliers.*') || request()->routeIs('controlled-substances.*') || request()->routeIs('lab-equipment-integrations.*') || request()->routeIs('pet-shop-packages.*') || request()->routeIs('pet-shop-subscriptions.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-boxes"></i>
                                 <p>Estoque <i class="right fas fa-angle-left"></i></p>
@@ -707,7 +839,7 @@
                         <!-- ADMINISTRAÇÃO -->
                         @can('admin')
                         <li class="nav-header"><i class="fas fa-cog"></i> ADMINISTRAÇÃO</li>
-                        <li class="nav-item has-treeview {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('services.*') || request()->routeIs('categories.*') || request()->routeIs('consent-templates.*') || request()->routeIs('branches.*') || request()->routeIs('departments.*') || request()->routeIs('positions.*') || request()->routeIs('employees.*') || request()->routeIs('configuracoes.branding.*') || request()->routeIs('configuracoes.notificacoes.*') || request()->routeIs('notification-logs.*') || request()->routeIs('breed-defaults.*') || request()->routeIs('zoonotic-diseases.*') || request()->routeIs('llm.config') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview nav-group-config {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('services.*') || request()->routeIs('categories.*') || request()->routeIs('consent-templates.*') || request()->routeIs('branches.*') || request()->routeIs('departments.*') || request()->routeIs('positions.*') || request()->routeIs('employees.*') || request()->routeIs('configuracoes.branding.*') || request()->routeIs('configuracoes.notificacoes.*') || request()->routeIs('notification-logs.*') || request()->routeIs('breed-defaults.*') || request()->routeIs('zoonotic-diseases.*') || request()->routeIs('llm.config') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shield-alt"></i>
                                 <p>Configurações <i class="right fas fa-angle-left"></i></p>
