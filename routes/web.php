@@ -456,6 +456,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\VaccinationCenterController::class, 'index'])->name('index');
         Route::get('preview/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'preview'])->name('preview');
         Route::post('send-manual/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'sendManual'])->name('send-manual');
+        Route::get('preview-birthday/{pet}', [\App\Http\Controllers\VaccinationCenterController::class, 'previewBirthday'])->name('preview-birthday');
+        Route::post('send-manual-birthday/{pet}', [\App\Http\Controllers\VaccinationCenterController::class, 'sendManualBirthday'])->name('send-manual-birthday');
+        Route::get('preview-grooming/{appointment}', [\App\Http\Controllers\VaccinationCenterController::class, 'previewGrooming'])->name('preview-grooming');
+        Route::post('send-manual-grooming/{appointment}', [\App\Http\Controllers\VaccinationCenterController::class, 'sendManualGrooming'])->name('send-manual-grooming');
         Route::post('register-contact/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'registerContact'])->name('register-contact');
         Route::post('cancel-pending/{vaccination}', [\App\Http\Controllers\VaccinationCenterController::class, 'cancelPending'])->name('cancel-pending');
         Route::post('reminders/{vaccinationReminder}/reprocess', [\App\Http\Controllers\VaccinationCenterController::class, 'reprocess'])->name('reprocess');

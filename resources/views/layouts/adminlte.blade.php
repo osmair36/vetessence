@@ -381,7 +381,7 @@
                         <li class="nav-item">
                             <a href="{{ route('vaccination-center.index') }}" class="nav-link {{ request()->routeIs('vaccination-center.*') ? 'active' : '' }}">
                                 <i class="fab fa-whatsapp nav-icon text-success"></i>
-                                <p>Central de Vacinas</p>
+                                <p>Central WhatsApp</p>
                             </a>
                         </li>
                         <li class="nav-item">

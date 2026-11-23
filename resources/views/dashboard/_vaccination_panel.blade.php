@@ -2,12 +2,14 @@
 @php
     $vs = $vaccineStats ?? [];
     $todayList = $todayVaccinations ?? collect();
+    $bdayList = $todayBirthdays ?? collect();
+    $groomList = $todayGroomings ?? collect();
 @endphp
 <div class="card card-outline card-success mb-4">
     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
         <h3 class="card-title mb-0">
-            <i class="fas fa-syringe text-success mr-2"></i>
-            <strong>Acompanhamento de Vacinações e Lembretes WhatsApp</strong>
+            <i class="fab fa-whatsapp text-success mr-2"></i>
+            <strong>Acompanhamento de Vacinações, Aniversariantes, Banho e Tosa e Lembretes WhatsApp</strong>
             @if(!empty($vs['auto_send_enabled']))
                 <span class="badge badge-success ml-2"><i class="fab fa-whatsapp mr-1"></i>Envio Automático Ativo</span>
             @else
@@ -16,12 +18,12 @@
         </h3>
         <div class="card-tools">
             <a href="{{ route('vaccination-center.index') }}" class="btn btn-sm btn-success">
-                <i class="fab fa-whatsapp mr-1"></i> Abrir Central de Lembretes
+                <i class="fab fa-whatsapp mr-1"></i> Abrir Central WhatsApp
             </a>
         </div>
     </div>
     <div class="card-body">
-        {{-- 7 Indicadores Clicaveis --}}
+        {{-- Linha 1: Vacinações (4 Indicadores) --}}
         <div class="row">
             <div class="col-lg-3 col-md-6 col-6 mb-3">
                 <a href="{{ route('vaccination-center.index', ['tab' => 'acompanhamento', 'bucket' => 'due_today']) }}" class="text-decoration-none">
@@ -50,7 +52,7 @@
                     <div class="info-box bg-info mb-0 shadow-sm">
                         <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Próximos 7 Dias</span>
+                            <span class="info-box-text">Vacinas Próx. 7 Dias</span>
                             <span class="info-box-number h4 mb-0">{{ $vs['next_7_days'] ?? 0 }}</span>
                         </div>
                     </div>
@@ -61,8 +63,56 @@
                     <div class="info-box bg-primary mb-0 shadow-sm">
                         <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Próximos 30 Dias</span>
+                            <span class="info-box-text">Vacinas Próx. 30 Dias</span>
                             <span class="info-box-number h4 mb-0">{{ $vs['next_30_days'] ?? 0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        {{-- Linha 2: Aniversariantes (Pets) e Agendamentos de Banho e Tosa --}}
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-6 mb-3">
+                <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'today']) }}" class="text-decoration-none">
+                    <div class="info-box mb-0 shadow-sm" style="background-color: #e83e8c; color: #fff;">
+                        <span class="info-box-icon"><i class="fas fa-birthday-cake"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Aniversariantes Hoje</span>
+                            <span class="info-box-number h4 mb-0">{{ $vs['birthdays_today'] ?? 0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6 mb-3">
+                <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'month']) }}" class="text-decoration-none">
+                    <div class="info-box bg-purple mb-0 shadow-sm">
+                        <span class="info-box-icon"><i class="fas fa-gift"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Aniversariantes no Mês</span>
+                            <span class="info-box-number h4 mb-0">{{ $vs['birthdays_month'] ?? 0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6 mb-3">
+                <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'today']) }}" class="text-decoration-none">
+                    <div class="info-box bg-teal mb-0 shadow-sm">
+                        <span class="info-box-icon"><i class="fas fa-bath"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Banho e Tosa Hoje</span>
+                            <span class="info-box-number h4 mb-0">{{ $vs['grooming_today'] ?? 0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6 mb-3">
+                <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'next_7_days']) }}" class="text-decoration-none">
+                    <div class="info-box bg-indigo mb-0 shadow-sm">
+                        <span class="info-box-icon"><i class="fas fa-cut"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Banho e Tosa (Próx. 7d)</span>
+                            <span class="info-box-number h4 mb-0">{{ $vs['grooming_next_7_days'] ?? 0 }}</span>
                         </div>
                     </div>
                 </a>
@@ -201,6 +251,111 @@
         @else
         <p class="text-muted text-center mb-0 py-3">Nenhuma vacinação prevista para hoje ({{ now()->format('d/m/Y') }}).</p>
         @endif
+
+        {{-- Listas Rapidas: Aniversariantes de Hoje e Banho e Tosa Hoje --}}
+        <div class="row mt-4">
+            <div class="col-lg-6 mb-3 mb-lg-0">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 font-weight-bold"><i class="fas fa-birthday-cake mr-1" style="color: #e83e8c;"></i> Aniversariantes do Dia ({{ now()->format('d/m') }})</h6>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'today']) }}" class="btn btn-xs btn-outline-primary">Ver todos</a>
+                </div>
+                @if($bdayList->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Pet</th>
+                                <th>Tutor / Telefone</th>
+                                <th style="width: 85px;">WhatsApp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($bdayList as $pet)
+                            @php $tutor = $pet->tutors->first(); @endphp
+                            <tr>
+                                <td>
+                                    <a href="{{ route('pets.show', $pet) }}"><strong>{{ $pet->name }}</strong></a>
+                                    <br><small class="text-muted">{{ $pet->birth_date?->format('d/m/Y') }} ({{ (int) $pet->birth_date?->diffInYears(now()) }} ano(s))</small>
+                                </td>
+                                <td>
+                                    @if($tutor)
+                                        <a href="{{ route('tutors.show', $tutor) }}">{{ $tutor->name }}</a><br>
+                                        <small class="text-muted">{{ $tutor->phone ?: 'Sem telefone' }}</small>
+                                    @else
+                                        <span class="text-danger small">Sem tutor</span>
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($tutor)
+                                        <button type="button" onclick="openBirthdayWhatsAppModal({{ $pet->id }}, {{ $tutor->id }})" class="btn btn-xs btn-success" title="Enviar Parabéns pelo WhatsApp">
+                                            <i class="fab fa-whatsapp"></i> Enviar
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <p class="text-muted small text-center border rounded py-3 mb-0">Nenhum pet aniversariante hoje.</p>
+                @endif
+            </div>
+
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 font-weight-bold"><i class="fas fa-bath text-teal mr-1"></i> Agendamentos de Banho e Tosa Hoje ({{ now()->format('d/m/Y') }})</h6>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'today']) }}" class="btn btn-xs btn-outline-primary">Ver todos</a>
+                </div>
+                @if($groomList->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Horário / Pet</th>
+                                <th>Tutor / Serviço</th>
+                                <th style="width: 85px;">WhatsApp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($groomList as $appt)
+                            @php
+                                $tutor = $appt->pet?->tutors?->first();
+                                $svcNames = $appt->services->map(fn($s) => $s->service?->name)->filter()->implode(', ') ?: ($appt->reason ?: 'Banho e Tosa');
+                                $hora = $appt->time ? (is_string($appt->time) ? substr($appt->time, 0, 5) : $appt->time->format('H:i')) : '--:--';
+                            @endphp
+                            <tr>
+                                <td>
+                                    <span class="badge badge-info">{{ $hora }}</span>
+                                    @if($appt->pet)
+                                        <a href="{{ route('pets.show', $appt->pet) }}"><strong>{{ $appt->pet->name }}</strong></a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($tutor)
+                                        <a href="{{ route('tutors.show', $tutor) }}">{{ $tutor->name }}</a>
+                                    @else
+                                        <span class="text-danger small">Sem tutor</span>
+                                    @endif
+                                    <br><small class="text-muted">{{ $svcNames }}</small>
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($tutor)
+                                        <button type="button" onclick="openGroomingWhatsAppModal({{ $appt->id }}, {{ $tutor->id }})" class="btn btn-xs btn-success" title="Enviar Lembrete de Banho e Tosa">
+                                            <i class="fab fa-whatsapp"></i> Enviar
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <p class="text-muted small text-center border rounded py-3 mb-0">Nenhum agendamento de Banho e Tosa para hoje.</p>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 @endcan

@@ -1,9 +1,9 @@
-@extends('layouts.adminlte', ['title' => 'Central de Lembretes e Notificações de Vacinação'])
+@extends('layouts.adminlte', ['title' => 'Central de Lembretes e Notificações por WhatsApp'])
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
     <div>
-        <h4 class="mb-0"><i class="fab fa-whatsapp text-success mr-2"></i>Central de Lembretes e Notificações de Vacinação</h4>
+        <h4 class="mb-0"><i class="fab fa-whatsapp text-success mr-2"></i>Central de Lembretes e Notificações por WhatsApp</h4>
         <small class="text-muted">
             Provedor WhatsApp: <strong>{{ $stats['whatsapp_provider'] ? strtoupper($stats['whatsapp_provider']) : 'Não configurado' }}</strong>
             | Envio Automático:
@@ -12,6 +12,10 @@
             @else
                 <span class="badge badge-secondary">DESATIVADO</span>
             @endif
+            | Serviços:
+            <span class="badge badge-{{ $settings['enable_vaccinations'] ? 'success' : 'light border text-muted' }}">Vacinas</span>
+            <span class="badge badge-{{ $settings['enable_birthdays'] ? 'success' : 'light border text-muted' }}">Aniversariantes</span>
+            <span class="badge badge-{{ $settings['enable_grooming'] ? 'success' : 'light border text-muted' }}">Banho e Tosa</span>
             @if($stats['last_run_at'])
                 | Última rotina: <strong>{{ \Carbon\Carbon::parse($stats['last_run_at'])->format('d/m/Y H:i') }}</strong>
             @endif
@@ -48,14 +52,14 @@
     </div>
 @endif
 
-{{-- 7 Indicadores Clicaveis no Topo --}}
+{{-- Indicadores Clicaveis no Topo --}}
 <div class="row mb-3">
     <div class="col-lg-3 col-6 mb-2">
         <a href="{{ route('vaccination-center.index', ['tab' => 'acompanhamento', 'bucket' => 'due_today']) }}" class="text-decoration-none">
             <div class="info-box bg-warning mb-0 {{ $tab === 'acompanhamento' && $bucket === 'due_today' ? 'elevation-3' : '' }}">
                 <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Vencem Hoje</span>
+                    <span class="info-box-text">Vacinas Hoje</span>
                     <span class="info-box-number h5 mb-0">{{ $stats['due_today'] }}</span>
                 </div>
             </div>
@@ -66,30 +70,30 @@
             <div class="info-box bg-danger mb-0 {{ $tab === 'acompanhamento' && $bucket === 'overdue' ? 'elevation-3' : '' }}">
                 <span class="info-box-icon"><i class="fas fa-exclamation-circle"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Em Atraso</span>
+                    <span class="info-box-text">Vacinas em Atraso</span>
                     <span class="info-box-number h5 mb-0">{{ $stats['overdue'] }}</span>
                 </div>
             </div>
         </a>
     </div>
     <div class="col-lg-3 col-6 mb-2">
-        <a href="{{ route('vaccination-center.index', ['tab' => 'acompanhamento', 'bucket' => 'next_7_days']) }}" class="text-decoration-none">
-            <div class="info-box bg-info mb-0 {{ $tab === 'acompanhamento' && $bucket === 'next_7_days' ? 'elevation-3' : '' }}">
-                <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+        <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'today']) }}" class="text-decoration-none">
+            <div class="info-box mb-0 {{ $tab === 'aniversariantes' ? 'elevation-3' : '' }}" style="background-color: #e83e8c; color: #fff;">
+                <span class="info-box-icon"><i class="fas fa-birthday-cake"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Próximos 7 Dias</span>
-                    <span class="info-box-number h5 mb-0">{{ $stats['next_7_days'] }}</span>
+                    <span class="info-box-text">Aniversariantes Hoje</span>
+                    <span class="info-box-number h5 mb-0">{{ $stats['birthdays_today'] ?? 0 }} <small>(Mês: {{ $stats['birthdays_month'] ?? 0 }})</small></span>
                 </div>
             </div>
         </a>
     </div>
     <div class="col-lg-3 col-6 mb-2">
-        <a href="{{ route('vaccination-center.index', ['tab' => 'acompanhamento', 'bucket' => 'next_30_days']) }}" class="text-decoration-none">
-            <div class="info-box bg-primary mb-0 {{ $tab === 'acompanhamento' && $bucket === 'next_30_days' ? 'elevation-3' : '' }}">
-                <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+        <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'today']) }}" class="text-decoration-none">
+            <div class="info-box bg-teal mb-0 {{ $tab === 'banho_tosa' ? 'elevation-3' : '' }}">
+                <span class="info-box-icon"><i class="fas fa-bath"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Próximos 30 Dias</span>
-                    <span class="info-box-number h5 mb-0">{{ $stats['next_30_days'] }}</span>
+                    <span class="info-box-text">Banho e Tosa Hoje</span>
+                    <span class="info-box-number h5 mb-0">{{ $stats['grooming_today'] ?? 0 }} <small>(7d: {{ $stats['grooming_next_7_days'] ?? 0 }})</small></span>
                 </div>
             </div>
         </a>
@@ -135,12 +139,28 @@
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link {{ $tab === 'acompanhamento' ? 'active' : '' }}" href="{{ route('vaccination-center.index', ['tab' => 'acompanhamento', 'bucket' => $bucket]) }}">
-                    <i class="fas fa-syringe mr-1"></i> Acompanhamento de Vacinas
+                    <i class="fas fa-syringe mr-1"></i> Vacinações
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $tab === 'aniversariantes' ? 'active' : '' }}" href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => $bdayBucket]) }}">
+                    <i class="fas fa-birthday-cake mr-1"></i> Aniversariantes (Pets)
+                    @if(($stats['birthdays_today'] ?? 0) > 0)
+                        <span class="badge ml-1" style="background-color: #e83e8c; color: #fff;">{{ $stats['birthdays_today'] }}</span>
+                    @endif
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $tab === 'banho_tosa' ? 'active' : '' }}" href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => $groomBucket]) }}">
+                    <i class="fas fa-bath mr-1"></i> Banho e Tosa
+                    @if(($stats['grooming_today'] ?? 0) > 0)
+                        <span class="badge badge-info ml-1">{{ $stats['grooming_today'] }}</span>
+                    @endif
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ $tab === 'mensagens' ? 'active' : '' }}" href="{{ route('vaccination-center.index', ['tab' => 'mensagens']) }}">
-                    <i class="fab fa-whatsapp mr-1"></i> Histórico e Fila de Mensagens
+                    <i class="fab fa-whatsapp mr-1"></i> Histórico e Fila
                     @if($stats['messages_failed'] > 0)
                         <span class="badge badge-danger ml-1">{{ $stats['messages_failed'] }}</span>
                     @endif
@@ -148,7 +168,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ $tab === 'tutores' ? 'active' : '' }}" href="{{ route('vaccination-center.index', ['tab' => 'tutores']) }}">
-                    <i class="fas fa-user-shield mr-1"></i> Tutores (Telefone / Autorização LGPD)
+                    <i class="fas fa-user-shield mr-1"></i> Tutores (LGPD)
                 </a>
             </li>
             @if($canManageSettings)
@@ -277,22 +297,214 @@
             </div>
             <div class="mt-3">{{ $vaccinations->withQueryString()->links() }}</div>
 
-        {{-- ================= ABA 2: HISTORICO E FILA DE MENSAGENS ================= --}}
-        @elseif($tab === 'mensagens')
+        {{-- ================= ABA: ANIVERSARIANTES DO DIA / MES (PETS) ================= --}}
+        @elseif($tab === 'aniversariantes')
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <div class="btn-group btn-group-sm mb-2">
-                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'all']) }}" class="btn {{ $msgStatus === 'all' ? 'btn-dark' : 'btn-outline-secondary' }}">Todas</a>
-                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'sent']) }}" class="btn {{ $msgStatus === 'sent' ? 'btn-success' : 'btn-outline-secondary' }}">Enviadas ({{ $stats['messages_sent'] }})</a>
-                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'pending']) }}" class="btn {{ $msgStatus === 'pending' ? 'btn-warning' : 'btn-outline-secondary' }}">Aguardando ({{ $stats['messages_pending'] }})</a>
-                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'failed']) }}" class="btn {{ $msgStatus === 'failed' ? 'btn-danger' : 'btn-outline-secondary' }}">Com Falha ({{ $stats['messages_failed'] }})</a>
-                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'cancelled']) }}" class="btn {{ $msgStatus === 'cancelled' ? 'btn-secondary' : 'btn-outline-secondary' }}">Canceladas ({{ $stats['messages_cancelled'] }})</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'today']) }}" class="btn {{ $bdayBucket === 'today' ? 'btn-danger' : 'btn-outline-secondary' }}">Hoje ({{ $stats['birthdays_today'] ?? 0 }})</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'next_7_days']) }}" class="btn {{ $bdayBucket === 'next_7_days' ? 'btn-info' : 'btn-outline-secondary' }}">Próximos 7 Dias</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'aniversariantes', 'bday_bucket' => 'month']) }}" class="btn {{ $bdayBucket === 'month' ? 'btn-primary' : 'btn-outline-secondary' }}">Neste Mês ({{ $stats['birthdays_month'] ?? 0 }})</a>
+                </div>
+                <form method="GET" action="{{ route('vaccination-center.index') }}" class="form-inline mb-2">
+                    <input type="hidden" name="tab" value="aniversariantes">
+                    <input type="hidden" name="bday_bucket" value="{{ $bdayBucket }}">
+                    <input type="text" name="search" value="{{ $search }}" class="form-control form-control-sm mr-1" placeholder="Buscar pet, raça, tutor...">
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Pet / Espécie / Raça</th>
+                            <th>Data de Nascimento</th>
+                            <th>Idade</th>
+                            <th>Tutor / Telefone</th>
+                            <th>Autorização LGPD</th>
+                            <th style="width: 150px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($birthdays as $pet)
+                        @php
+                            $tutor = $pet->tutors->first();
+                            $ageYears = $pet->birth_date ? (int) $pet->birth_date->diffInYears(now()) : null;
+                            $isTodayBday = $pet->birth_date && $pet->birth_date->format('m-d') === now()->format('m-d');
+                        @endphp
+                        <tr>
+                            <td>
+                                <a href="{{ route('pets.show', $pet) }}"><strong>{{ $pet->name }}</strong></a>
+                                @if($isTodayBday)
+                                    <span class="badge ml-1" style="background-color: #e83e8c; color: #fff;">🎂 Hoje!</span>
+                                @endif
+                                <br><small class="text-muted">{{ ucfirst($pet->species ?? '') }} {{ $pet->breed ? '• ' . $pet->breed : '' }}</small>
+                            </td>
+                            <td><strong>{{ $pet->birth_date ? $pet->birth_date->format('d/m/Y') : '-' }}</strong></td>
+                            <td>{{ $ageYears !== null ? ($ageYears <= 0 ? 'Menos de 1 ano' : ($ageYears === 1 ? '1 ano' : "{$ageYears} anos")) : '-' }}</td>
+                            <td>
+                                @if($tutor)
+                                    <a href="{{ route('tutors.show', $tutor) }}">{{ $tutor->name }}</a><br>
+                                    <small class="{{ $tutor->hasValidWhatsAppPhone() ? 'text-muted' : 'text-danger' }}">
+                                        <i class="fas fa-phone-alt mr-1"></i>{{ $tutor->phone ?: 'Sem telefone' }}
+                                    </small>
+                                @else
+                                    <span class="text-danger small">Sem tutor vinculado</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($tutor)
+                                    @if($tutor->whatsapp_opt_in === true)
+                                        <span class="badge badge-success">Autorizado</span>
+                                    @elseif($tutor->whatsapp_opt_in === false)
+                                        <span class="badge badge-danger">Recusado</span>
+                                    @else
+                                        <span class="badge badge-warning">Não confirmado</span>
+                                    @endif
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td class="text-nowrap">
+                                <a href="{{ route('pets.show', $pet) }}" class="btn btn-xs btn-info" title="Cadastro do Animal"><i class="fas fa-paw"></i></a>
+                                @if($tutor)
+                                    <a href="{{ route('tutors.show', $tutor) }}" class="btn btn-xs btn-outline-info" title="Cadastro do Tutor"><i class="fas fa-user"></i></a>
+                                    <button type="button" onclick="openBirthdayWhatsAppModal({{ $pet->id }}, {{ $tutor->id }})" class="btn btn-xs btn-success" title="Enviar Parabéns via WhatsApp">
+                                        <i class="fab fa-whatsapp mr-1"></i>Enviar
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="6" class="text-center text-muted py-4">Nenhum pet aniversariante encontrado neste período.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3">{{ $birthdays->withQueryString()->links() }}</div>
+
+        {{-- ================= ABA: AGENDAMENTOS DE BANHO E TOSA ================= --}}
+        @elseif($tab === 'banho_tosa')
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <div class="btn-group btn-group-sm mb-2">
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'today']) }}" class="btn {{ $groomBucket === 'today' ? 'btn-info' : 'btn-outline-secondary' }}">Hoje ({{ $stats['grooming_today'] ?? 0 }})</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'tomorrow']) }}" class="btn {{ $groomBucket === 'tomorrow' ? 'btn-primary' : 'btn-outline-secondary' }}">Amanhã</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'next_7_days']) }}" class="btn {{ $groomBucket === 'next_7_days' ? 'btn-teal' : 'btn-outline-secondary' }}">Próximos 7 Dias ({{ $stats['grooming_next_7_days'] ?? 0 }})</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'banho_tosa', 'groom_bucket' => 'all']) }}" class="btn {{ $groomBucket === 'all' ? 'btn-dark' : 'btn-outline-secondary' }}">Todos Futuros</a>
+                </div>
+                <form method="GET" action="{{ route('vaccination-center.index') }}" class="form-inline mb-2">
+                    <input type="hidden" name="tab" value="banho_tosa">
+                    <input type="hidden" name="groom_bucket" value="{{ $groomBucket }}">
+                    <input type="text" name="search" value="{{ $search }}" class="form-control form-control-sm mr-1" placeholder="Buscar pet, tutor, serviço...">
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Data / Horário</th>
+                            <th>Animal</th>
+                            <th>Tutor / Telefone</th>
+                            <th>Serviço / Profissional</th>
+                            <th>Status</th>
+                            <th style="width: 150px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($groomings as $appt)
+                        @php
+                            $tutor = $appt->pet?->tutors?->first();
+                            $svcNames = $appt->services->map(fn($s) => $s->service?->name)->filter()->implode(', ') ?: ($appt->reason ?: 'Banho e Tosa');
+                            $hora = $appt->time ? (is_string($appt->time) ? substr($appt->time, 0, 5) : $appt->time->format('H:i')) : '--:--';
+                            $statusLabels = [
+                                'scheduled' => ['Agendado', 'primary'],
+                                'checked_in' => ['Chegou', 'info'],
+                                'in_progress' => ['Em Atendimento', 'warning'],
+                                'completed' => ['Pronto', 'success'],
+                                'delivered' => ['Entregue', 'secondary'],
+                                'cancelled' => ['Cancelado', 'danger'],
+                            ];
+                            $st = $statusLabels[$appt->status] ?? [ucfirst($appt->status ?? ''), 'light'];
+                        @endphp
+                        <tr>
+                            <td>
+                                <strong>{{ $appt->date ? $appt->date->format('d/m/Y') : '-' }}</strong>
+                                <br><span class="badge badge-info">{{ $hora }}</span>
+                            </td>
+                            <td>
+                                @if($appt->pet)
+                                    <a href="{{ route('pets.show', $appt->pet) }}"><strong>{{ $appt->pet->name }}</strong></a>
+                                    <br><small class="text-muted">{{ $appt->pet->breed ?? '' }}</small>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if($tutor)
+                                    <a href="{{ route('tutors.show', $tutor) }}">{{ $tutor->name }}</a><br>
+                                    <small class="{{ $tutor->hasValidWhatsAppPhone() ? 'text-muted' : 'text-danger' }}">
+                                        <i class="fas fa-phone-alt mr-1"></i>{{ $tutor->phone ?: 'Sem telefone' }}
+                                    </small>
+                                    @if($tutor->whatsapp_opt_in === true)
+                                        <span class="badge badge-success ml-1">Opt-in</span>
+                                    @elseif($tutor->whatsapp_opt_in === false)
+                                        <span class="badge badge-danger ml-1">Opt-out</span>
+                                    @endif
+                                @else
+                                    <span class="text-danger small">Sem tutor</span>
+                                @endif
+                            </td>
+                            <td>
+                                <strong>{{ $svcNames }}</strong>
+                                @if($appt->groomer)
+                                    <br><small class="text-muted"><i class="fas fa-user-tag mr-1"></i>{{ $appt->groomer->name }}</small>
+                                @endif
+                            </td>
+                            <td><span class="badge badge-{{ $st[1] }}">{{ $st[0] }}</span></td>
+                            <td class="text-nowrap">
+                                @if($appt->pet)
+                                    <a href="{{ route('pets.show', $appt->pet) }}" class="btn btn-xs btn-info" title="Cadastro do Animal"><i class="fas fa-paw"></i></a>
+                                @endif
+                                @if($tutor)
+                                    <button type="button" onclick="openGroomingWhatsAppModal({{ $appt->id }}, {{ $tutor->id }})" class="btn btn-xs btn-success" title="Enviar Lembrete de Banho e Tosa via WhatsApp">
+                                        <i class="fab fa-whatsapp mr-1"></i>Enviar
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="6" class="text-center text-muted py-4">Nenhum agendamento de Banho e Tosa encontrado neste período.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3">{{ $groomings->withQueryString()->links() }}</div>
+
+        {{-- ================= ABA: HISTORICO E FILA DE MENSAGENS ================= --}}
+        @elseif($tab === 'mensagens')
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                <div class="btn-group btn-group-sm mb-2">
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => $msgStatus, 'msg_category' => 'all']) }}" class="btn {{ $msgCategory === 'all' ? 'btn-primary' : 'btn-outline-secondary' }}">Todas Categorias</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => $msgStatus, 'msg_category' => 'vaccination']) }}" class="btn {{ $msgCategory === 'vaccination' ? 'btn-success' : 'btn-outline-secondary' }}"><i class="fas fa-syringe mr-1"></i>Vacinações</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => $msgStatus, 'msg_category' => 'birthday']) }}" class="btn {{ $msgCategory === 'birthday' ? 'btn-danger' : 'btn-outline-secondary' }}"><i class="fas fa-birthday-cake mr-1"></i>Aniversariantes</a>
+                    <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => $msgStatus, 'msg_category' => 'grooming']) }}" class="btn {{ $msgCategory === 'grooming' ? 'btn-info' : 'btn-outline-secondary' }}"><i class="fas fa-bath mr-1"></i>Banho e Tosa</a>
                 </div>
                 <form method="GET" action="{{ route('vaccination-center.index') }}" class="form-inline mb-2">
                     <input type="hidden" name="tab" value="mensagens">
                     <input type="hidden" name="msg_status" value="{{ $msgStatus }}">
+                    <input type="hidden" name="msg_category" value="{{ $msgCategory }}">
                     <input type="text" name="search" value="{{ $search }}" class="form-control form-control-sm mr-1" placeholder="Buscar pet, tutor, destino...">
                     <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i></button>
                 </form>
+            </div>
+            <div class="btn-group btn-group-sm mb-3">
+                <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'all', 'msg_category' => $msgCategory]) }}" class="btn {{ $msgStatus === 'all' ? 'btn-dark' : 'btn-outline-secondary' }}">Todos Status</a>
+                <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'sent', 'msg_category' => $msgCategory]) }}" class="btn {{ $msgStatus === 'sent' ? 'btn-success' : 'btn-outline-secondary' }}">Enviadas ({{ $stats['messages_sent'] }})</a>
+                <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'pending', 'msg_category' => $msgCategory]) }}" class="btn {{ $msgStatus === 'pending' ? 'btn-warning' : 'btn-outline-secondary' }}">Aguardando ({{ $stats['messages_pending'] }})</a>
+                <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'failed', 'msg_category' => $msgCategory]) }}" class="btn {{ $msgStatus === 'failed' ? 'btn-danger' : 'btn-outline-secondary' }}">Com Falha ({{ $stats['messages_failed'] }})</a>
+                <a href="{{ route('vaccination-center.index', ['tab' => 'mensagens', 'msg_status' => 'cancelled', 'msg_category' => $msgCategory]) }}" class="btn {{ $msgStatus === 'cancelled' ? 'btn-secondary' : 'btn-outline-secondary' }}">Canceladas ({{ $stats['messages_cancelled'] }})</a>
             </div>
 
             <div class="table-responsive">
@@ -300,7 +512,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Animal / Vacina</th>
+                            <th>Categoria / Animal</th>
                             <th>Tutor / Destino</th>
                             <th>Etapa / Ref.</th>
                             <th>Status</th>
@@ -314,8 +526,13 @@
                         <tr>
                             <td>{{ $rem->id }}</td>
                             <td>
-                                <strong>{{ $rem->pet->name ?? '-' }}</strong><br>
-                                <small class="text-muted">{{ $rem->vaccination->vaccine ?? '-' }}</small>
+                                <span class="badge badge-{{ $rem->category === 'birthday' ? 'danger' : ($rem->category === 'grooming' ? 'info' : 'success') }}">{{ $rem->category_label }}</span><br>
+                                <strong>{{ $rem->pet->name ?? '-' }}</strong>
+                                @if($rem->vaccination)
+                                    <br><small class="text-muted">{{ $rem->vaccination->vaccine }}</small>
+                                @elseif($rem->appointment)
+                                    <br><small class="text-muted">{{ $rem->appointment->reason ?: 'Banho e Tosa' }}</small>
+                                @endif
                             </td>
                             <td>
                                 {{ $rem->tutor->name ?? '-' }}<br>
@@ -436,7 +653,7 @@
             </div>
             <div class="mt-3">{{ $tutors->withQueryString()->links() }}</div>
 
-        {{-- ================= ABA 4: CONFIGURACOES E MODELOS (ADMIN) ================= --}}
+        {{-- ================= ABA: CONFIGURACOES E MODELOS (ADMIN) ================= --}}
         @elseif($tab === 'configuracoes' && $canManageSettings)
             <form action="{{ route('vaccination-center.settings.update') }}" method="POST">
                 @csrf
@@ -444,50 +661,97 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card card-light border">
-                            <div class="card-header"><strong><i class="fas fa-sliders-h mr-1"></i>Regras de Envio Automático</strong></div>
+                            <div class="card-header"><strong><i class="fas fa-sliders-h mr-1"></i>Serviços Ativos e Regras de Envio Automático</strong></div>
                             <div class="card-body">
                                 <div class="custom-control custom-switch mb-3">
                                     <input type="checkbox" class="custom-control-input" id="autoSendSwitch" name="auto_send_enabled" value="1" {{ $settings['auto_send_enabled'] ? 'checked' : '' }}>
                                     <label class="custom-control-label font-weight-bold text-success" for="autoSendSwitch">Ativar envio automático diário de WhatsApp</label>
                                     <small class="form-text text-muted">Quando desativado, a rotina diária apenas identifica e prepara lembretes sem disparar mensagens automaticamente.</small>
                                 </div>
-                                <hr>
-                                <div class="custom-control custom-switch mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="rem7Switch" name="remind_7_days_enabled" value="1" {{ $settings['remind_7_days_enabled'] ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="rem7Switch">Ativar lembrete de 7 dias antes</label>
-                                </div>
-                                <div class="custom-control custom-switch mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="remTodaySwitch" name="remind_due_today_enabled" value="1" {{ $settings['remind_due_today_enabled'] ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="remTodaySwitch">Ativar lembrete no dia previsto</label>
-                                </div>
-                                <div class="custom-control custom-switch mb-3">
-                                    <input type="checkbox" class="custom-control-input" id="remOverdueSwitch" name="remind_overdue_enabled" value="1" {{ $settings['remind_overdue_enabled'] ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="remOverdueSwitch">Ativar lembretes de vacinação em atraso</label>
+
+                                <div class="form-group">
+                                    <label>Horário da Rotina Diária (America/Sao_Paulo)</label>
+                                    <input type="time" name="daily_run_time" value="{{ $settings['daily_run_time'] }}" class="form-control" style="max-width: 180px;" required>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Horário Diário (America/Sao_Paulo)</label>
-                                            <input type="time" name="daily_run_time" value="{{ $settings['daily_run_time'] }}" class="form-control" required>
+                                <hr>
+
+                                {{-- SERVICO 1: VACINACOES --}}
+                                <div class="p-3 mb-3 rounded border bg-white">
+                                    <div class="custom-control custom-checkbox mb-2">
+                                        <input type="checkbox" class="custom-control-input" id="enableVacCheck" name="enable_vaccinations" value="1" {{ $settings['enable_vaccinations'] ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-weight-bold text-dark" for="enableVacCheck">
+                                            <i class="fas fa-syringe text-success mr-1"></i> Notificar Vacinações
+                                        </label>
+                                    </div>
+                                    <div class="pl-4">
+                                        <div class="custom-control custom-switch mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="rem7Switch" name="remind_7_days_enabled" value="1" {{ $settings['remind_7_days_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="rem7Switch">Ativar lembrete de 7 dias antes</label>
+                                        </div>
+                                        <div class="custom-control custom-switch mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="rem2Switch" name="remind_2_days_enabled" value="1" {{ $settings['remind_2_days_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="rem2Switch">Ativar lembrete de 2 dias antes</label>
+                                        </div>
+                                        <div class="custom-control custom-switch mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="remTodaySwitch" name="remind_due_today_enabled" value="1" {{ $settings['remind_due_today_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="remTodaySwitch">Ativar lembrete no dia previsto</label>
+                                        </div>
+                                        <div class="custom-control custom-switch mb-3">
+                                            <input type="checkbox" class="custom-control-input" id="remOverdueSwitch" name="remind_overdue_enabled" value="1" {{ $settings['remind_overdue_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="remOverdueSwitch">Ativar lembretes de vacinação em atraso</label>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-0">
+                                                    <label class="small">Intervalo Atraso (dias)</label>
+                                                    <input type="number" name="overdue_interval_days" value="{{ $settings['overdue_interval_days'] }}" min="1" max="90" class="form-control form-control-sm" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-0">
+                                                    <label class="small">Máx. Tentativas</label>
+                                                    <input type="number" name="max_overdue_attempts" value="{{ $settings['max_overdue_attempts'] }}" min="1" max="20" class="form-control form-control-sm" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-0">
+                                                    <label class="small">Janela Máx. (dias)</label>
+                                                    <input type="number" name="overdue_max_age_days" value="{{ $settings['overdue_max_age_days'] }}" min="7" max="1825" class="form-control form-control-sm" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Intervalo de Atraso (dias)</label>
-                                            <input type="number" name="overdue_interval_days" value="{{ $settings['overdue_interval_days'] }}" min="1" max="90" class="form-control" required>
-                                        </div>
+                                </div>
+
+                                {{-- SERVICO 2: ANIVERSARIANTES DO DIA (PETS) --}}
+                                <div class="p-3 mb-3 rounded border bg-white">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="enableBdayCheck" name="enable_birthdays" value="1" {{ $settings['enable_birthdays'] ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-weight-bold text-dark" for="enableBdayCheck">
+                                            <i class="fas fa-birthday-cake mr-1" style="color: #e83e8c;"></i> Notificar Aniversariantes do Dia (Pets)
+                                        </label>
+                                        <small class="form-text text-muted pl-4">Envia automaticamente uma mensagem carinhosa de parabéns ao tutor no dia do aniversário do pet (com proteção contra duplicidade anual).</small>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group mb-0">
-                                            <label>Limite de Tentativas (atraso)</label>
-                                            <input type="number" name="max_overdue_attempts" value="{{ $settings['max_overdue_attempts'] }}" min="1" max="20" class="form-control" required>
-                                        </div>
+                                </div>
+
+                                {{-- SERVICO 3: AGENDAMENTOS DE BANHO E TOSA --}}
+                                <div class="p-3 rounded border bg-white">
+                                    <div class="custom-control custom-checkbox mb-2">
+                                        <input type="checkbox" class="custom-control-input" id="enableGroomCheck" name="enable_grooming" value="1" {{ $settings['enable_grooming'] ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-weight-bold text-dark" for="enableGroomCheck">
+                                            <i class="fas fa-bath text-teal mr-1"></i> Notificar Agendamentos de Banho e Tosa
+                                        </label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group mb-0">
-                                            <label>Janela Máx. Atraso Automático (dias)</label>
-                                            <input type="number" name="overdue_max_age_days" value="{{ $settings['overdue_max_age_days'] }}" min="7" max="1825" class="form-control" required>
+                                    <div class="pl-4">
+                                        <div class="custom-control custom-switch mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="groom1DaySwitch" name="grooming_remind_1_day_enabled" value="1" {{ $settings['grooming_remind_1_day_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="groom1DaySwitch">Ativar lembrete 1 dia antes do agendamento</label>
+                                        </div>
+                                        <div class="custom-control custom-switch mb-0">
+                                            <input type="checkbox" class="custom-control-input" id="groomTodaySwitch" name="grooming_remind_today_enabled" value="1" {{ $settings['grooming_remind_today_enabled'] ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="groomTodaySwitch">Ativar lembrete no dia do agendamento</label>
                                         </div>
                                     </div>
                                 </div>
@@ -508,23 +772,55 @@
 
                     <div class="col-md-6">
                         <div class="card card-light border">
-                            <div class="card-header"><strong><i class="fas fa-comment-dots mr-1"></i>Modelos de Mensagens Editáveis</strong></div>
+                            <div class="card-header"><strong><i class="fas fa-syringe text-success mr-1"></i>Modelos de Mensagens — Vacinações</strong></div>
                             <div class="card-body">
                                 <p class="small text-muted mb-2">
                                     Variáveis disponíveis:
                                     <code>{NOME_TUTOR}</code> <code>{NOME_ANIMAL}</code> <code>{NOME_VACINA}</code> <code>{DATA_VACINACAO}</code> <code>{CLINICA}</code> <code>{LABORATORIO}</code> <code>{DATA_APLICACAO}</code>
                                 </p>
                                 <div class="form-group">
-                                    <label>1. Modelo — 7 Dias Antes</label>
-                                    <textarea name="template_7_days" rows="6" class="form-control" required>{{ $settings['template_7_days'] }}</textarea>
+                                    <label>1. Vacinação — 7 Dias Antes</label>
+                                    <textarea name="template_7_days" rows="4" class="form-control" required>{{ $settings['template_7_days'] }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label>2. Modelo — No Dia Previsto</label>
-                                    <textarea name="template_due_today" rows="6" class="form-control" required>{{ $settings['template_due_today'] }}</textarea>
+                                    <label>2. Vacinação — 2 Dias Antes</label>
+                                    <textarea name="template_2_days" rows="4" class="form-control" required>{{ $settings['template_2_days'] }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>3. Vacinação — No Dia Previsto</label>
+                                    <textarea name="template_due_today" rows="4" class="form-control" required>{{ $settings['template_due_today'] }}</textarea>
                                 </div>
                                 <div class="form-group mb-0">
-                                    <label>3. Modelo — Vacinação em Atraso</label>
-                                    <textarea name="template_overdue" rows="6" class="form-control" required>{{ $settings['template_overdue'] }}</textarea>
+                                    <label>4. Vacinação — Em Atraso</label>
+                                    <textarea name="template_overdue" rows="4" class="form-control" required>{{ $settings['template_overdue'] }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-light border">
+                            <div class="card-header"><strong><i class="fas fa-birthday-cake mr-1" style="color: #e83e8c;"></i>Modelo de Mensagem — Aniversariante do Dia (Pet)</strong></div>
+                            <div class="card-body">
+                                <p class="small text-muted mb-2">
+                                    Variáveis disponíveis:
+                                    <code>{NOME_TUTOR}</code> <code>{NOME_ANIMAL}</code> <code>{DATA_NASCIMENTO}</code> <code>{IDADE_ANIMAL}</code> <code>{CLINICA}</code>
+                                </p>
+                                <div class="form-group mb-0">
+                                    <label>5. Felicitação de Aniversário (Pet)</label>
+                                    <textarea name="template_birthday" rows="5" class="form-control" required>{{ $settings['template_birthday'] }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-light border">
+                            <div class="card-header"><strong><i class="fas fa-bath text-teal mr-1"></i>Modelo de Mensagem — Agendamento de Banho e Tosa</strong></div>
+                            <div class="card-body">
+                                <p class="small text-muted mb-2">
+                                    Variáveis disponíveis:
+                                    <code>{NOME_TUTOR}</code> <code>{NOME_ANIMAL}</code> <code>{DATA_AGENDAMENTO}</code> <code>{HORARIO_AGENDAMENTO}</code> <code>{SERVICO_BANHO_TOSA}</code> <code>{PROFISSIONAL}</code> <code>{CLINICA}</code>
+                                </p>
+                                <div class="form-group mb-0">
+                                    <label>6. Lembrete de Banho e Tosa</label>
+                                    <textarea name="template_grooming" rows="5" class="form-control" required>{{ $settings['template_grooming'] }}</textarea>
                                 </div>
                             </div>
                         </div>

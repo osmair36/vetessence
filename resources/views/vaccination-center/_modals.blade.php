@@ -6,7 +6,7 @@
                 @csrf
                 <input type="hidden" name="reminder_type" id="waReminderType" value="manual">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title"><i class="fab fa-whatsapp mr-2"></i>Enviar Lembrete de Vacinação via WhatsApp</h5>
+                    <h5 class="modal-title" id="waModalTitle"><i class="fab fa-whatsapp mr-2"></i>Enviar Mensagem via WhatsApp</h5>
                     <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -130,20 +130,45 @@
 
     const previewBaseUrl = "{{ url('/central-vacinas/preview') }}";
     const sendBaseUrl = "{{ url('/central-vacinas/send-manual') }}";
+    const previewBirthdayUrl = "{{ url('/central-vacinas/preview-birthday') }}";
+    const sendBirthdayUrl = "{{ url('/central-vacinas/send-manual-birthday') }}";
+    const previewGroomingUrl = "{{ url('/central-vacinas/preview-grooming') }}";
+    const sendGroomingUrl = "{{ url('/central-vacinas/send-manual-grooming') }}";
     const contactBaseUrl = "{{ url('/central-vacinas/register-contact') }}";
-    let currentVaccinationId = null;
 
-    window.openWhatsAppPreviewModal = function(vaccinationId, tutorId) {
-        currentVaccinationId = vaccinationId;
+    let currentMode = 'vaccination';
+    let currentTargetId = null;
+
+    function loadWhatsAppPreview(mode, targetId, tutorId) {
+        currentMode = mode;
+        currentTargetId = targetId;
+
+        const titles = {
+            vaccination: '<i class="fab fa-whatsapp mr-2"></i>Enviar Lembrete de Vacinação via WhatsApp',
+            birthday: '<i class="fas fa-birthday-cake mr-2"></i>Enviar Parabéns ao Aniversariante via WhatsApp',
+            grooming: '<i class="fas fa-bath mr-2"></i>Enviar Lembrete de Banho e Tosa via WhatsApp'
+        };
+        const previewUrls = {
+            vaccination: previewBaseUrl,
+            birthday: previewBirthdayUrl,
+            grooming: previewGroomingUrl
+        };
+        const sendUrls = {
+            vaccination: sendBaseUrl,
+            birthday: sendBirthdayUrl,
+            grooming: sendGroomingUrl
+        };
+
         const modal = $('#waPreviewModal');
+        $('#waModalTitle').html(titles[mode] || titles.vaccination);
         $('#waPreviewLoading').removeClass('d-none');
         $('#waPreviewError').addClass('d-none').text('');
         $('#waPreviewContent').addClass('d-none');
         $('#waConfirmSendBtn').prop('disabled', true);
-        $('#waPreviewForm').attr('action', sendBaseUrl + '/' + vaccinationId);
+        $('#waPreviewForm').attr('action', sendUrls[mode] + '/' + targetId);
         modal.modal('show');
 
-        let url = previewBaseUrl + '/' + vaccinationId;
+        let url = previewUrls[mode] + '/' + targetId;
         if (tutorId) url += '?tutor_id=' + encodeURIComponent(tutorId);
 
         fetch(url, { headers: { 'Accept': 'application/json' } })
@@ -200,11 +225,23 @@
                 $('#waPreviewLoading').addClass('d-none');
                 $('#waPreviewError').removeClass('d-none').text('Erro de comunicação ao carregar a pré-visualização.');
             });
+    }
+
+    window.openWhatsAppPreviewModal = function(vaccinationId, tutorId) {
+        loadWhatsAppPreview('vaccination', vaccinationId, tutorId);
+    };
+
+    window.openBirthdayWhatsAppModal = function(petId, tutorId) {
+        loadWhatsAppPreview('birthday', petId, tutorId);
+    };
+
+    window.openGroomingWhatsAppModal = function(appointmentId, tutorId) {
+        loadWhatsAppPreview('grooming', appointmentId, tutorId);
     };
 
     $(document).on('change', '#waTutorSelect', function() {
-        if (currentVaccinationId) {
-            window.openWhatsAppPreviewModal(currentVaccinationId, $(this).val());
+        if (currentTargetId) {
+            loadWhatsAppPreview(currentMode, currentTargetId, $(this).val());
         }
     });
 

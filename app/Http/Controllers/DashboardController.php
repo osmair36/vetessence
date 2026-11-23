@@ -19,6 +19,8 @@ class DashboardController extends Controller
     {
         $vaccineStats = $vaccineCenter->getDashboardStats();
         $todayVaccinations = $vaccineCenter->getTodayVaccinations(15);
+        $todayBirthdays = $vaccineCenter->getTodayBirthdays(10);
+        $todayGroomings = $vaccineCenter->getTodayGroomingAppointments(10);
         // Stats
         $stats = [
             'todayAppointments' => Appointment::where('date', today())
@@ -45,7 +47,9 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'stats',
             'vaccineStats',
-            'todayVaccinations'
+            'todayVaccinations',
+            'todayBirthdays',
+            'todayGroomings'
         ));
     }
 }

@@ -33,7 +33,7 @@ class ProcessVaccinationRemindersCommand extends Command
 
         try {
             $today = Carbon::now('America/Sao_Paulo')->startOfDay();
-            $this->info('=== CENTRAL AUTOMATIZADA DE LEMBRETES DE VACINACAO ===');
+            $this->info('=== CENTRAL AUTOMATIZADA DE LEMBRETES E NOTIFICACOES WHATSAPP ===');
             $this->line('Data de referencia (America/Sao_Paulo): ' . $today->format('d/m/Y'));
 
             $prep = null;
@@ -42,9 +42,13 @@ class ProcessVaccinationRemindersCommand extends Command
                 $this->table(
                     ['Etapa de Identificacao / Preparacao', 'Qtd'],
                     [
-                        ['Verificadas: 7 dias antes', $prep['checked_7_days']],
-                        ['Verificadas: vencem hoje', $prep['checked_due_today']],
-                        ['Verificadas: em atraso (janela configurada)', $prep['checked_overdue']],
+                        ['Vacinas verificadas: 7 dias antes', $prep['checked_7_days']],
+                        ['Vacinas verificadas: 2 dias antes', $prep['checked_2_days']],
+                        ['Vacinas verificadas: vencem hoje', $prep['checked_due_today']],
+                        ['Vacinas verificadas: em atraso (janela configurada)', $prep['checked_overdue']],
+                        ['Aniversariantes do dia (Pets) verificados', $prep['checked_birthdays']],
+                        ['Banho e Tosa verificados (1 dia antes)', $prep['checked_grooming_1_day']],
+                        ['Banho e Tosa verificados (hoje)', $prep['checked_grooming_today']],
                         ['Novos lembretes preparados', $prep['prepared']],
                         ['Ignorados: ja preparados/enviados (duplicidade evitada)', $prep['skipped_duplicate']],
                         ['Ignorados: tutor sem autorizacao WhatsApp (LGPD)', $prep['skipped_no_opt_in']],
