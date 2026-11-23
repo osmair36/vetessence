@@ -107,6 +107,21 @@ class ApplicationScheduleServiceTest extends TestCase
             $table->timestamps();
         });
 
+        Schema::create('tutors', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('phone')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('pet_tutor', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('pet_id');
+            $table->unsignedBigInteger('tutor_id');
+            $table->boolean('is_primary')->default(true);
+            $table->string('relationship')->nullable();
+        });
+
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id')->nullable();
@@ -705,5 +720,53 @@ class ApplicationScheduleServiceTest extends TestCase
         $this->assertTrue(Schema::hasColumn('vaccine_protocols', 'interval_value'));
         $this->assertTrue(Schema::hasColumn('parasite_controls', 'product_id'));
         $this->assertTrue(Schema::hasColumn('medication_administrations', 'next_application_date'));
+    }
+
+    // 16. Formulários de criar/editar vacina oferecem seleção pesquisável correlacionada à espécie do Pet
+    public function test_16_vaccination_create_and_edit_expose_searchable_species_correlated_vaccines(): void
+    {
+        $dog = $this->makePet(['name' => 'Rex', 'species' => 'canine']);
+        $cat = $this->makePet(['name' => 'Mimi', 'species' => 'feline']);
+
+        VaccineProtocol::create([
+            'species' => 'canine',
+            'vaccine_name' => 'V10 (Polivalente)',
+            'is_initial' => false,
+            'booster_interval_months' => 12,
+            'is_active' => true,
+        ]);
+        VaccineProtocol::create([
+            'species' => 'feline',
+            'vaccine_name' => 'FeLV (Leucemia Felina)',
+            'is_initial' => false,
+            'booster_interval_months' => 12,
+            'is_active' => true,
+        ]);
+
+        $vac = Vaccination::create([
+            'pet_id' => $dog->id,
+            'vet_id' => $this->vet->id,
+            'vaccine' => 'V10 ADULTO',
+            'date' => '2026-06-01',
+            'next_date' => '2027-06-01',
+        ]);
+
+        // Tela de cadastro
+        $createRes = $this->actingAs($this->vet)->get(route('vaccinations.create'));
+        $createRes->assertOk();
+        $createRes->assertSee('id="vac_vaccine"', false);
+        $createRes->assertSee('data-create="true"', false);
+        $createRes->assertSee('V10 (Polivalente)', false);
+        $createRes->assertSee('FeLV (Leucemia Felina)', false);
+        $createRes->assertSee('V10 ADULTO', false);
+        $createRes->assertSee('data-species="canine"', false);
+        $createRes->assertSee('data-species="feline"', false);
+
+        // Tela de edição
+        $editRes = $this->actingAs($this->vet)->get(route('vaccinations.edit', $vac));
+        $editRes->assertOk();
+        $editRes->assertSee('id="vac_vaccine"', false);
+        $editRes->assertSee('V10 ADULTO', false);
+        $editRes->assertSee('V10 (Polivalente)', false);
     }
 }

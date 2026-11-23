@@ -67,8 +67,9 @@ class VaccinationController extends Controller
             ?? ($request->pet_id ? Pet::find($request->pet_id) : null);
         $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
         $laboratories = $this->getKnownLaboratories();
+        $vaccineOptions = $this->getKnownVaccineOptions();
 
-        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories', 'completingVaccination'));
+        return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories', 'completingVaccination', 'vaccineOptions'));
     }
 
     public function store(Request $request)
@@ -142,8 +143,9 @@ class VaccinationController extends Controller
         $veterinarians = $this->getVeterinarians();
         $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
         $laboratories = $this->getKnownLaboratories();
+        $vaccineOptions = $this->getKnownVaccineOptions($vaccination->vaccine);
 
-        return view('vaccinations.edit', compact('vaccination', 'pets', 'veterinarians', 'products', 'laboratories'));
+        return view('vaccinations.edit', compact('vaccination', 'pets', 'veterinarians', 'products', 'laboratories', 'vaccineOptions'));
     }
 
     public function update(Request $request, Vaccination $vaccination)
@@ -318,6 +320,102 @@ class VaccinationController extends Controller
             ->where(fn($q) => $q->whereHas('role', fn($q) => $q->where('slug', 'veterinario'))->orWhere('is_veterinarian', true))
             ->orderBy('name')
             ->get();
+    }
+
+    protected function getKnownVaccineOptions(?string $ensureIncluded = null): array
+    {
+        $options = [];
+        $seenKeys = [];
+
+        $addOption = function (string $name, string $species, string $source, ?int $productId = null) use (&$options, &$seenKeys) {
+            $cleanName = trim($name);
+            if ($cleanName === '') {
+                return;
+            }
+            $normSpecies = trim(mb_strtolower($species)) ?: 'all';
+            $key = mb_strtolower($cleanName) . '|' . $normSpecies;
+            if (isset($seenKeys[$key])) {
+                return;
+            }
+            $seenKeys[$key] = true;
+            $options[] = [
+                'name' => $cleanName,
+                'species' => $normSpecies,
+                'source' => $source,
+                'product_id' => $productId,
+            ];
+        };
+
+        // 1. Protocolos cadastrados e ativos (correlacionados por espécie)
+        if (\Illuminate\Support\Facades\Schema::hasTable('vaccine_protocols')) {
+            $protocols = \App\Models\VaccineProtocol::where('is_active', true)
+                ->orderBy('is_core', 'desc')
+                ->orderBy('vaccine_name')
+                ->get();
+
+            foreach ($protocols as $proto) {
+                $addOption(
+                    (string) $proto->vaccine_name,
+                    (string) ($proto->species ?: 'all'),
+                    'protocol',
+                    $proto->product_id ? (int) $proto->product_id : null
+                );
+            }
+        }
+
+        // 2. Vacinas já registradas no histórico da clínica (com inferência de espécie pelo uso real)
+        if (\Illuminate\Support\Facades\Schema::hasTable('vaccinations')) {
+            $rows = DB::table('vaccinations as v')
+                ->leftJoin('pets as p', 'p.id', '=', 'v.pet_id')
+                ->whereNotNull('v.vaccine')
+                ->whereRaw("TRIM(v.vaccine) != ''")
+                ->selectRaw('TRIM(v.vaccine) as vaccine_name, LOWER(COALESCE(p.species, "")) as species, COUNT(*) as total')
+                ->groupBy('vaccine_name', 'species')
+                ->orderByDesc('total')
+                ->get();
+
+            $byName = [];
+            foreach ($rows as $row) {
+                $vName = trim((string) $row->vaccine_name);
+                if ($vName === '') {
+                    continue;
+                }
+                $sp = trim((string) $row->species);
+                if (!isset($byName[$vName])) {
+                    $byName[$vName] = ['total' => 0, 'species' => []];
+                }
+                $byName[$vName]['total'] += (int) $row->total;
+                if ($sp !== '') {
+                    $byName[$vName]['species'][$sp] = ($byName[$vName]['species'][$sp] ?? 0) + (int) $row->total;
+                }
+            }
+
+            uasort($byName, fn ($a, $b) => $b['total'] <=> $a['total']);
+
+            foreach ($byName as $vName => $info) {
+                $speciesList = $info['species'];
+                arsort($speciesList);
+                $inferredSpecies = 'all';
+                if (count($speciesList) === 1) {
+                    $inferredSpecies = (string) array_key_first($speciesList);
+                } elseif (count($speciesList) > 1) {
+                    $topSpecies = (string) array_key_first($speciesList);
+                    $topCount = (int) reset($speciesList);
+                    // Se >= 95% das aplicações foram em uma única espécie, correlaciona com ela
+                    if ($info['total'] > 0 && ($topCount / $info['total']) >= 0.95) {
+                        $inferredSpecies = $topSpecies;
+                    }
+                }
+                $addOption($vName, $inferredSpecies, 'history', null);
+            }
+        }
+
+        // 3. Garante que o valor atual em edição esteja sempre presente
+        if ($ensureIncluded !== null && trim($ensureIncluded) !== '') {
+            $addOption($ensureIncluded, 'all', 'current', null);
+        }
+
+        return $options;
     }
 
     protected function getKnownLaboratories(): array

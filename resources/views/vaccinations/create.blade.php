@@ -20,7 +20,7 @@
                         <label>Pet *</label>
                         <x-tom-select name="pet_id" :value="old('pet_id', $selectedPet->id ?? '')" required>
                             @foreach($pets as $pet)
-                            <option value="{{ $pet->id }}" {{ old('pet_id', $selectedPet->id ?? '') == $pet->id ? 'selected' : '' }}>{{ $pet->name }} - {{ $pet->tutors->first()->name ?? 'Sem tutor' }}</option>
+                            <option value="{{ $pet->id }}" data-species="{{ $pet->species ?? '' }}" {{ old('pet_id', $selectedPet->id ?? '') == $pet->id ? 'selected' : '' }}>{{ $pet->name }} - {{ $pet->tutors->first()->name ?? 'Sem tutor' }}</option>
                             @endforeach
                         </x-tom-select>
                         @error('pet_id')<span class="text-danger small">{{ $message }}</span>@enderror
@@ -29,8 +29,28 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Vacina *</label>
-                                <input type="text" name="vaccine" value="{{ old('vaccine', $completingVaccination->vaccine ?? '') }}" required class="form-control @error('vaccine') is-invalid @enderror" placeholder="Ex: V10 Filhote, Antirrábica, Giardia">
-                                @error('vaccine')<span class="invalid-feedback">{{ $message }}</span>@enderror
+                                @php
+                                    $selectedVaccine = old('vaccine', $completingVaccination->vaccine ?? '');
+                                    $seenVacNames = [];
+                                @endphp
+                                <select name="vaccine" id="vac_vaccine" required class="form-control tom-select @error('vaccine') is-invalid @enderror" data-create="true" data-max-options="200" data-placeholder="Clique ou digite parte do nome da vacina...">
+                                    <option value="">Clique ou digite parte do nome da vacina...</option>
+                                    @foreach(($vaccineOptions ?? []) as $opt)
+                                        @php
+                                            $vKey = mb_strtolower($opt['name']);
+                                            if (isset($seenVacNames[$vKey])) continue;
+                                            $seenVacNames[$vKey] = true;
+                                        @endphp
+                                        <option value="{{ $opt['name'] }}" {{ $selectedVaccine === $opt['name'] ? 'selected' : '' }}>
+                                            {{ $opt['name'] }}{{ ($opt['source'] ?? '') === 'protocol' ? ' (Protocolo)' : '' }}
+                                        </option>
+                                    @endforeach
+                                    @if($selectedVaccine !== '' && !isset($seenVacNames[mb_strtolower($selectedVaccine)]))
+                                        <option value="{{ $selectedVaccine }}" selected>{{ $selectedVaccine }}</option>
+                                    @endif
+                                </select>
+                                <small id="vac_vaccine_hint" class="form-text text-muted">Clique para listar as vacinas existentes ou digite parte do nome para filtrar.</small>
+                                @error('vaccine')<span class="invalid-feedback d-block">{{ $message }}</span>@enderror
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -43,7 +63,7 @@
                     </div>
                     <div class="form-group">
                         <label>Produto (para protocolo e baixa de estoque)</label>
-                        <select name="product_id" id="vac_product_id" class="form-control">
+                        <select name="product_id" id="vac_product_id" class="form-control tom-select" data-max-options="150" data-placeholder="— Sem produto —">
                             <option value="">— Sem produto —</option>
                             @foreach($products as $p)
                             <option value="{{ $p->id }}" data-name="{{ $p->name }}" data-price="{{ $p->sale_price }}" {{ old('product_id') == $p->id ? 'selected' : '' }}>
@@ -115,6 +135,11 @@
         </form>
     </div>
 </div>
+@include('vaccinations._vaccine-autocomplete-script', [
+    'vaccineOptions' => $vaccineOptions ?? [],
+    'petSpeciesMap' => $pets->pluck('species', 'id'),
+    'fixedPetSpecies' => null,
+])
 @include('partials.application-schedule-script', [
     'scheduleConfig' => [
         'context' => 'vaccination',

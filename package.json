@@ -35,7 +35,7 @@
                          "tinymce":  "^8.6.0"
                      },
     "name":  "vetessence",
-    "version": "1.14.0",
+    "version": "1.14.1",
     "description":  "\u003cp align=\"center\"\u003e\u003ca href=\"https://laravel.com\" target=\"_blank\"\u003e\u003cimg src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"\u003e\u003c/a\u003e\u003c/p\u003e",
     "main":  "postcss.config.js",
     "directories":  {

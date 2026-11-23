@@ -50,6 +50,7 @@
 
     function buildTomSelectConfig(el) {
         var isMultiple = el.hasAttribute('multiple');
+        var allowCreate = el.dataset.create === 'true';
         var maxOptAttr = parseInt(el.dataset.maxOptions || '', 10);
         var maxOptions = (!isNaN(maxOptAttr) && maxOptAttr > 0) ? maxOptAttr : DEFAULT_MAX_OPTIONS;
         var ajaxUrl = el.dataset.ajaxUrl || '';
@@ -63,10 +64,15 @@
             hideSelected: false,
             allowEmptyOption: !isMultiple,
             diacritics: true,
+            create: allowCreate,
+            createOnBlur: allowCreate,
             render: {
                 no_results: function (data, escape) {
                     var term = (data && data.input) ? ' para "' + escape(data.input) + '"' : '';
                     return '<div class="no-results">Nenhum registro encontrado' + term + '</div>';
+                },
+                option_create: function (data, escape) {
+                    return '<div class="create">Usar <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                 }
             },
             onItemAdd: function () {

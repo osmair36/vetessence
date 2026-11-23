@@ -62,15 +62,35 @@
         }
     }
 
+    function getFieldValue(el) {
+        if (!el) return '';
+        if (el.tomselect) {
+            return String(el.tomselect.getValue() || '').trim();
+        }
+        return String(el.value || '').trim();
+    }
+
+    function setFieldValue(el, val) {
+        if (!el) return;
+        if (el.tomselect) {
+            if (val && !el.tomselect.options[val]) {
+                el.tomselect.addOption({ value: val, text: val });
+            }
+            el.tomselect.setValue(val || '', true);
+        } else {
+            el.value = val || '';
+        }
+    }
+
     function getPetId() {
         if (config.fixedPetId) return config.fixedPetId;
-        return petEl ? petEl.value : '';
+        return getFieldValue(petEl);
     }
 
     function calculate(forceApply = false) {
         const appDate = appDateEl.value ? appDateEl.value.trim() : '';
-        const productId = productEl ? productEl.value : '';
-        const itemName = itemNameEl ? itemNameEl.value.trim() : '';
+        const productId = getFieldValue(productEl);
+        const itemName = getFieldValue(itemNameEl);
         const petId = getPetId();
         const dose = doseEl ? doseEl.value.trim() : '';
 
@@ -110,8 +130,9 @@
 
             // Preenche nome / principio ativo do produto quando selecionado (se campo ainda vazio ou preenchido automaticamente antes)
             if (data.product) {
-                if (itemNameEl && (itemNameEl.value.trim() === '' || itemNameEl.value.trim() === lastAutoProductName)) {
-                    itemNameEl.value = data.product.name;
+                const currentItem = getFieldValue(itemNameEl);
+                if (itemNameEl && (currentItem === '' || currentItem === lastAutoProductName)) {
+                    setFieldValue(itemNameEl, data.product.name);
                     lastAutoProductName = data.product.name;
                 }
                 if (activeIngredientEl && data.product.active_ingredient && activeIngredientEl.value.trim() === '') {
@@ -190,18 +211,19 @@
         }
     });
 
-    // Gatilhos de recálculo
+    // Gatilhos de recálculo (compatível com inputs nativos e TomSelect)
     appDateEl.addEventListener('change', () => scheduleCalculate(true));
     if (petEl) petEl.addEventListener('change', () => scheduleCalculate(true));
     if (productEl) {
         productEl.addEventListener('change', () => {
-            // Preenche nome do produto imediatamente via data-name se disponivel
-            const opt = productEl.options[productEl.selectedIndex];
+            const selectedVal = getFieldValue(productEl);
+            const opt = selectedVal ? productEl.querySelector('option[value="' + CSS.escape(selectedVal) + '"]') : null;
             if (opt && opt.value) {
                 const pName = opt.getAttribute('data-name') || '';
                 const pActive = opt.getAttribute('data-active-ingredient') || '';
-                if (itemNameEl && pName && (itemNameEl.value.trim() === '' || itemNameEl.value.trim() === lastAutoProductName)) {
-                    itemNameEl.value = pName;
+                const currentItem = getFieldValue(itemNameEl);
+                if (itemNameEl && pName && (currentItem === '' || currentItem === lastAutoProductName)) {
+                    setFieldValue(itemNameEl, pName);
                     lastAutoProductName = pName;
                 }
                 if (activeIngredientEl && pActive && activeIngredientEl.value.trim() === '') {
