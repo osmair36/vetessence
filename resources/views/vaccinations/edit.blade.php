@@ -28,11 +28,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Produto (para baixa de estoque)</label>
-                        <select name="product_id" class="form-control">
+                        <label>Produto (para protocolo e baixa de estoque)</label>
+                        <select name="product_id" id="vac_product_id" class="form-control">
                             <option value="">— Sem produto —</option>
                             @foreach($products as $p)
-                            <option value="{{ $p->id }}" {{ old('product_id', $vaccination->product_id) == $p->id ? 'selected' : '' }}>
+                            <option value="{{ $p->id }}" data-name="{{ $p->name }}" {{ old('product_id', $vaccination->product_id) == $p->id ? 'selected' : '' }}>
                                 {{ $p->name }} (estoque: {{ $p->stock }}) — R$ {{ number_format($p->sale_price, 2, ',', '.') }}
                             </option>
                             @endforeach
@@ -42,14 +42,16 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Data de Aplicação *</label>
-                                <input type="date" name="date" value="{{ old('date', $vaccination->date ? $vaccination->date->format('Y-m-d') : '') }}" required class="form-control @error('date') is-invalid @enderror">
+                                <input type="date" name="date" id="vac_date" value="{{ old('date', $vaccination->date ? $vaccination->date->format('Y-m-d') : '') }}" required class="form-control @error('date') is-invalid @enderror">
                                 @error('date')<span class="invalid-feedback">{{ $message }}</span>@enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Próxima Dose</label>
-                                <input type="date" name="next_date" value="{{ old('next_date', $vaccination->next_date ? $vaccination->next_date->format('Y-m-d') : '') }}" class="form-control @error('next_date') is-invalid @enderror">
+                                <input type="date" name="next_date" id="vac_next_date" value="{{ old('next_date', $vaccination->next_date ? $vaccination->next_date->format('Y-m-d') : '') }}" class="form-control @error('next_date') is-invalid @enderror">
+                                <input type="hidden" name="next_date_manual" id="vac_next_date_manual" value="{{ old('next_date', $vaccination->next_date) ? '1' : '0' }}">
+                                <small id="vac_schedule_feedback" class="form-text mt-1"></small>
                                 @error('next_date')<span class="invalid-feedback">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -98,4 +100,19 @@
         </form>
     </div>
 </div>
+@include('partials.application-schedule-script', [
+    'scheduleConfig' => [
+        'context' => 'vaccination',
+        'fixedPetId' => $vaccination->pet_id,
+        'excludeId' => $vaccination->id,
+        'productSelector' => '#vac_product_id',
+        'itemNameSelector' => '[name="vaccine"]',
+        'doseSelector' => '[name="dose"]',
+        'applicationDateSelector' => '#vac_date',
+        'nextDateSelector' => '#vac_next_date',
+        'manualFlagSelector' => '#vac_next_date_manual',
+        'feedbackSelector' => '#vac_schedule_feedback',
+        'initiallyManual' => (bool) old('next_date', $vaccination->next_date),
+    ],
+])
 @endsection

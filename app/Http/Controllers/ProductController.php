@@ -54,8 +54,16 @@ class ProductController extends Controller
             'cost_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'active_ingredient' => 'nullable|string|max:200',
+            'target_species' => 'nullable|string|max:50',
+            'reapplication_interval' => 'nullable|integer|min:1|max:3650',
+            'reapplication_unit' => 'nullable|in:days,weeks,months|required_with:reapplication_interval',
             'is_active' => 'boolean',
         ]);
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('products', 'reapplication_interval')) {
+            unset($validated['active_ingredient'], $validated['target_species'], $validated['reapplication_interval'], $validated['reapplication_unit']);
+        }
 
         Product::create($validated);
 
@@ -82,8 +90,16 @@ class ProductController extends Controller
             'supplier_id' => 'nullable|exists:suppliers,id',
             'cost_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|min:0',
+            'active_ingredient' => 'nullable|string|max:200',
+            'target_species' => 'nullable|string|max:50',
+            'reapplication_interval' => 'nullable|integer|min:1|max:3650',
+            'reapplication_unit' => 'nullable|in:days,weeks,months|required_with:reapplication_interval',
             'is_active' => 'boolean',
         ]);
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('products', 'reapplication_interval')) {
+            unset($validated['active_ingredient'], $validated['target_species'], $validated['reapplication_interval'], $validated['reapplication_unit']);
+        }
 
         $product->update($validated);
 

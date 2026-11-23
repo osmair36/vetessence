@@ -36,17 +36,25 @@ class VaccineProtocolController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'product_id' => 'nullable|exists:products,id',
+            'protocol_type' => 'nullable|in:vaccine,antiparasitic,dewormer,medication,other',
             'species' => 'required|string|max:50',
             'vaccine_name' => 'required|string|max:200',
             'age_start_weeks' => 'nullable|integer|min:0',
             'age_end_weeks' => 'nullable|integer|min:0|gte:age_start_weeks',
             'is_initial' => 'boolean',
             'dose_number' => 'nullable|integer|min:1',
+            'interval_value' => 'nullable|integer|min:1|max:3650',
+            'interval_unit' => 'nullable|in:days,weeks,months|required_with:interval_value',
             'booster_interval_months' => 'nullable|integer|min:1',
             'is_core' => 'boolean',
             'notes' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('vaccine_protocols', 'product_id')) {
+            unset($validated['product_id'], $validated['protocol_type'], $validated['interval_value'], $validated['interval_unit']);
+        }
 
         VaccineProtocol::create($validated);
 
@@ -67,17 +75,25 @@ class VaccineProtocolController extends Controller
     public function update(Request $request, VaccineProtocol $vaccineProtocol)
     {
         $validated = $request->validate([
+            'product_id' => 'nullable|exists:products,id',
+            'protocol_type' => 'nullable|in:vaccine,antiparasitic,dewormer,medication,other',
             'species' => 'required|string|max:50',
             'vaccine_name' => 'required|string|max:200',
             'age_start_weeks' => 'nullable|integer|min:0',
             'age_end_weeks' => 'nullable|integer|min:0|gte:age_start_weeks',
             'is_initial' => 'boolean',
             'dose_number' => 'nullable|integer|min:1',
+            'interval_value' => 'nullable|integer|min:1|max:3650',
+            'interval_unit' => 'nullable|in:days,weeks,months|required_with:interval_value',
             'booster_interval_months' => 'nullable|integer|min:1',
             'is_core' => 'boolean',
             'notes' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('vaccine_protocols', 'product_id')) {
+            unset($validated['product_id'], $validated['protocol_type'], $validated['interval_value'], $validated['interval_unit']);
+        }
 
         $vaccineProtocol->update($validated);
 

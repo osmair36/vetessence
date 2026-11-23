@@ -27,6 +27,10 @@ class ProductForm extends Component
     public $requires_container_tracking = false;
     public $opened_use_days = '';
     public $reconstituted_use_days = '';
+    public $active_ingredient = '';
+    public $target_species = '';
+    public $reapplication_interval = '';
+    public $reapplication_unit = '';
     public $batch_number = '';
     public $lot_number = '';
     public $expiration_date = '';
@@ -53,6 +57,10 @@ class ProductForm extends Component
             'requires_container_tracking' => 'boolean',
             'opened_use_days' => 'nullable|integer|min:1',
             'reconstituted_use_days' => 'nullable|integer|min:1',
+            'active_ingredient' => 'nullable|string|max:200',
+            'target_species' => 'nullable|string|max:50',
+            'reapplication_interval' => 'nullable|integer|min:1|max:3650',
+            'reapplication_unit' => 'nullable|in:days,weeks,months|required_with:reapplication_interval',
             'is_active' => 'boolean',
         ];
         if (!$this->productId) {
@@ -88,6 +96,10 @@ class ProductForm extends Component
         $this->requires_container_tracking = (bool) $product->requires_container_tracking;
         $this->opened_use_days = (string) ($product->opened_use_days ?? '');
         $this->reconstituted_use_days = (string) ($product->reconstituted_use_days ?? '');
+        $this->active_ingredient = (string) ($product->active_ingredient ?? '');
+        $this->target_species = (string) ($product->target_species ?? '');
+        $this->reapplication_interval = (string) ($product->reapplication_interval ?? '');
+        $this->reapplication_unit = (string) ($product->reapplication_unit ?? '');
         $this->batch_number = $product->batch_number ?? '';
         $this->lot_number = $product->lot_number ?? '';
         $this->expiration_date = $product->expiration_date ? $product->expiration_date->format('Y-m-d') : '';
@@ -115,6 +127,10 @@ class ProductForm extends Component
         $this->requires_container_tracking = false;
         $this->opened_use_days = '';
         $this->reconstituted_use_days = '';
+        $this->active_ingredient = '';
+        $this->target_species = '';
+        $this->reapplication_interval = '';
+        $this->reapplication_unit = '';
         $this->stock = '';
         $this->batch_number = '';
         $this->lot_number = '';
@@ -155,6 +171,13 @@ class ProductForm extends Component
             'expiration_date' => $this->expiration_date ?: null,
             'is_active' => $this->is_active,
         ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('products', 'reapplication_interval')) {
+            $data['active_ingredient'] = $this->active_ingredient ?: null;
+            $data['target_species'] = $this->target_species ?: null;
+            $data['reapplication_interval'] = $this->reapplication_interval !== '' ? (int) $this->reapplication_interval : null;
+            $data['reapplication_unit'] = $this->reapplication_interval !== '' ? ($this->reapplication_unit ?: null) : null;
+        }
 
         if ($this->productId) {
             unset($data['stock']);

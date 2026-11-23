@@ -60,14 +60,31 @@ class MedicationReservationController extends Controller
             'quantity_administered' => ['required', 'numeric', 'gt:0'],
             'route' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
+            'administered_at' => ['nullable', 'date'],
+            'next_application_date' => ['nullable', 'date'],
+            'next_application_date_manual' => ['nullable', 'boolean'],
         ]);
         $product = $reservation->product;
+        $administeredAt = !empty($data['administered_at'])
+            ? \Carbon\Carbon::parse($data['administered_at'])
+            : now();
+
+        $nextAppDate = app(\App\Services\ApplicationScheduleService::class)->resolveNextDateForPersistence(
+            $data['next_application_date'] ?? null,
+            (bool) ($data['next_application_date_manual'] ?? false),
+            $administeredAt,
+            $product,
+            $reservation->pet,
+            $product?->name,
+            'medication'
+        );
+
         $movement = $inventory->consume($product, (float) $data['quantity_administered'], $reservation->unit, [
             'reference' => 'reservation:' . $reservation->id,
             'reason' => 'administration',
         ]);
-        $administration = DB::transaction(function () use ($request, $reservation, $data, $movement) {
-            $record = MedicationAdministration::create([
+        $administration = DB::transaction(function () use ($request, $reservation, $data, $movement, $administeredAt, $nextAppDate) {
+            $payload = [
                 'product_id' => $reservation->product_id,
                 'inventory_batch_id' => $movement->inventory_batch_id,
                 'inventory_container_id' => $movement->inventory_container_id,
@@ -80,9 +97,13 @@ class MedicationReservationController extends Controller
                 'unit' => $reservation->unit,
                 'route' => $data['route'] ?? null,
                 'notes' => $data['notes'] ?? null,
-                'administered_at' => now(),
+                'administered_at' => $administeredAt,
                 'branch_id' => $reservation->branch_id,
-            ]);
+            ];
+            if (\Illuminate\Support\Facades\Schema::hasColumn('medication_administrations', 'next_application_date')) {
+                $payload['next_application_date'] = $nextAppDate;
+            }
+            $record = MedicationAdministration::create($payload);
             $reservation->update(['status' => 'consumed']);
             return $record;
         });

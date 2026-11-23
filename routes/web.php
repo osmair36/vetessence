@@ -116,6 +116,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('medical-records/{medicalRecord}/generate-invoice', 'App\Http\Controllers\MedicalRecordController@generateInvoice')
         ->name('medical-records.generate-invoice');
 
+    // Application Schedule (cálculo automático de próxima aplicação de produtos veterinários)
+    Route::post('application-schedule/calculate', [\App\Http\Controllers\ApplicationScheduleController::class, 'calculate'])
+        ->name('application-schedule.calculate');
+
     // Vaccinations
     Route::get('vaccinations/report/print', 'App\Http\Controllers\VaccinationController@reportPrint')->name('vaccinations.report.print');
     Route::get('vaccinations/report/pdf', 'App\Http\Controllers\VaccinationController@reportPdf')->name('vaccinations.report.pdf');

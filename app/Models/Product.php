@@ -17,6 +17,7 @@ class Product extends Model
         'sale_price', 'fractional_cost_price', 'fractional_sale_price', 'stock', 'min_stock', 'max_stock',
         'stock_unit', 'dispensing_unit', 'package_quantity', 'allows_fractional',
         'requires_container_tracking', 'opened_use_days', 'reconstituted_use_days',
+        'active_ingredient', 'target_species', 'reapplication_interval', 'reapplication_unit',
         'expiration_date', 'is_active',
         'ncm', 'cest', 'cfop', 'cst', 'csosn', 'ibpt_percentage',
         'weight_kg', 'icms_origin', 'icms_cst', 'icms_modbc',
@@ -38,6 +39,7 @@ class Product extends Model
         'requires_container_tracking' => 'boolean',
         'opened_use_days' => 'integer',
         'reconstituted_use_days' => 'integer',
+        'reapplication_interval' => 'integer',
         'expiration_date' => 'date',
         'is_active' => 'boolean',
         'ibpt_percentage' => 'decimal:2',
@@ -67,6 +69,11 @@ class Product extends Model
     public function movements(): HasMany
     {
         return $this->hasMany(StockMovement::class);
+    }
+
+    public function protocols(): HasMany
+    {
+        return $this->hasMany(VaccineProtocol::class, 'product_id');
     }
 
     public function getIsLowStockAttribute(): bool

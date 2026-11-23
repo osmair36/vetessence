@@ -10,16 +10,26 @@ class VaccineProtocol extends Model
     use HasFactory;
 
     protected $fillable = [
-        'species', 'vaccine_name', 'age_start_weeks', 'age_end_weeks',
-        'is_initial', 'dose_number', 'booster_interval_months',
+        'product_id', 'protocol_type', 'species', 'vaccine_name', 'age_start_weeks', 'age_end_weeks',
+        'is_initial', 'dose_number', 'interval_value', 'interval_unit', 'booster_interval_months',
         'is_core', 'notes', 'is_active',
     ];
 
     protected $casts = [
+        'age_start_weeks' => 'integer',
+        'age_end_weeks' => 'integer',
+        'dose_number' => 'integer',
+        'interval_value' => 'integer',
+        'booster_interval_months' => 'integer',
         'is_initial' => 'boolean',
         'is_core' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 
     public function scopeForSpecies($query, $species)
     {

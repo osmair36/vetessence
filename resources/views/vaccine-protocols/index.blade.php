@@ -62,7 +62,18 @@
                     <td>{{ $p->age_start_weeks ? $p->age_start_weeks . ' sem' : '-' }}</td>
                     <td>{{ $p->age_end_weeks ? $p->age_end_weeks . ' sem' : '-' }}</td>
                     <td>{{ $p->is_initial ? $p->dose_number . 'ª dose' : 'Reforço' }}</td>
-                    <td>{{ $p->booster_interval_months ? $p->booster_interval_months . ' meses' : '-' }}</td>
+                    <td>
+                        @php
+                            $unitLabels = ['days' => 'dias', 'weeks' => 'semanas', 'months' => 'meses'];
+                        @endphp
+                        @if(!empty($p->interval_value) && !empty($p->interval_unit))
+                            {{ $p->interval_value }} {{ $unitLabels[$p->interval_unit] ?? $p->interval_unit }}
+                        @elseif($p->booster_interval_months)
+                            {{ $p->booster_interval_months }} meses
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         @if($p->is_core)
                             <span class="badge badge-primary">Essencial</span>

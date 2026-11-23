@@ -123,6 +123,52 @@
             </div>
         </div>
 
+        <div class="border rounded p-2 mb-3 bg-light">
+            <small class="font-weight-bold text-muted d-block mb-2">
+                <i class="fas fa-calendar-check mr-1"></i> Protocolo de Reaplicação (Opcional — para cálculo automático da próxima data)
+            </small>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="small mb-1">Princípio Ativo</label>
+                        <input type="text" wire:model="active_ingredient" class="form-control form-control-sm" placeholder="Ex: Sarolaner, Afoxolaner, Praziquantel">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="small mb-1">Espécie Indicada</label>
+                        <select wire:model="target_species" class="form-control form-control-sm">
+                            <option value="">Todas as espécies</option>
+                            @foreach((config('species') ?? []) as $key => $label)
+                                <option value="{{ $key }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-0">
+                        <label class="small mb-1">Intervalo de Reaplicação</label>
+                        <input type="number" min="1" max="3650" wire:model="reapplication_interval" class="form-control form-control-sm @error('reapplication_interval') is-invalid @enderror" placeholder="Ex: 30, 60, 3, 12">
+                        @error('reapplication_interval') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-0">
+                        <label class="small mb-1">Unidade do Intervalo</label>
+                        <select wire:model="reapplication_unit" class="form-control form-control-sm @error('reapplication_unit') is-invalid @enderror">
+                            <option value="">— Sem periodicidade —</option>
+                            <option value="days">Dias</option>
+                            <option value="weeks">Semanas</option>
+                            <option value="months">Meses</option>
+                        </select>
+                        @error('reapplication_unit') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="custom-control custom-switch">
                 <input type="checkbox" wire:model="is_active" class="custom-control-input" id="prodIsActive">

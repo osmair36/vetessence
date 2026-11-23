@@ -17,7 +17,7 @@ class ParasiteControl extends Model
     }
 
     protected $fillable = [
-        'pet_id', 'product_name', 'active_ingredient', 'type',
+        'pet_id', 'product_id', 'product_name', 'active_ingredient', 'type',
         'application_date', 'next_due_date', 'dose', 'batch',
         'vet_id', 'medical_record_id', 'notes', 'branch_id',
     ];
@@ -28,6 +28,7 @@ class ParasiteControl extends Model
     ];
 
     public function pet(): BelongsTo { return $this->belongsTo(Pet::class); }
+    public function product(): BelongsTo { return $this->belongsTo(Product::class); }
     public function vet(): BelongsTo { return $this->belongsTo(User::class, 'vet_id'); }
     public function medicalRecord(): BelongsTo { return $this->belongsTo(MedicalRecord::class); }
 }

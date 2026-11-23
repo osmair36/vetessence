@@ -38,23 +38,48 @@ class ParasiteControlController extends Controller
     {
         $pets = Pet::with('tutors')->where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
-        return view('parasite-controls.create', compact('pets', 'veterinarians'));
+        $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
+        return view('parasite-controls.create', compact('pets', 'veterinarians', 'products'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
+            'product_id' => 'nullable|exists:products,id',
             'product_name' => 'required|string|max:200',
             'active_ingredient' => 'nullable|string|max:200',
             'type' => 'required|string|max:50',
             'application_date' => 'required|date',
             'next_due_date' => 'nullable|date|after_or_equal:application_date',
+            'next_due_date_manual' => 'nullable|boolean',
             'dose' => 'nullable|string|max:100',
             'batch' => 'nullable|string|max:100',
             'vet_id' => 'required|exists:users,id',
             'notes' => 'nullable|string',
         ]);
+
+        $wasManual = (bool) ($validated['next_due_date_manual'] ?? false);
+        unset($validated['next_due_date_manual']);
+
+        $product = !empty($validated['product_id']) ? \App\Models\Product::find($validated['product_id']) : null;
+        $pet = Pet::find($validated['pet_id']);
+
+        $validated['next_due_date'] = app(\App\Services\ApplicationScheduleService::class)->resolveNextDateForPersistence(
+            $validated['next_due_date'] ?? null,
+            $wasManual,
+            $validated['application_date'],
+            $product,
+            $pet,
+            $validated['product_name'],
+            'parasite_control',
+            null,
+            $validated['dose'] ?? null
+        );
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('parasite_controls', 'product_id')) {
+            unset($validated['product_id']);
+        }
 
         $validated['medical_record_id'] = $request->medical_record_id;
 
@@ -74,13 +99,15 @@ class ParasiteControlController extends Controller
     {
         $pets = Pet::where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
-        return view('parasite-controls.edit', compact('parasiteControl', 'pets', 'veterinarians'));
+        $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
+        return view('parasite-controls.edit', compact('parasiteControl', 'pets', 'veterinarians', 'products'));
     }
 
     public function update(Request $request, ParasiteControl $parasiteControl)
     {
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
+            'product_id' => 'nullable|exists:products,id',
             'product_name' => 'required|string|max:200',
             'active_ingredient' => 'nullable|string|max:200',
             'type' => 'required|string|max:50',
@@ -91,6 +118,10 @@ class ParasiteControlController extends Controller
             'vet_id' => 'required|exists:users,id',
             'notes' => 'nullable|string',
         ]);
+
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('parasite_controls', 'product_id')) {
+            unset($validated['product_id']);
+        }
 
         $parasiteControl->update($validated);
 

@@ -13,7 +13,7 @@
         @method('PUT')
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="pet_id">Pet *</label>
                         <x-tom-select name="pet_id" id="pet_id" :value="old('pet_id', $parasiteControl->pet_id)" required>
@@ -23,9 +23,22 @@
                         </x-tom-select>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="product_name">Produto *</label>
+                        <label for="product_id">Produto Cadastrado (opcional)</label>
+                        <select name="product_id" id="product_id" class="form-control">
+                            <option value="">— Selecionar do cadastro —</option>
+                            @foreach(($products ?? []) as $prod)
+                                <option value="{{ $prod->id }}" data-name="{{ $prod->name }}" data-active-ingredient="{{ $prod->active_ingredient ?? '' }}" {{ old('product_id', $parasiteControl->product_id ?? '') == $prod->id ? 'selected' : '' }}>
+                                    {{ $prod->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="product_name">Nome do Produto *</label>
                         <input type="text" name="product_name" id="product_name" class="form-control" value="{{ old('product_name', $parasiteControl->product_name) }}" required>
                     </div>
                 </div>
@@ -67,6 +80,8 @@
                     <div class="form-group">
                         <label for="next_due_date">Próxima Data</label>
                         <input type="date" name="next_due_date" id="next_due_date" class="form-control" value="{{ old('next_due_date', $parasiteControl->next_due_date ? $parasiteControl->next_due_date->format('Y-m-d') : '') }}">
+                        <input type="hidden" name="next_due_date_manual" id="next_due_date_manual" value="{{ old('next_due_date', $parasiteControl->next_due_date) ? '1' : '0' }}">
+                        <small id="pc_schedule_feedback" class="form-text mt-1"></small>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -99,4 +114,20 @@
         </div>
     </form>
 </div>
+@include('partials.application-schedule-script', [
+    'scheduleConfig' => [
+        'context' => 'parasite_control',
+        'excludeId' => $parasiteControl->id,
+        'petSelector' => '#pet_id',
+        'productSelector' => '#product_id',
+        'itemNameSelector' => '#product_name',
+        'activeIngredientSelector' => '#active_ingredient',
+        'doseSelector' => '#dose',
+        'applicationDateSelector' => '#application_date',
+        'nextDateSelector' => '#next_due_date',
+        'manualFlagSelector' => '#next_due_date_manual',
+        'feedbackSelector' => '#pc_schedule_feedback',
+        'initiallyManual' => (bool) old('next_due_date', $parasiteControl->next_due_date),
+    ],
+])
 @endsection

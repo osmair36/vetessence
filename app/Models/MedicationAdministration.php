@@ -15,13 +15,14 @@ class MedicationAdministration extends Model
         'product_id', 'inventory_batch_id', 'inventory_container_id', 'medication_reservation_id',
         'pet_id', 'prescribed_by', 'administered_by', 'quantity_prescribed',
         'quantity_administered', 'unit', 'route', 'status', 'source_type', 'source_id',
-        'notes', 'administered_at', 'branch_id',
+        'notes', 'administered_at', 'next_application_date', 'branch_id',
     ];
 
     protected $casts = [
         'quantity_prescribed' => 'decimal:4',
         'quantity_administered' => 'decimal:4',
         'administered_at' => 'datetime',
+        'next_application_date' => 'date',
     ];
 
     public function product(): BelongsTo { return $this->belongsTo(Product::class); }

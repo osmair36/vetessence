@@ -65,7 +65,7 @@ class VaccinationController extends Controller
             : null;
         $selectedPet = $completingVaccination?->pet
             ?? ($request->pet_id ? Pet::find($request->pet_id) : null);
-        $products = \App\Models\Product::where('is_active', true)->where('stock', '>', 0)->orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
         $laboratories = $this->getKnownLaboratories();
 
         return view('vaccinations.create', compact('pets', 'veterinarians', 'selectedPet', 'products', 'laboratories', 'completingVaccination'));
@@ -78,6 +78,7 @@ class VaccinationController extends Controller
             'vaccine' => 'required|string|max:100',
             'date' => 'required|date',
             'next_date' => 'nullable|date|after:date',
+            'next_date_manual' => 'nullable|boolean',
             'batch' => 'nullable|string|max:50',
             'lot' => 'nullable|string|max:50',
             'laboratory' => 'nullable|string|max:100',
@@ -90,7 +91,23 @@ class VaccinationController extends Controller
         ]);
 
         $explicitPendingId = $validated['complete_vaccination_id'] ?? null;
-        unset($validated['complete_vaccination_id']);
+        $wasManual = (bool) ($validated['next_date_manual'] ?? false);
+        unset($validated['complete_vaccination_id'], $validated['next_date_manual']);
+
+        // Cálculo confiável no backend: preserva alteração manual e preenche automaticamente se omitido
+        $product = !empty($validated['product_id']) ? \App\Models\Product::find($validated['product_id']) : null;
+        $pet = Pet::find($validated['pet_id']);
+        $validated['next_date'] = app(\App\Services\ApplicationScheduleService::class)->resolveNextDateForPersistence(
+            $validated['next_date'] ?? null,
+            $wasManual,
+            $validated['date'],
+            $product,
+            $pet,
+            $validated['vaccine'],
+            'vaccination',
+            null,
+            $validated['dose'] ?? null
+        );
 
         $lab = $validated['laboratory'] ?? $validated['manufacturer'] ?? null;
         $validated['laboratory'] = $lab;
@@ -123,7 +140,7 @@ class VaccinationController extends Controller
     {
         $pets = Pet::where('is_active', true)->orderBy('name')->get();
         $veterinarians = $this->getVeterinarians();
-        $products = \App\Models\Product::where('is_active', true)->where('stock', '>', 0)->orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('name')->get();
         $laboratories = $this->getKnownLaboratories();
 
         return view('vaccinations.edit', compact('vaccination', 'pets', 'veterinarians', 'products', 'laboratories'));
