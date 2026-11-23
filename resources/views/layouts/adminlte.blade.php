@@ -270,8 +270,8 @@
                         @endif
 
                         <!-- ATENDIMENTO -->
-                        @if(Gate::allows('atendimentos') || Gate::allows('prontuarios') || Gate::allows('vacinas') || Gate::allows('exames') || Gate::allows('cirurgias') || Gate::allows('prescricoes') || Gate::allows('hospitalizacao') || Gate::allows('laboratorio') || Gate::allows('imagem') || Gate::allows('referral') || Gate::allows('lembrete-vacinas') || Gate::allows('protocolo-vacinas') || Gate::allows('parasitario') || Gate::allows('certificado-sanitario') || Gate::allows('modelo-laudo') || Gate::allows('interacao-medicamentosa') || Gate::allows('hospedagem') || Gate::allows('agendamento-online') || Gate::allows('teleconsulta') || Gate::allows('triage') || Gate::allows('pre-anesthetic') || Gate::allows('diet-plans') || Gate::allows('convenio-claims') || Gate::allows('plano-tratamento') || Gate::allows('odontologia') || Gate::allows('termo-consentimento') || Gate::allows('controle-peso'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('appointments.*') || request()->routeIs('medical-records.*') || request()->routeIs('vaccinations.*') || request()->routeIs('vaccination-reminders.*') || request()->routeIs('vaccination-center.*') || request()->routeIs('vaccine-protocols.*') || request()->routeIs('parasite-controls.*') || request()->routeIs('health-certificates.*') || request()->routeIs('clinical-report-templates.*') || request()->routeIs('drug-interactions.*') || request()->routeIs('boardings.*') || request()->routeIs('online-bookings.*') || request()->routeIs('teleconsultations.*') || request()->routeIs('exams.*') || request()->routeIs('surgeries.*') || request()->routeIs('prescriptions.*') || request()->routeIs('hospitalizations.*') || request()->routeIs('hospitalization-daily-records.*') || request()->routeIs('anesthesia-monitorings.*') || request()->routeIs('dental-charts.*') || request()->routeIs('weight-records.*') || request()->routeIs('treatment-plans.*') || request()->routeIs('consent-forms.*') || request()->routeIs('laboratory-orders.*') || request()->routeIs('imaging-exams.*') || request()->routeIs('referrals.*') || request()->routeIs('triage.*') || request()->routeIs('pre-anesthetic-evaluations.*') || request()->routeIs('diet-plans.*') || request()->routeIs('convenio-claims.*') ? 'menu-open' : '' }}">
+                        @if(Gate::allows('atendimentos') || Gate::allows('prontuarios') || Gate::allows('vacinas') || Gate::allows('exames') || Gate::allows('cirurgias') || Gate::allows('prescricoes') || Gate::allows('hospitalizacao') || Gate::allows('laboratorio') || Gate::allows('imagem') || Gate::allows('referral') || Gate::allows('lembrete-vacinas') || Gate::allows('protocolo-vacinas') || Gate::allows('parasitario') || Gate::allows('certificado-sanitario') || Gate::allows('modelo-laudo') || Gate::allows('interacao-medicamentosa') || Gate::allows('hospedagem') || Gate::allows('triage') || Gate::allows('pre-anesthetic') || Gate::allows('diet-plans') || Gate::allows('convenio-claims') || Gate::allows('plano-tratamento') || Gate::allows('odontologia') || Gate::allows('termo-consentimento') || Gate::allows('controle-peso'))
+                        <li class="nav-item has-treeview {{ request()->routeIs('appointments.*') || request()->routeIs('grooming-board.*') || request()->routeIs('pet-transports.*') || request()->routeIs('medical-records.*') || request()->routeIs('vaccinations.*') || request()->routeIs('vaccination-reminders.*') || request()->routeIs('vaccination-center.*') || request()->routeIs('vaccine-protocols.*') || request()->routeIs('parasite-controls.*') || request()->routeIs('health-certificates.*') || request()->routeIs('clinical-report-templates.*') || request()->routeIs('drug-interactions.*') || request()->routeIs('boardings.*') || request()->routeIs('exams.*') || request()->routeIs('surgeries.*') || request()->routeIs('prescriptions.*') || request()->routeIs('hospitalizations.*') || request()->routeIs('hospitalization-daily-records.*') || request()->routeIs('anesthesia-monitorings.*') || request()->routeIs('dental-charts.*') || request()->routeIs('weight-records.*') || request()->routeIs('treatment-plans.*') || request()->routeIs('consent-forms.*') || request()->routeIs('laboratory-orders.*') || request()->routeIs('imaging-exams.*') || request()->routeIs('referrals.*') || request()->routeIs('triage.*') || request()->routeIs('pre-anesthetic-evaluations.*') || request()->routeIs('diet-plans.*') || request()->routeIs('convenio-claims.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-stethoscope"></i>
                                 <p>Atendimento <i class="right fas fa-angle-left"></i></p>
@@ -302,14 +302,6 @@
                             <a href="{{ route('triage.index') }}" class="nav-link {{ request()->routeIs('triage.*') ? 'active' : '' }}">
                                 <i class="fas fa-sort-amount-up nav-icon"></i>
                                 <p>Triagem</p>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('agendamento-online')
-                        <li class="nav-item">
-                            <a href="{{ route('online-bookings.index') }}" class="nav-link {{ request()->routeIs('online-bookings.*') ? 'active' : '' }}">
-                                <i class="fas fa-globe nav-icon"></i>
-                                <p>Agendamentos Online</p>
                             </a>
                         </li>
                         @endcan
@@ -509,66 +501,6 @@
                             </a>
                         </li>
                         @endcan
-                        @can('teleconsulta')
-                        <li class="nav-item">
-                            <a href="{{ route('teleconsultations.index') }}" class="nav-link {{ request()->routeIs('teleconsultations.*') ? 'active' : '' }}">
-                                <i class="fas fa-video nav-icon"></i>
-                                <p>Teleconsultas</p>
-                            </a>
-                        </li>
-                        @endcan
-                                @can('bank-reconciliation.view')
-                                <li class="nav-item">
-                                    <a href="{{ route('bank-reconciliation.index') }}" class="nav-link {{ request()->routeIs('bank-reconciliation.*') || request()->routeIs('bank-accounts.*') ? 'active' : '' }}">
-                                        <i class="fas fa-handshake nav-icon"></i>
-                                        <p>Conciliação Bancária</p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('commissions.view')
-                                <li class="nav-item">
-                                    <a href="{{ route('commissions.index') }}" class="nav-link {{ request()->routeIs('commissions.*') ? 'active' : '' }}">
-                                        <i class="fas fa-percentage nav-icon"></i>
-                                        <p>Comissões</p>
-                                    </a>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                        @endif
-
-                        <!-- COMUNICAÇÃO -->
-                        @if(Gate::allows('notificacoes') || Gate::allows('nota-interna') || Gate::allows('chat'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('notification-logs.*') || request()->routeIs('staff-notes.*') || request()->routeIs('chat.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-bullhorn"></i>
-                                <p>Comunicação <i class="right fas fa-angle-left"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @can('chat')
-                                <li class="nav-item">
-                                    <a href="{{ route('chat.index') }}" class="nav-link {{ request()->routeIs('chat.*') ? 'active' : '' }}">
-                                        <i class="fas fa-comments nav-icon"></i>
-                                        <p>Chat Interno <span id="chat-unread-badge" class="badge badge-info right" style="display:none;">0</span></p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('nota-interna')
-                                <li class="nav-item">
-                                    <a href="{{ route('staff-notes.index') }}" class="nav-link {{ request()->routeIs('staff-notes.*') ? 'active' : '' }}">
-                                        <i class="fas fa-sticky-note nav-icon"></i>
-                                        <p>Notas Internas</p>
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('notificacoes')
-                                <li class="nav-item">
-                                    <a href="{{ route('notification-logs.index') }}" class="nav-link {{ request()->routeIs('notification-logs.*') ? 'active' : '' }}">
-                                        <i class="fas fa-history nav-icon"></i>
-                                        <p>Logs de Notificação</p>
-                                    </a>
-                                </li>
-                                @endcan
                             </ul>
                         </li>
                         @endif
@@ -606,8 +538,8 @@
                         @endcan
 
                         <!-- FINANCEIRO -->
-                        @if(Gate::allows('financeiro') || Gate::allows('gateway-pagamento') || Gate::allows('nfse.view') || Gate::allows('nfe.view') || Gate::allows('bank-reconciliation.view'))
-                        <li class="nav-item has-treeview {{ request()->routeIs('invoices.*') || request()->routeIs('reports.*') || request()->routeIs('payment-gateways.*') || request()->routeIs('nfse.*') || request()->routeIs('nfe.*') || request()->routeIs('nf.config') || request()->routeIs('bank-reconciliation.*') || request()->routeIs('bank-accounts.*') ? 'menu-open' : '' }}">
+                        @if(Gate::allows('financeiro') || Gate::allows('gateway-pagamento') || Gate::allows('nfse.view') || Gate::allows('nfe.view'))
+                        <li class="nav-item has-treeview {{ request()->routeIs('invoices.*') || request()->routeIs('pdv.*') || request()->routeIs('reports.*') || request()->routeIs('payment-gateways.*') || request()->routeIs('nfse.*') || request()->routeIs('nfce.*') || request()->routeIs('nfe.*') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-dollar-sign"></i>
                                 <p>Financeiro <i class="right fas fa-angle-left"></i></p>
@@ -775,7 +707,7 @@
                         <!-- ADMINISTRAÇÃO -->
                         @can('admin')
                         <li class="nav-header"><i class="fas fa-cog"></i> ADMINISTRAÇÃO</li>
-                        <li class="nav-item has-treeview {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('services.*') || request()->routeIs('categories.*') || request()->routeIs('consent-templates.*') || request()->routeIs('communication-templates.*') || request()->routeIs('communication-queues.*') || request()->routeIs('branches.*') || request()->routeIs('departments.*') || request()->routeIs('positions.*') || request()->routeIs('employees.*') || request()->routeIs('configuracoes.branding.*') || request()->routeIs('configuracoes.notificacoes.*') || request()->routeIs('breed-defaults.*') || request()->routeIs('zoonotic-diseases.*') || request()->routeIs('llm.config') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('services.*') || request()->routeIs('categories.*') || request()->routeIs('consent-templates.*') || request()->routeIs('branches.*') || request()->routeIs('departments.*') || request()->routeIs('positions.*') || request()->routeIs('employees.*') || request()->routeIs('configuracoes.branding.*') || request()->routeIs('configuracoes.notificacoes.*') || request()->routeIs('notification-logs.*') || request()->routeIs('breed-defaults.*') || request()->routeIs('zoonotic-diseases.*') || request()->routeIs('llm.config') || request()->routeIs('nf.config') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shield-alt"></i>
                                 <p>Configurações <i class="right fas fa-angle-left"></i></p>
@@ -835,18 +767,6 @@
                                         <p>Modelos de Termos</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('communication-templates.index') }}" class="nav-link {{ request()->routeIs('communication-templates.*') ? 'active' : '' }}">
-                                        <i class="fas fa-envelope-open-text nav-icon"></i>
-                                        <p>Modelos de Comunicação</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('communication-queues.index') }}" class="nav-link {{ request()->routeIs('communication-queues.*') ? 'active' : '' }}">
-                                        <i class="fas fa-tasks nav-icon"></i>
-                                        <p>Fila de Comunicação</p>
-                                    </a>
-                                </li>
                                 @can('unidades')
                                 <li class="nav-item">
                                     <a href="{{ route('branches.index') }}" class="nav-link {{ request()->routeIs('branches.*') ? 'active' : '' }}">
@@ -877,6 +797,14 @@
                                         <p>Notificações</p>
                                     </a>
                                 </li>
+                                @can('notificacoes')
+                                <li class="nav-item">
+                                    <a href="{{ route('notification-logs.index') }}" class="nav-link {{ request()->routeIs('notification-logs.*') ? 'active' : '' }}">
+                                        <i class="fas fa-history nav-icon"></i>
+                                        <p>Logs de Notificação</p>
+                                    </a>
+                                </li>
+                                @endcan
                                 @can('configuracoes')
                                 <li class="nav-item">
                                     <a href="{{ route('breed-defaults.index') }}" class="nav-link {{ request()->routeIs('breed-defaults.*') ? 'active' : '' }}">

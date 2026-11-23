@@ -240,33 +240,6 @@ Route::middleware(['auth'])->group(function () {
     // Config NF (unificada)
     Route::get('nf/config', 'App\Http\Controllers\NfConfigController@edit')->name('nf.config')->middleware('can:nfe-config.edit');
 
-    // Bank Reconciliation
-    Route::resource('bank-accounts', 'App\Http\Controllers\BankAccountController')->names([
-        'index' => 'bank-accounts.index',
-        'create' => 'bank-accounts.create',
-        'store' => 'bank-accounts.store',
-        'show' => 'bank-accounts.show',
-        'edit' => 'bank-accounts.edit',
-        'update' => 'bank-accounts.update',
-        'destroy' => 'bank-accounts.destroy',
-    ]);
-    Route::get('bank-reconciliation', 'App\Http\Controllers\BankReconciliationController@index')->name('bank-reconciliation.index');
-    Route::post('bank-reconciliation/{bankTransaction}/match', 'App\Http\Controllers\BankReconciliationController@match')->name('bank-reconciliation.match');
-    Route::post('bank-reconciliation/{bankTransaction}/unmatch', 'App\Http\Controllers\BankReconciliationController@unmatch')->name('bank-reconciliation.unmatch');
-    Route::get('bank-reconciliation/{bankAccount}/suggest', 'App\Http\Controllers\BankReconciliationController@suggest')->name('bank-reconciliation.suggest');
-
-    // Commissions
-    Route::get('commissions/report/print', 'App\Http\Controllers\CommissionController@reportPrint')->name('commissions.report.print');
-    Route::get('commissions/report/pdf', 'App\Http\Controllers\CommissionController@reportPdf')->name('commissions.report.pdf');
-    Route::get('commissions/{commissionLog}/print', 'App\Http\Controllers\CommissionController@print')->name('commissions.print');
-    Route::get('commissions/{commissionLog}/pdf', 'App\Http\Controllers\CommissionController@pdf')->name('commissions.pdf');
-    Route::get('commissions', 'App\Http\Controllers\CommissionController@index')->name('commissions.index');
-    Route::get('commissions/{commissionLog}', 'App\Http\Controllers\CommissionController@show')->name('commissions.show');
-    Route::post('commissions/{commissionLog}/mark-paid', 'App\Http\Controllers\CommissionController@markPaid')->name('commissions.mark-paid');
-    Route::get('commissions/rates/list', 'App\Http\Controllers\CommissionController@rates')->name('commissions.rates');
-    Route::post('commissions/rates', 'App\Http\Controllers\CommissionController@ratesStore')->name('commissions.rates-store');
-    Route::delete('commissions/rates/{commissionRate}', 'App\Http\Controllers\CommissionController@ratesDestroy')->name('commissions.rates-destroy');
-
     // Products
     Route::get('products/inventory/print', 'App\Http\Controllers\ProductController@inventoryPrint')->name('products.inventory.print');
     Route::get('products/inventory/pdf', 'App\Http\Controllers\ProductController@inventoryPdf')->name('products.inventory.pdf');
@@ -609,24 +582,6 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'referrals.destroy',
     ]);
 
-    // Communication Templates
-    Route::resource('communication-templates', 'App\Http\Controllers\CommunicationTemplateController')->names([
-        'index' => 'communication-templates.index',
-        'create' => 'communication-templates.create',
-        'store' => 'communication-templates.store',
-        'show' => 'communication-templates.show',
-        'edit' => 'communication-templates.edit',
-        'update' => 'communication-templates.update',
-        'destroy' => 'communication-templates.destroy',
-    ]);
-
-    // Communication Queue
-    Route::get('communication-queues', 'App\Http\Controllers\CommunicationQueueController@index')->name('communication-queues.index');
-    Route::get('communication-queues/create', 'App\Http\Controllers\CommunicationQueueController@create')->name('communication-queues.create');
-    Route::post('communication-queues', 'App\Http\Controllers\CommunicationQueueController@store')->name('communication-queues.store');
-    Route::get('communication-queues/{communicationQueue}', 'App\Http\Controllers\CommunicationQueueController@show')->name('communication-queues.show');
-    Route::delete('communication-queues/{communicationQueue}', 'App\Http\Controllers\CommunicationQueueController@destroy')->name('communication-queues.destroy');
-
     // Parasite Controls
     Route::get('parasite-controls/report/print', 'App\Http\Controllers\ParasiteControlController@reportPrint')->name('parasite-controls.report.print');
     Route::get('parasite-controls/report/pdf', 'App\Http\Controllers\ParasiteControlController@reportPdf')->name('parasite-controls.report.pdf');
@@ -654,22 +609,6 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'vaccine-protocols.update',
         'destroy' => 'vaccine-protocols.destroy',
     ]);
-
-    // Teleconsultations
-    Route::get('teleconsultations/{teleconsultation}/print', 'App\Http\Controllers\TeleconsultationController@print')->name('teleconsultations.print');
-    Route::get('teleconsultations/{teleconsultation}/pdf', 'App\Http\Controllers\TeleconsultationController@pdf')->name('teleconsultations.pdf');
-    Route::resource('teleconsultations', 'App\Http\Controllers\TeleconsultationController')->names([
-        'index' => 'teleconsultations.index',
-        'create' => 'teleconsultations.create',
-        'store' => 'teleconsultations.store',
-        'show' => 'teleconsultations.show',
-        'edit' => 'teleconsultations.edit',
-        'update' => 'teleconsultations.update',
-        'destroy' => 'teleconsultations.destroy',
-    ]);
-    Route::get('teleconsultations/{teleconsultation}/start', 'App\Http\Controllers\TeleconsultationController@start')->name('teleconsultations.start');
-    Route::post('teleconsultations/{teleconsultation}/end', 'App\Http\Controllers\TeleconsultationController@end')->name('teleconsultations.end');
-    Route::get('teleconsultation/{token}', 'App\Http\Controllers\TeleconsultationController@room')->name('teleconsultations.room');
 
     // Branches (Multi-unit)
     Route::resource('branches', 'App\Http\Controllers\BranchController')->names([
@@ -704,30 +643,6 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'lab-equipment-integrations.update',
         'destroy' => 'lab-equipment-integrations.destroy',
     ]);
-
-    // Online Bookings
-    Route::resource('online-bookings', 'App\Http\Controllers\OnlineBookingController')->names([
-        'index' => 'online-bookings.index',
-        'show' => 'online-bookings.show',
-        'destroy' => 'online-bookings.destroy',
-    ])->only(['index', 'show', 'destroy']);
-    Route::post('online-bookings/{onlineBooking}/confirm', 'App\Http\Controllers\OnlineBookingController@confirm')->name('online-bookings.confirm');
-    Route::post('online-bookings/{onlineBooking}/reject', 'App\Http\Controllers\OnlineBookingController@reject')->name('online-bookings.reject');
-
-    // Staff Notes
-    Route::resource('staff-notes', 'App\Http\Controllers\StaffNoteController')->names([
-        'index' => 'staff-notes.index',
-        'create' => 'staff-notes.create',
-        'store' => 'staff-notes.store',
-        'show' => 'staff-notes.show',
-        'edit' => 'staff-notes.edit',
-        'update' => 'staff-notes.update',
-        'destroy' => 'staff-notes.destroy',
-    ]);
-    Route::post('staff-notes/{staffNote}/mark-read', 'App\Http\Controllers\StaffNoteController@markRead')->name('staff-notes.mark-read');
-
-    // Chat
-    Route::get('chat', function () { return view('chat.index'); })->name('chat.index')->middleware('can:chat');
 
     // Mobile
     Route::prefix('m')->name('mobile.')->group(function () {

@@ -20,8 +20,6 @@ use App\Http\Controllers\Api\ZoonoticDiseaseController;
 Route::prefix('v1')->group(function () {
     // Public Routes
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/online-bookings', [\App\Http\Controllers\Api\OnlineBookingController::class, 'store']);
-    Route::get('/online-bookings/availability', [\App\Http\Controllers\Api\OnlineBookingController::class, 'availability']);
     // Lab Equipment (no auth - equipment posts results via webhook)
     Route::post('/lab-equipment/{integrationId}/receive', [\App\Http\Controllers\Api\LabEquipmentController::class, 'receive']);
     Route::get('/lab-equipment/{integrationId}/status', [\App\Http\Controllers\Api\LabEquipmentController::class, 'status']);

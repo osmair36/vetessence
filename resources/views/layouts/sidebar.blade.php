@@ -58,9 +58,6 @@
                 <a href="{{ route('appointments.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-list w-5 mr-2"></i> Listar
                 </a>
-                <a href="{{ route('online-bookings.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-globe w-5 mr-2"></i> Agendamentos Online
-                </a>
                 <a href="{{ route('appointments.create') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-plus w-5 mr-2"></i> Novo
                 </a>
@@ -178,9 +175,6 @@
                 <a href="{{ route('referrals.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-share-alt w-5 mr-2"></i> Encaminhamentos
                 </a>
-                <a href="{{ route('teleconsultations.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-video w-5 mr-2"></i> Teleconsultas
-                </a>
                 <a href="{{ route('drug-interactions.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-exclamation-triangle w-5 mr-2"></i> Interações Medicamentosas
                 </a>
@@ -228,29 +222,6 @@
                     <i class="fas fa-box w-5 mr-2"></i> NF-e
                 </a>
                 @endcan
-            </div>
-        </div>
-        @endrole
-
-        @role('admin|veterinario|recepcionista|tecnico')
-        <!-- Notas Internas -->
-        <div x-data="{ open: false }">
-            <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 text-gray-200 hover:bg-gray-800 rounded-lg transition">
-                <div class="flex items-center">
-                    <i class="fas fa-sticky-note w-6"></i>
-                    <span>Comunicação</span>
-                </div>
-                <i class="fas fa-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
-            </button>
-            <div x-show="open" class="pl-4 mt-1 space-y-1">
-                    <a href="{{ route('staff-notes.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                        <i class="fas fa-sticky-note w-5 mr-2"></i> Notas Internas
-                    </a>
-                    @can('chat.view')
-                    <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                        <i class="fas fa-comments w-5 mr-2"></i> Chat Interno
-                    </a>
-                    @endcan
             </div>
         </div>
         @endrole
@@ -360,12 +331,6 @@
                 </a>
                 <a href="{{ route('consent-templates.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-file-contract w-5 mr-2"></i> Modelos de Termos
-                </a>
-                <a href="{{ route('communication-templates.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-envelope-open-text w-5 mr-2"></i> Modelos de Comunicação
-                </a>
-                <a href="{{ route('communication-queues.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-tasks w-5 mr-2"></i> Fila de Comunicação
                 </a>
                 <a href="{{ route('branches.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-building w-5 mr-2"></i> Unidades
