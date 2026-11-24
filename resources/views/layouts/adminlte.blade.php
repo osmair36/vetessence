@@ -214,6 +214,153 @@
             padding-left: 0;
             margin-left: 0;
         }
+
+        /* ===== PESQUISA RÁPIDA NO MENU LATERAL ===== */
+        .sidebar-quick-search {
+            position: relative;
+            padding: 0.65rem 0.5rem 0.35rem 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 0.25rem;
+        }
+        .sidebar-quick-search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 8px;
+            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .sidebar-quick-search-box:focus-within {
+            background: rgba(255, 255, 255, 0.13);
+            border-color: var(--brand-accent, #d6c38d);
+            box-shadow: 0 0 0 2px rgba(214, 195, 141, 0.22);
+        }
+        .sidebar-quick-search-icon {
+            position: absolute;
+            left: 10px;
+            color: var(--brand-accent, #d6c38d);
+            font-size: 0.82rem;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        .sidebar-quick-search-input {
+            width: 100%;
+            background: transparent;
+            border: 0;
+            outline: none;
+            color: #ffffff;
+            font-size: 0.86rem;
+            padding: 0.48rem 2.2rem 0.48rem 1.95rem;
+            line-height: 1.3;
+        }
+        .sidebar-quick-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.55);
+        }
+        .sidebar-quick-search-clear {
+            position: absolute;
+            right: 6px;
+            background: transparent;
+            border: 0;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.85rem;
+            padding: 2px 6px;
+            cursor: pointer;
+            display: none;
+            line-height: 1;
+        }
+        .sidebar-quick-search-clear:hover {
+            color: #ffffff;
+        }
+        .sidebar-quick-search-kbd {
+            position: absolute;
+            right: 8px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 4px;
+            padding: 1px 5px;
+            pointer-events: none;
+            letter-spacing: 0.3px;
+        }
+        .sidebar-quick-search-results {
+            position: absolute;
+            left: 0.5rem;
+            right: 0.5rem;
+            top: calc(100% - 2px);
+            background: #0d2b1e;
+            border: 1px solid rgba(214, 195, 141, 0.45);
+            border-radius: 8px;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+            max-height: 320px;
+            overflow-y: auto;
+            z-index: 1080;
+            display: none;
+            padding: 4px;
+        }
+        .sidebar-quick-search-results.open {
+            display: block;
+        }
+        .sidebar-quick-search-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 0.48rem 0.6rem;
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.92) !important;
+            text-decoration: none !important;
+            font-size: 0.85rem;
+            transition: background-color 0.12s ease;
+        }
+        .sidebar-quick-search-item:hover,
+        .sidebar-quick-search-item.is-selected {
+            background: rgba(214, 195, 141, 0.22);
+            color: #ffffff !important;
+        }
+        .sidebar-quick-search-item-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .sidebar-quick-search-item-main i {
+            width: 16px;
+            text-align: center;
+            color: var(--brand-accent, #d6c38d);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .sidebar-quick-search-item-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-quick-search-item-label mark {
+            background: rgba(214, 195, 141, 0.35);
+            color: #ffffff;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .sidebar-quick-search-item-group {
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.62);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 6px;
+            border-radius: 10px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .sidebar-quick-search-empty {
+            padding: 0.65rem 0.75rem;
+            text-align: center;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.58);
+        }
+        body.sidebar-collapse:not(.sidebar-is-opening) .sidebar-quick-search {
+            display: none !important;
+        }
         .btn-secondary-custom { background: var(--brand-secondary, #9aaa7e); border-color: var(--brand-secondary, #9aaa7e); color: #fff; }
         .btn-secondary-custom:hover { filter: brightness(0.9); color: #fff; }
         .text-accent { color: var(--brand-accent, #d6c38d); }
@@ -356,6 +503,29 @@
                      class="brand-logo-img img-fluid">
             </a>
             <div class="sidebar">
+                <!-- Pesquisa Rápida do Menu -->
+                <div class="sidebar-quick-search" id="sidebarQuickSearch">
+                    <div class="sidebar-quick-search-box">
+                        <i class="fas fa-search sidebar-quick-search-icon" aria-hidden="true"></i>
+                        <input
+                            type="text"
+                            id="sidebarQuickSearchInput"
+                            class="sidebar-quick-search-input"
+                            placeholder="Pesquisar função..."
+                            autocomplete="off"
+                            aria-label="Pesquisar função no menu"
+                        >
+                        <span class="sidebar-quick-search-kbd" id="sidebarQuickSearchKbd">Ctrl+K</span>
+                        <button
+                            type="button"
+                            id="sidebarQuickSearchClear"
+                            class="sidebar-quick-search-clear"
+                            title="Limpar pesquisa"
+                            aria-label="Limpar pesquisa"
+                        >&times;</button>
+                    </div>
+                    <div class="sidebar-quick-search-results" id="sidebarQuickSearchResults" role="listbox"></div>
+                </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                         <li class="nav-item">
@@ -1276,6 +1446,202 @@
                 initTinyMCE(this);
             });
         }
+
+        // ===== PESQUISA RÁPIDA DE FUNÇÕES NO MENU LATERAL =====
+        (function() {
+            function normalizeSearchText(str) {
+                return String(str || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .trim();
+            }
+
+            function escapeHtml(str) {
+                var div = document.createElement('div');
+                div.textContent = str || '';
+                return div.innerHTML;
+            }
+
+            function highlightMatch(text, query) {
+                if (!query) return escapeHtml(text);
+                var normText = normalizeSearchText(text);
+                var normQuery = normalizeSearchText(query);
+                var idx = normText.indexOf(normQuery);
+                if (idx === -1) return escapeHtml(text);
+                var before = text.slice(0, idx);
+                var match = text.slice(idx, idx + query.length);
+                var after = text.slice(idx + query.length);
+                return escapeHtml(before) + '<mark>' + escapeHtml(match) + '</mark>' + escapeHtml(after);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var container = document.getElementById('sidebarQuickSearch');
+                var input = document.getElementById('sidebarQuickSearchInput');
+                var clearBtn = document.getElementById('sidebarQuickSearchClear');
+                var kbdHint = document.getElementById('sidebarQuickSearchKbd');
+                var resultsBox = document.getElementById('sidebarQuickSearchResults');
+                if (!container || !input || !resultsBox) return;
+
+                // Indexa dinamicamente todos os itens reais renderizados na sidebar (respeitando permissões)
+                var items = [];
+                var navLinks = document.querySelectorAll('.main-sidebar .nav-sidebar a.nav-link[href]');
+                navLinks.forEach(function(link) {
+                    var href = link.getAttribute('href') || '';
+                    if (!href || href === '#' || href.indexOf('javascript:') === 0) return;
+
+                    var labelEl = link.querySelector('p');
+                    var label = labelEl ? labelEl.textContent.replace(/\s+/g, ' ').trim() : link.textContent.trim();
+                    if (!label) return;
+
+                    var iconEl = link.querySelector('i.nav-icon, i.fas, i.far, i.fab');
+                    var iconClass = iconEl ? iconEl.className.replace('nav-icon', '').trim() : 'fas fa-chevron-right';
+
+                    var groupName = 'Geral';
+                    var parentTree = link.closest('li.has-treeview');
+                    if (parentTree) {
+                        var parentLabelEl = parentTree.querySelector(':scope > a.nav-link > p');
+                        if (parentLabelEl) {
+                            groupName = parentLabelEl.textContent.replace(/\s+/g, ' ').trim();
+                        }
+                    }
+
+                    items.push({
+                        label: label,
+                        group: groupName,
+                        href: href,
+                        icon: iconClass,
+                        searchKey: normalizeSearchText(label + ' ' + groupName)
+                    });
+                });
+
+                var activeIndex = -1;
+                var currentMatches = [];
+
+                function updateClearVisibility() {
+                    var hasVal = input.value.trim().length > 0;
+                    if (clearBtn) clearBtn.style.display = hasVal ? 'inline-block' : 'none';
+                    if (kbdHint) kbdHint.style.display = hasVal ? 'none' : 'inline-block';
+                }
+
+                function closeResults() {
+                    resultsBox.classList.remove('open');
+                    resultsBox.innerHTML = '';
+                    activeIndex = -1;
+                    currentMatches = [];
+                }
+
+                function renderResults(query) {
+                    var q = query.trim();
+                    updateClearVisibility();
+                    if (!q) {
+                        closeResults();
+                        return;
+                    }
+
+                    var normQ = normalizeSearchText(q);
+                    var tokens = normQ.split(/\s+/).filter(Boolean);
+
+                    currentMatches = items.filter(function(item) {
+                        return tokens.every(function(tok) {
+                            return item.searchKey.indexOf(tok) !== -1;
+                        });
+                    });
+
+                    if (currentMatches.length === 0) {
+                        resultsBox.innerHTML = '<div class="sidebar-quick-search-empty"><i class="fas fa-search mr-1"></i>Nenhuma função encontrada para "' + escapeHtml(q) + '"</div>';
+                        resultsBox.classList.add('open');
+                        activeIndex = -1;
+                        return;
+                    }
+
+                    var html = currentMatches.map(function(item, idx) {
+                        return '<a href="' + escapeHtml(item.href) + '" class="sidebar-quick-search-item' + (idx === 0 ? ' is-selected' : '') + '" data-idx="' + idx + '" role="option">' +
+                            '<span class="sidebar-quick-search-item-main">' +
+                                '<i class="' + escapeHtml(item.icon) + '"></i>' +
+                                '<span class="sidebar-quick-search-item-label">' + highlightMatch(item.label, q) + '</span>' +
+                            '</span>' +
+                            '<span class="sidebar-quick-search-item-group">' + escapeHtml(item.group) + '</span>' +
+                        '</a>';
+                    }).join('');
+
+                    resultsBox.innerHTML = html;
+                    resultsBox.classList.add('open');
+                    activeIndex = 0;
+                }
+
+                function setActive(newIndex) {
+                    var nodes = resultsBox.querySelectorAll('.sidebar-quick-search-item');
+                    if (!nodes.length) return;
+                    if (newIndex < 0) newIndex = nodes.length - 1;
+                    if (newIndex >= nodes.length) newIndex = 0;
+                    activeIndex = newIndex;
+                    nodes.forEach(function(node, i) {
+                        node.classList.toggle('is-selected', i === activeIndex);
+                    });
+                    nodes[activeIndex].scrollIntoView({ block: 'nearest' });
+                }
+
+                input.addEventListener('input', function() {
+                    renderResults(input.value);
+                });
+
+                input.addEventListener('focus', function() {
+                    if (input.value.trim()) {
+                        renderResults(input.value);
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (!resultsBox.classList.contains('open')) return;
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        setActive(activeIndex + 1);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        setActive(activeIndex - 1);
+                    } else if (e.key === 'Enter') {
+                        if (activeIndex >= 0 && currentMatches[activeIndex]) {
+                            e.preventDefault();
+                            window.location.href = currentMatches[activeIndex].href;
+                        }
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        input.value = '';
+                        updateClearVisibility();
+                        closeResults();
+                        input.blur();
+                    }
+                });
+
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        input.value = '';
+                        updateClearVisibility();
+                        closeResults();
+                        input.focus();
+                    });
+                }
+
+                document.addEventListener('click', function(e) {
+                    if (!container.contains(e.target)) {
+                        closeResults();
+                    }
+                });
+
+                // Atalho global Ctrl+K para focar a pesquisa rápida de qualquer tela
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                        e.preventDefault();
+                        if (document.body.classList.contains('sidebar-collapse')) {
+                            document.body.classList.remove('sidebar-collapse');
+                        }
+                        input.focus();
+                        input.select();
+                    }
+                });
+            });
+        })();
 
     </script>
         @stack('scripts')
